@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">CalculatorVault</string>
+
+    <array name="stringLang" translatable="false">
+        <item>English</item>
+        <item>Français</item>
+        <item>भारत</item>
+        <item>Indonesia</item>
+        <item>日本</item>
+        <item>Brazil</item>
+        <item>Tiếng Việt</item>
+        <item>한국인</item>
+        <item>Türkiye</item>
+        <item>España</item>
+        <item>Italia</item>
+        <item>Deutsch</item>
+    </array>
+    <array name="valueLang" translatable="false">
+        <item>en</item>
+        <item>fr</item>
+        <item>hi</item>
+        <item>in</item>
+        <item>ja</item>
+        <item>pt</item>
+        <item>vi</item>
+        <item>ko</item>
+        <item>tr</item>
+        <item>es</item>
+        <item>it</item>
+        <item>de</item>
+    </array>
+
+    <string name="ENGLISH" translatable="false">English</string>
+    <string name="JAPANESE" translatable="false">日本</string>
+    <string name="KOREAN" translatable="false">"한국인 </string>
+    <string name="FRENCH" translatable="false">Français</string>
+    <string name="ITALIA" translatable="false">Italia</string>
+    <string name="GERMAN" translatable="false">Deutsch</string>
+    <string name="VIETNAM" translatable="false">Tiếng Việt</string>
+    <string name="INDONESIA" translatable="false">Indonesia</string>
+    <string name="BRAZIL" translatable="false">Brazil</string>
+    <string name="TURKEY" translatable="false">Türkiye</string>
+    <string name="SPAIN" translatable="false">España</string>
+    <string name="INDIA" translatable="false">भारत</string>
+</resources>

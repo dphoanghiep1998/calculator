@@ -1,0 +1,373 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
+    id 'dagger.hilt.android.plugin'
+}
+apply plugin: 'kotlin-android'
+
+
+android {
+    namespace 'com.neko.hiepdph.calculatorvault'
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.neko.hiepdph.calculatorvault"
+        minSdk 23
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        def date = new Date()
+        def formattedDate = date.format('dd-MM')
+        Calendar calendar = GregorianCalendar.getInstance()
+        def hour = calendar.get(Calendar.HOUR_OF_DAY)
+        def minute = calendar.get(Calendar.MINUTE)
+        setProperty("archivesBaseName", "${applicationId}" + versionCode + "__" + versionName + "__${formattedDate}__${hour}h${minute}")
+
+
+        def addConstant = { constantName, constantValue ->
+            manifestPlaceholders += [(constantName): constantValue]
+            buildConfigField "String", "${constantName}", "\"${constantValue}\""
+        }
+        addConstant("facebook_app_id", "")
+        addConstant("facebook_client_token", "")
+        addConstant("adjust_token_key", "")
+        addConstant("app_lovin_sdk_key", "")
+        addConstant("ads_app_id", "")
+        addConstant("application_id", "${applicationId}")
+    }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            // This property is set to true by default.
+            enableSplit = true
+        }
+        abi {
+            // This property is set to true by default.
+            enableSplit = true
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            def addConstant = { constantName, constantValue ->
+                manifestPlaceholders += [(constantName): constantValue]
+                buildConfigField "String", "${constantName}", "\"${constantValue}\""
+            }
+            addConstant("ads_app_id", "ca-app-pub-3940256099942544~3347511713")
+        }
+        release {
+            def addConstant = { constantName, constantValue ->
+                manifestPlaceholders += [(constantName): constantValue]
+                buildConfigField "String", "${constantName}", "\"${constantValue}\""
+            }
+            addConstant("ads_app_id", "ca-app-pub-3940256099942544~3347511713")
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    flavorDimensions "ads"
+
+    productFlavors {
+
+        noads {
+            dimension "ads"
+
+
+            buildConfigField('String', 'inter_splash_id1', '""')
+            buildConfigField('String', 'inter_splash_id2', '""')
+            buildConfigField('String', 'inter_splash_id3', '""')
+
+            buildConfigField('String', 'open_app_id', '""')
+
+            buildConfigField('String', 'inter_intro_id1', '""')
+            buildConfigField('String', 'inter_intro_id2', '""')
+            buildConfigField('String', 'inter_intro_id3', '""')
+
+            buildConfigField('String', 'inter_history_id1', '""')
+            buildConfigField('String', 'inter_history_id2', '""')
+            buildConfigField('String', 'inter_history_id3', '""')
+
+            buildConfigField('String', 'inter_adddata_id1', '""')
+            buildConfigField('String', 'inter_adddata_id2', '""')
+            buildConfigField('String', 'inter_adddata_id3', '""')
+
+            buildConfigField('String', 'native_info_id1', '""')
+            buildConfigField('String', 'native_info_id2', '""')
+            buildConfigField('String', 'native_info_id3', '""')
+
+
+            buildConfigField('String', 'inter_export_id1', '""')
+            buildConfigField('String', 'inter_export_id2', '""')
+            buildConfigField('String', 'inter_export_id3', '""')
+
+
+            buildConfigField('String', 'banner_home_id1', '""')
+            buildConfigField('String', 'banner_home_id2', '""')
+            buildConfigField('String', 'banner_home_id3', '""')
+
+            buildConfigField('String', 'native_info2_id1', '""')
+            buildConfigField('String', 'native_info2_id2', '""')
+            buildConfigField('String', 'native_info2_id3', '""')
+
+            buildConfigField('String', 'native_history_id1', '""')
+            buildConfigField('String', 'native_history_id2', '""')
+            buildConfigField('String', 'native_history_id3', '""')
+
+            buildConfigField('String', 'native_languages_id1', '""')
+            buildConfigField('String', 'native_languages_id2', '""')
+            buildConfigField('String', 'native_languages_id3', '""')
+
+            buildConfigField('String', 'native_home_id1', '""')
+            buildConfigField('String', 'native_home_id2', '""')
+            buildConfigField('String', 'native_home_id3', '""')
+
+
+            buildConfigField('String', 'inter_home_id1', '""')
+            buildConfigField('String', 'inter_home_id2', '""')
+            buildConfigField('String', 'inter_home_id3', '""')
+
+
+            buildConfigField('String', 'inter_info_detail_id1', '""')
+            buildConfigField('String', 'inter_info_detail_id2', '""')
+            buildConfigField('String', 'inter_info_detail_id3', '""')
+
+
+            buildConfigField('String', 'native_settings_id1', '""')
+            buildConfigField('String', 'native_settings_id2', '""')
+            buildConfigField('String', 'native_settings_id3', '""')
+        }
+        adstest {
+            dimension "ads"
+            buildConfigField('String', 'inter_splash_id1', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_splash_id2', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_splash_id3', '"ca-app-pub-3940256099942544/1033173712"')
+
+            buildConfigField('String', 'open_app_id', '"ca-app-pub-3940256099942544/3419835294"')
+
+            buildConfigField('String', 'native_languages_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_languages_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_languages_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'banner_home_id1', '"ca-app-pub-3940256099942544/6300978111"')
+            buildConfigField('String', 'banner_home_id2', '"ca-app-pub-3940256099942544/6300978111"')
+            buildConfigField('String', 'banner_home_id3', '"ca-app-pub-3940256099942544/6300978111"')
+
+            buildConfigField('String', 'inter_intro_id1', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_intro_id2', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_intro_id3', '"ca-app-pub-3940256099942544/1033173712"')
+
+            buildConfigField('String', 'inter_new_record_id1', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_new_record_id2', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_new_record_id3', '"ca-app-pub-3940256099942544/1033173712"')
+
+
+            buildConfigField('String', 'native_record_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_record_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_record_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'inter_switch_tab_id1', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_switch_tab_id2', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_switch_tab_id3', '"ca-app-pub-3940256099942544/1033173712"')
+
+
+            buildConfigField('String', 'native_settings_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_settings_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_settings_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'native_unit_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_unit_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_unit_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+
+            buildConfigField('String', 'native_info_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_info_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_info_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'native_info_detail_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_info_detail_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_info_detail_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'native_target_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_target_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_target_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'native_history_id1', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_history_id2', '"ca-app-pub-3940256099942544/2247696110"')
+            buildConfigField('String', 'native_history_id3', '"ca-app-pub-3940256099942544/2247696110"')
+
+            buildConfigField('String', 'inter_info_back_id1', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_info_back_id2', '"ca-app-pub-3940256099942544/1033173712"')
+            buildConfigField('String', 'inter_info_back_id3', '"ca-app-pub-3940256099942544/1033173712"')
+        }
+        adsreal {
+            dimension "ads"
+            buildConfigField('String', 'inter_splash_id1', '"ca-app-pub-6256074067607531/9628402373"')
+            buildConfigField('String', 'inter_splash_id2', '"ca-app-pub-6256074067607531/3282485879"')
+            buildConfigField('String', 'inter_splash_id3', '"ca-app-pub-6256074067607531/4100743521"')
+
+            buildConfigField('String', 'open_app_id', '"ca-app-pub-6256074067607531/8023407162"')
+
+            buildConfigField('String', 'native_languages_id1', '"ca-app-pub-6256074067607531/5397243823"')
+            buildConfigField('String', 'native_languages_id2', '"ca-app-pub-6256074067607531/2771080485"')
+            buildConfigField('String', 'native_languages_id3', '"ca-app-pub-6256074067607531/3965012155"')
+
+            buildConfigField('String', 'banner_home_id1', '"ca-app-pub-6256074067607531/2651930485"')
+            buildConfigField('String', 'banner_home_id2', '"ca-app-pub-6256074067607531/7831835475"')
+            buildConfigField('String', 'banner_home_id3', '"ca-app-pub-6256074067607531/1973004131"')
+
+            buildConfigField('String', 'inter_intro_id1', '"ca-app-pub-6256074067607531/7712685472"')
+            buildConfigField('String', 'inter_intro_id2', '"ca-app-pub-6256074067607531/5222253501"')
+            buildConfigField('String', 'inter_intro_id3', '"ca-app-pub-6256074067607531/7033759121"')
+
+            buildConfigField('String', 'inter_new_record_id1', '"ca-app-pub-6256074067607531/2596090160"')
+            buildConfigField('String', 'inter_new_record_id2', '"ca-app-pub-6256074067607531/3094514114"')
+            buildConfigField('String', 'inter_new_record_id3', '"ca-app-pub-6256074067607531/1749912353"')
+
+
+            buildConfigField('String', 'native_record_id1', '"ca-app-pub-6256074067607531/8969926828"')
+            buildConfigField('String', 'native_record_id2', '"ca-app-pub-6256074067607531/3581868778"')
+            buildConfigField('String', 'native_record_id3', '"ca-app-pub-6256074067607531/7469142893"')
+
+            buildConfigField('String', 'inter_switch_tab_id1', '"ca-app-pub-6256074067607531/8642623760"')
+            buildConfigField('String', 'inter_switch_tab_id2', '"ca-app-pub-6256074067607531/2704450116"')
+            buildConfigField('String', 'inter_switch_tab_id3', '"ca-app-pub-6256074067607531/1391368440"')
+
+
+            buildConfigField('String', 'native_settings_id1', '"ca-app-pub-6256074067607531/2404518475"')
+            buildConfigField('String', 'native_settings_id2', '"ca-app-pub-6256074067607531/3529897883"')
+            buildConfigField('String', 'native_settings_id3', '"ca-app-pub-6256074067607531/2216816216"')
+
+            buildConfigField('String', 'native_unit_id1', '"ca-app-pub-6256074067607531/9903734540"')
+            buildConfigField('String', 'native_unit_id2', '"ca-app-pub-6256074067607531/6842187437"')
+            buildConfigField('String', 'native_unit_id3', '"ca-app-pub-6256074067607531/8590652871"')
+
+
+            buildConfigField('String', 'native_info_id1', '"ca-app-pub-6256074067607531/7277571203"')
+            buildConfigField('String', 'native_info_id2', '"ca-app-pub-6256074067607531/5529105767"')
+            buildConfigField('String', 'native_info_id3', '"ca-app-pub-6256074067607531/5964489537"')
+
+            buildConfigField('String', 'native_info_detail_id1', '"ca-app-pub-6256074067607531/1199796759"')
+            buildConfigField('String', 'native_info_detail_id2', '"ca-app-pub-6256074067607531/8067908692"')
+            buildConfigField('String', 'native_info_detail_id3', '"ca-app-pub-6256074067607531/4128663684"')
+
+            buildConfigField('String', 'native_target_id1', '"ca-app-pub-6256074067607531/5306013987"')
+            buildConfigField('String', 'native_target_id2', '"ca-app-pub-6256074067607531/7772125726"')
+            buildConfigField('String', 'native_target_id3', '"ca-app-pub-6256074067607531/2276256460"')
+
+            buildConfigField('String', 'native_history_id1', '"ca-app-pub-6256074067607531/7337011458"')
+            buildConfigField('String', 'native_history_id2', '"ca-app-pub-6256074067607531/7517793098"')
+            buildConfigField('String', 'native_history_id3', '"ca-app-pub-6256074067607531/7537974390"')
+
+            buildConfigField('String', 'inter_info_back_id1', '"ca-app-pub-6256074067607531/6235682773"')
+            buildConfigField('String', 'inter_info_back_id2', '"ca-app-pub-6256074067607531/2185026628"')
+            buildConfigField('String', 'inter_info_back_id3', '"ca-app-pub-6256074067607531/9983356095"')
+        }
+    }
+}
+
+
+dependencies {
+    implementation project(":libads")
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    def room_version = "2.4.3"
+    def lifecycle_version = "2.6.0-alpha01"
+    def lottieVersion = "3.4.0"
+    def nav_version = "2.4.2"
+    def coroutines_version = '1.5.2'
+
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    //viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    //livedata
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    //Gson
+    implementation 'com.google.code.gson:gson:2.9.1'
+    //ssp, sdp
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    //lotties
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    //navigation components
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+    // coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.42")
+    kapt("com.google.dagger:hilt-android-compiler:2.42")
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //dot
+    implementation("com.tbuonomo:dotsindicator:4.3")
+    implementation 'com.github.zhpanvip:viewpagerindicator:1.2.2'
+    //flex lau lam roi toi moi dung
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    //Ads
+
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.6.0")
+
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+
+    implementation "com.google.android.datatransport:transport-runtime:3.1.8"
+    //FIREBASE
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.5'
+    implementation 'com.google.firebase:firebase-analytics:21.2.0'
+
+    implementation 'com.google.ads.mediation:applovin:11.7.1.0'
+    implementation 'com.google.ads.mediation:facebook:6.12.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+    implementation 'com.google.ads.mediation:vungle:6.12.1.0'
+    implementation 'com.google.ads.mediation:pangle:5.0.0.6.0'
+
+
+/*Adjust tracking*/
+    implementation 'com.adjust.sdk:adjust-android:4.33.0'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+// Add the following if you are using the Adjust SDK inside web views on your app
+    implementation 'com.adjust.sdk:adjust-android-webbridge:4.33.0'
+}
+
+repositories {
+    mavenCentral()
+}
