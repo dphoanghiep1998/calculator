@@ -69,7 +69,7 @@
     </item>
     <item>
         <shape >
-            <solid android:color="@color/neutral_01"/>
+            <solid android:color="@color/primary"/>
             <corners android:radius="@dimen/_6sdp"/>
         </shape>
     </item>

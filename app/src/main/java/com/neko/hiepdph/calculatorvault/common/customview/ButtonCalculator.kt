@@ -19,7 +19,8 @@ class ButtonCalculator @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val binding: ItemCalculatorBinding
     private var textButton: String? = null
-    private var srcImage: Drawable? = null
+    private var srcImage: Int = 0
+    private var special: Boolean = false
 
     init {
         binding = ItemCalculatorBinding.inflate(LayoutInflater.from(context), this, false)
@@ -29,11 +30,10 @@ class ButtonCalculator @JvmOverloads constructor(
         } catch (e: Exception) {
             null
         }
-        srcImage = try {
-            typedArray.getDrawable(R.styleable.ButtonCalculator_src)
-        } catch (e: Exception) {
-            null
-        }
+        srcImage = typedArray.getResourceId(R.styleable.ButtonCalculator_src,0)
+
+        special = typedArray.getBoolean(R.styleable.ButtonCalculator_special, false)
+
         initView()
         addView(binding.root)
         typedArray.recycle()
@@ -47,11 +47,17 @@ class ButtonCalculator @JvmOverloads constructor(
             binding.tvButton.text = textButton
         }
 
-        if (srcImage == null) {
+        if (srcImage == 0) {
             binding.imvButton.hide()
         } else {
             binding.imvButton.show()
-            binding.imvButton.setImageDrawable(srcImage)
+            binding.imvButton.setImageResource(srcImage)
+        }
+
+        if(special){
+            binding.root.setBackgroundResource(R.drawable.bg_item_calculator_special)
+        }else{
+            binding.root.setBackgroundResource(R.drawable.bg_item_calculator_normal)
         }
     }
 }
