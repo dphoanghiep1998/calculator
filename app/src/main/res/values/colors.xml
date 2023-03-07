@@ -8,32 +8,43 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="primary_01">#E31C3D</color>
-    <color name="primary_02">#FFD0D8</color>
-    <color name="primary_03">#FFEEEF</color>
+    <color name="primary">#29BBCF</color>
+    <color name="secondary_01">#29BBCF1F</color>
+    <color name="secondary_02">#356182</color>
+
+    <color name="gradient_01">#26D0CE</color>
+    <color name="gradient_02">#1A2980</color>
 
     <color name="blur">#80101419</color>
 
-    <color name="main_00">#000000</color>
-    <color name="main_01">#292929</color>
-    <color name="main_02">#8E8E8E</color>
-    <color name="main_03">#BFBFBF</color>
-    <color name="main_04">#E3E3E3</color>
-    <color name="main_05">#FFFFFF</color>
+    <color name="neutral_01">#FFFFFF</color>
+    <color name="neutral_02">#FAFAFA</color>
+    <color name="neutral_03">#D4DAE8</color>
+    <color name="neutral_04">#B6B9CD</color>
+    <color name="neutral_05">#7C7E8B</color>
+    <color name="neutral_06">#3F455D</color>
+    <color name="neutral_07">#01355A</color>
 
-    <color name="sugar_01">#2079EF</color>
-    <color name="sugar_02">#06C88C</color>
-    <color name="sugar_03">#FFBE40</color>
-    <color name="sugar_04">#CC0425</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="theme_default">#29BBCF</color>
+    <color name="theme_01">#EA1E63</color>
+    <color name="theme_02">#FA729A</color>
+    <color name="theme_03">#9D29B2</color>
+    <color name="theme_04">#673BB6</color>
+    <color name="theme_05">#362075</color>
+    <color name="theme_06">#3F51B5</color>
+    <color name="theme_07">#2196F5</color>
+    <color name="theme_08">#029688</color>
+    <color name="theme_09">#4CB050</color>
+    <color name="theme_10">#CBDC38</color>
+    <color name="theme_11">#FFEC33</color>
+    <color name="theme_12">#FF9700</color>
+    <color name="theme_13">#FE5723</color>
+    <color name="theme_14">#795549</color>
+    <color name="theme_15">#607D8B</color>
+    <color name="theme_16">#000000</color>
 
-    <color name="info_tint_1">#CCE7FF</color>
-    <color name="info_tint_2">#FFE3E7</color>
-    <color name="info_tint_3">#E7FFFA</color>
-    <color name="info_tint_4">#FFF8E8</color>
 
 
-    <color name="mtrl_textinput_default_box_stroke_color">@color/main_03</color>
 
 
 </resources>

@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.share_preference.AppSharePreference
@@ -44,6 +45,9 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
         )
         val builder = NotificationCompat.Builder(context, Constant.CHANNEL_ID)
         builder.setStyle(NotificationCompat.DecoratedCustomViewStyle()).setContentTitle("Lmao")
+            .setSmallIcon(
+                R.drawable.ic_launcher_background
+            )
 //            .setCustomContentView(remoteViews)
 //            .setAutoCancel(true)
 //            .setShowWhen(true)
@@ -58,6 +62,8 @@ class NotificationWorker(val context: Context, params: WorkerParameters) : Worke
         am.notify(numOfNotify, builder.build())
         numOfNotify -= 1
         AppSharePreference.INSTANCE.saveNumNotify(numOfNotify)
+
         return Result.success()
     }
+
 }

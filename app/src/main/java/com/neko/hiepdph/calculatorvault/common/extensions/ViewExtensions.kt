@@ -1,4 +1,4 @@
-package com.neko.hiepdph.calculatorvault.common.extensions
+package com.neko.hiepdph.magic.extension
 
 import android.os.SystemClock
 import android.view.View
@@ -14,4 +14,12 @@ fun View.clickWithDebounce(debounceTime: Long = 400L, action: () -> Unit) {
             lastClickTime = SystemClock.elapsedRealtime()
         }
     })
+}
+
+fun View.hide() {
+    this.visibility = View.GONE
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
 }

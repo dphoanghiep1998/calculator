@@ -63,8 +63,8 @@ class CustomApplication : Application(), Application.ActivityLifecycleCallbacks,
     }
 
     private fun initApplovinMediation() {
-        AppLovinSdk.getInstance(this).mediationProvider = AppLovinMediationProvider.MAX
-        AppLovinSdk.getInstance(this).initializeSdk {}
+//        AppLovinSdk.getInstance(this).mediationProvider = AppLovinMediationProvider.MAX
+//        AppLovinSdk.getInstance(this).initializeSdk {}
     }
 
     private fun initAdjust() {

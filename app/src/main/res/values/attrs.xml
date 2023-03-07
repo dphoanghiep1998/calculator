@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ButtonCalculator">
+        <attr name="src" format="reference|color" />
+        <attr name="buttonText" format="string" />
+    </declare-styleable>
+</resources>

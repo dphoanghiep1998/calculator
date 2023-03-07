@@ -7,50 +7,45 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object NotificationMain {
-    fun scheduleDailyNotification(context: Context){
+    fun scheduleDailyNotification(context: Context) {
+        val calendarCurrent = Calendar.getInstance()
         val calendarAM = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, 7)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
-
-        // Create a calendar object and set the time to 7 PM
         val calendarPM = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
             set(Calendar.HOUR_OF_DAY, 19)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
-
-        // If the current time is after 7 PM, set the calendar object to tomorrow
-        if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 19) {
-            calendarAM.add(Calendar.DAY_OF_MONTH, 1)
-            calendarPM.add(Calendar.DAY_OF_MONTH, 1)
+        val timeDelay = when {
+            calendarCurrent.timeInMillis <= calendarAM.timeInMillis -> calendarAM.timeInMillis - calendarCurrent.timeInMillis
+            calendarCurrent.timeInMillis > calendarAM.timeInMillis && calendarCurrent.timeInMillis <= calendarPM.timeInMillis -> calendarPM.timeInMillis - calendarCurrent.timeInMillis
+            else -> {
+                calendarAM.add(Calendar.DAY_OF_YEAR, 1)
+                calendarAM.timeInMillis - calendarCurrent.timeInMillis
+            }
         }
-        val constraint = Constraints.Builder().setRequiredNetworkType(NetworkType.NOT_REQUIRED).build()
 
-        val notificationWorkRequestAM = OneTimeWorkRequest.Builder(NotificationWorker::class.java)
-            .setInitialDelay(calendarAM.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-            .setConstraints(constraint)
-            .build()
 
-        val notificationWorkRequestPM =  OneTimeWorkRequest.Builder(NotificationWorker::class.java)
-            .setInitialDelay(calendarPM.timeInMillis - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-            .setConstraints(constraint)
-            .build()
+        val constraint =
+            Constraints.Builder().setRequiredNetworkType(NetworkType.NOT_REQUIRED).build()
 
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            Constant.NOTI_EVERYDAY_MORNING,
-            ExistingWorkPolicy.REPLACE,
-            notificationWorkRequestAM
-        )
+        val notificationWorkRequest =
+            OneTimeWorkRequest.Builder(NotificationWorker::class.java).setInitialDelay(
+                timeDelay, TimeUnit.MILLISECONDS
+            ).setConstraints(constraint).build()
 
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            Constant.NOTI_EVERYDAY_EVENING,
-            ExistingWorkPolicy.REPLACE,
-            notificationWorkRequestPM
-        )
+        val notificationWorkRequest2 =
+            PeriodicWorkRequest.Builder(NotificationWorker::class.java, 12, TimeUnit.HOURS)
+                .setInitialDelay(
+                    timeDelay, TimeUnit.MILLISECONDS
+                ).setConstraints(constraint).build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(Constant.NOTI_EVERYDAY,ExistingPeriodicWorkPolicy.REPLACE,notificationWorkRequest2)
     }
 
 }
