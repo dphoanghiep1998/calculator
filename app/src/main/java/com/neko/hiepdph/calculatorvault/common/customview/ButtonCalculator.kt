@@ -21,6 +21,7 @@ class ButtonCalculator @JvmOverloads constructor(
     private var textButton: String? = null
     private var srcImage: Int = 0
     private var special: Boolean = false
+    private var expand: Boolean = false
 
     init {
         binding = ItemCalculatorBinding.inflate(LayoutInflater.from(context), this, false)
@@ -30,9 +31,11 @@ class ButtonCalculator @JvmOverloads constructor(
         } catch (e: Exception) {
             null
         }
-        srcImage = typedArray.getResourceId(R.styleable.ButtonCalculator_src,0)
+        srcImage = typedArray.getResourceId(R.styleable.ButtonCalculator_src, 0)
 
         special = typedArray.getBoolean(R.styleable.ButtonCalculator_special, false)
+
+        expand = typedArray.getBoolean(R.styleable.ButtonCalculator_expand, false)
 
         initView()
         addView(binding.root)
@@ -54,10 +57,15 @@ class ButtonCalculator @JvmOverloads constructor(
             binding.imvButton.setImageResource(srcImage)
         }
 
-        if(special){
+        if (special) {
             binding.root.setBackgroundResource(R.drawable.bg_item_calculator_special)
-        }else{
+        } else {
             binding.root.setBackgroundResource(R.drawable.bg_item_calculator_normal)
+        }
+
+        if(expand){
+            binding.root.background = null
+            binding.tvButton.setTextColor(context.getColor(R.color.neutral_05))
         }
     }
 }

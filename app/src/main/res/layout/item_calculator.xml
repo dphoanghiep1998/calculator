@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imv_button"
-        android:layout_width="@dimen/_20sdp"
-        android:layout_height="@dimen/_20sdp"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/neutral_07"
         android:textSize="@dimen/_26sdp"
+        android:includeFontPadding="false"
         android:fontFamily="@font/app_font_400"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
