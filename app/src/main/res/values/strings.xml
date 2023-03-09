@@ -57,4 +57,9 @@
     <string name="files">Files</string>
     <string name="list">List</string>
     <string name="sort">Sort</string>
+    <string name="delete">Delete</string>
+    <string name="delete_instruction">Are you sure to delete the selected picture %d?</string>
+    <string name="yes">Yes</string>
+    <string name="unlock">Unlock</string>
+    <string name="unlock_instruction">Are you sure to unlock the selected picture ?</string>
 </resources>

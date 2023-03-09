@@ -38,6 +38,18 @@ class FragmentHome : Fragment() {
         binding.imvOption.clickWithDebounce {
             popupWindow.showAsDropDown(binding.imvOption, 0, 0)
         }
+        binding.containerPictures.clickWithDebounce {
+
+        }
+        binding.containerVideos.clickWithDebounce {
+
+        }
+        binding.containerAudios.clickWithDebounce {
+
+        }
+        binding.containerFiles.clickWithDebounce {
+
+        }
     }
 
     private fun initPopupWindow() {
@@ -45,19 +57,8 @@ class FragmentHome : Fragment() {
             (requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?)!!
         val bindingLayout = LayoutMenuOptionBinding.inflate(inflater, null, false)
 
-        val width = if (buildMinVersionR()) {
-            val windowMetrics: WindowMetrics = requireActivity().windowManager.currentWindowMetrics
-            val insets: Insets =
-                windowMetrics.windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
-            windowMetrics.bounds.width() - insets.left - insets.right
-
-        } else {
-            val displayMetrics = DisplayMetrics()
-            requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
-            displayMetrics.widthPixels
-        }
         popupWindow =
-            PopupWindow(bindingLayout.root, width, LinearLayout.LayoutParams.WRAP_CONTENT, true)
+            PopupWindow(bindingLayout.root, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true)
         bindingLayout.root.clickWithDebounce {
             popupWindow.dismiss()
         }
