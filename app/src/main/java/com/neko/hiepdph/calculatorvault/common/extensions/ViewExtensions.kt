@@ -1,4 +1,4 @@
-package com.neko.hiepdph.magic.extension
+package com.neko.hiepdph.calculatorvault.common.extensions
 
 import android.os.SystemClock
 import android.view.View

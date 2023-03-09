@@ -3,7 +3,7 @@
 
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">@font/app_font_400</item>
-        <item name="android:textColor">@color/neutral_05</item>
+        <item name="android:textColor">@color/neutral_06</item>
         <item name="android:textSize">@dimen/_14sdp</item>
     </style>
 

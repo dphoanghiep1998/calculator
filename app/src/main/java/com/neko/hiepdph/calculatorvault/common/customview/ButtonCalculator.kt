@@ -1,18 +1,14 @@
 package com.neko.hiepdph.calculatorvault.common.customview
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.databinding.ItemCalculatorBinding
-import com.neko.hiepdph.magic.extension.hide
-import com.neko.hiepdph.magic.extension.show
+import com.neko.hiepdph.calculatorvault.common.extensions.hide
+import com.neko.hiepdph.calculatorvault.common.extensions.show
 
-interface IButtonCalculator {
-
-}
 
 class ButtonCalculator @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -63,9 +59,12 @@ class ButtonCalculator @JvmOverloads constructor(
             binding.root.setBackgroundResource(R.drawable.bg_item_calculator_normal)
         }
 
-        if(expand){
+        if (expand) {
             binding.root.background = null
             binding.tvButton.setTextColor(context.getColor(R.color.neutral_05))
+            if (srcImage != 0) {
+                binding.imvButton.setColorFilter(context.getColor(R.color.neutral_05));
+            }
         }
     }
 }

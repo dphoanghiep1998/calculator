@@ -62,7 +62,6 @@ android {
     }
 
     buildTypes {
-
         debug {
             def addConstant = { constantName, constantValue ->
                 manifestPlaceholders += [(constantName): constantValue]
@@ -226,66 +225,6 @@ android {
         }
         adsreal {
             dimension "ads"
-            buildConfigField('String', 'inter_splash_id1', '"ca-app-pub-6256074067607531/9628402373"')
-            buildConfigField('String', 'inter_splash_id2', '"ca-app-pub-6256074067607531/3282485879"')
-            buildConfigField('String', 'inter_splash_id3', '"ca-app-pub-6256074067607531/4100743521"')
-
-            buildConfigField('String', 'open_app_id', '"ca-app-pub-6256074067607531/8023407162"')
-
-            buildConfigField('String', 'native_languages_id1', '"ca-app-pub-6256074067607531/5397243823"')
-            buildConfigField('String', 'native_languages_id2', '"ca-app-pub-6256074067607531/2771080485"')
-            buildConfigField('String', 'native_languages_id3', '"ca-app-pub-6256074067607531/3965012155"')
-
-            buildConfigField('String', 'banner_home_id1', '"ca-app-pub-6256074067607531/2651930485"')
-            buildConfigField('String', 'banner_home_id2', '"ca-app-pub-6256074067607531/7831835475"')
-            buildConfigField('String', 'banner_home_id3', '"ca-app-pub-6256074067607531/1973004131"')
-
-            buildConfigField('String', 'inter_intro_id1', '"ca-app-pub-6256074067607531/7712685472"')
-            buildConfigField('String', 'inter_intro_id2', '"ca-app-pub-6256074067607531/5222253501"')
-            buildConfigField('String', 'inter_intro_id3', '"ca-app-pub-6256074067607531/7033759121"')
-
-            buildConfigField('String', 'inter_new_record_id1', '"ca-app-pub-6256074067607531/2596090160"')
-            buildConfigField('String', 'inter_new_record_id2', '"ca-app-pub-6256074067607531/3094514114"')
-            buildConfigField('String', 'inter_new_record_id3', '"ca-app-pub-6256074067607531/1749912353"')
-
-
-            buildConfigField('String', 'native_record_id1', '"ca-app-pub-6256074067607531/8969926828"')
-            buildConfigField('String', 'native_record_id2', '"ca-app-pub-6256074067607531/3581868778"')
-            buildConfigField('String', 'native_record_id3', '"ca-app-pub-6256074067607531/7469142893"')
-
-            buildConfigField('String', 'inter_switch_tab_id1', '"ca-app-pub-6256074067607531/8642623760"')
-            buildConfigField('String', 'inter_switch_tab_id2', '"ca-app-pub-6256074067607531/2704450116"')
-            buildConfigField('String', 'inter_switch_tab_id3', '"ca-app-pub-6256074067607531/1391368440"')
-
-
-            buildConfigField('String', 'native_settings_id1', '"ca-app-pub-6256074067607531/2404518475"')
-            buildConfigField('String', 'native_settings_id2', '"ca-app-pub-6256074067607531/3529897883"')
-            buildConfigField('String', 'native_settings_id3', '"ca-app-pub-6256074067607531/2216816216"')
-
-            buildConfigField('String', 'native_unit_id1', '"ca-app-pub-6256074067607531/9903734540"')
-            buildConfigField('String', 'native_unit_id2', '"ca-app-pub-6256074067607531/6842187437"')
-            buildConfigField('String', 'native_unit_id3', '"ca-app-pub-6256074067607531/8590652871"')
-
-
-            buildConfigField('String', 'native_info_id1', '"ca-app-pub-6256074067607531/7277571203"')
-            buildConfigField('String', 'native_info_id2', '"ca-app-pub-6256074067607531/5529105767"')
-            buildConfigField('String', 'native_info_id3', '"ca-app-pub-6256074067607531/5964489537"')
-
-            buildConfigField('String', 'native_info_detail_id1', '"ca-app-pub-6256074067607531/1199796759"')
-            buildConfigField('String', 'native_info_detail_id2', '"ca-app-pub-6256074067607531/8067908692"')
-            buildConfigField('String', 'native_info_detail_id3', '"ca-app-pub-6256074067607531/4128663684"')
-
-            buildConfigField('String', 'native_target_id1', '"ca-app-pub-6256074067607531/5306013987"')
-            buildConfigField('String', 'native_target_id2', '"ca-app-pub-6256074067607531/7772125726"')
-            buildConfigField('String', 'native_target_id3', '"ca-app-pub-6256074067607531/2276256460"')
-
-            buildConfigField('String', 'native_history_id1', '"ca-app-pub-6256074067607531/7337011458"')
-            buildConfigField('String', 'native_history_id2', '"ca-app-pub-6256074067607531/7517793098"')
-            buildConfigField('String', 'native_history_id3', '"ca-app-pub-6256074067607531/7537974390"')
-
-            buildConfigField('String', 'inter_info_back_id1', '"ca-app-pub-6256074067607531/6235682773"')
-            buildConfigField('String', 'inter_info_back_id2', '"ca-app-pub-6256074067607531/2185026628"')
-            buildConfigField('String', 'inter_info_back_id3', '"ca-app-pub-6256074067607531/9983356095"')
         }
     }
 }
