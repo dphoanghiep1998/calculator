@@ -27,41 +27,47 @@
             android:layout_width="@dimen/_44sdp"
             android:layout_height="@dimen/_44sdp"
             android:padding="@dimen/_12sdp"
-            android:src="@drawable/ic_delete"
+            android:src="@drawable/ic_new_folder_dark"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/neutral_04" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
-            android:textColor="@color/neutral_04"
+            android:fontFamily="@font/app_font_500"
+            android:text="@string/new_folder"
+            android:textColor="@color/neutral_06"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintBottom_toBottomOf="@id/imv_title"
             app:layout_constraintStart_toEndOf="@id/imv_title"
             app:layout_constraintTop_toTopOf="@id/imv_title" />
 
 
-        <TextView
-            android:id="@+id/tv_instruction"
+        <EditText
+            android:id="@+id/edt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginHorizontal="@dimen/_12sdp"
-            android:textColor="@color/neutral_04"
+            android:background="@drawable/bg_item_calculator_normal"
+            android:hint="@string/enter_name"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:paddingVertical="@dimen/_12sdp"
+            android:maxLength="20"
+            android:textColor="@color/neutral_06"
+            android:textColorHint="@color/neutral_04"
             android:textSize="@dimen/_12sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imv_title"/>
+            app:layout_constraintTop_toBottomOf="@id/imv_title" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_18sdp"
-            app:layout_constraintTop_toBottomOf="@id/tv_instruction">
+            app:layout_constraintTop_toBottomOf="@id/edt_name">
 
             <TextView
                 android:id="@+id/btn_cancel"
@@ -75,6 +81,7 @@
                 android:paddingVertical="@dimen/_8sdp"
                 android:textColor="@color/neutral_01"
                 android:textSize="@dimen/_16sdp"
+                android:text="@string/cancel"
                 app:layout_constraintEnd_toStartOf="@id/btn_confirm"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -92,6 +99,7 @@
                 android:paddingVertical="@dimen/_8sdp"
                 android:textColor="@color/neutral_01"
                 android:textSize="@dimen/_16sdp"
+                android:text="@string/custom_ok"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_cancel"
                 app:layout_constraintTop_toTopOf="parent" />

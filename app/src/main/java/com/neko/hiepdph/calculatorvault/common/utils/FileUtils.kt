@@ -31,4 +31,31 @@ object FileUtils {
 
         return intent
     }
+
+    fun createSecretFile(parentDir: File, name: String) {
+        try {
+            val folder = File(parentDir, name)
+            if (!folder.exists()) {
+                folder.mkdir()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun getFoldersInDirectory(dir: String): List<File> {
+        return try {
+            val listOfFolder = mutableListOf<File>()
+            val directory = File(dir)
+            val files = directory.listFiles { file -> file.isDirectory }
+            for (file in files) {
+                listOfFolder.add(file)
+            }
+            listOfFolder
+        } catch (e: Exception) {
+            mutableListOf()
+        }
+
+    }
 }

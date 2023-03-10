@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -13,14 +14,16 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-
+import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.utils.buildMinVersionM
 import com.gianghv.libads.*
+import com.google.android.material.snackbar.Snackbar
 
 enum class NativeType {
     HISTORY, INFORMATION, SETTINGS, LANGUAGE, RECORD, DETAIL_INFORMATION, UNIT, TARGET
@@ -38,6 +41,27 @@ fun Fragment.navigateToPage(id: Int, actionId: Int, bundle: Bundle? = null) {
         )
         return
     }
+}
+
+fun Fragment.getColor(res:Int):Int{
+    return requireContext().getColor(res)
+}
+
+@SuppressLint("ResourceAsColor")
+fun Fragment.showSnackBar(text: String,color:Int) {
+    val snackBar: Snackbar = Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT)
+    snackBar.setAction("Action", null)
+    snackBar.setBackgroundTint(color);
+    val sbView = snackBar.view
+    val textView =
+        sbView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+    val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_back)
+    drawable?.setTint(ContextCompat.getColor(requireContext(), R.color.white))
+    textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+    textView.compoundDrawablePadding =
+        resources.getDimensionPixelOffset(R.dimen.snackbar_icon_padding)
+    snackBar.show()
+
 }
 
 fun Fragment.openLink(strUri: String?) {

@@ -11,41 +11,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
+import com.neko.hiepdph.calculatorvault.common.extensions.getColor
+import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
+import com.neko.hiepdph.calculatorvault.databinding.DialogAddFolderBinding
 import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
 
 
-enum class DialogConfirmType(
-    val title: Int,
-    val content: Int,
-    val imageRes: Int,
-    val negativeText: Int,
-    val positiveText: Int
-) {
-    DELETE(
-        R.string.delete,
-        R.string.delete_instruction,
-        R.drawable.ic_delete,
-        R.string.cancel,
-        R.string.yes
-    ),
-    UNLOCK(
-        R.string.unlock,
-        R.string.unlock_instruction,
-        R.drawable.ic_unlock,
-        R.string.cancel,
-        R.string.yes
-    ),
-
+interface AddNewFolderDialogCallBack {
+    fun onPositiveClicked(name: String)
 }
 
-interface ConfirmDialogCallBack {
-    fun onPositiveClicked()
-}
-
-class DialogConfirm(
-    private val callBack: ConfirmDialogCallBack, private val dialogType: DialogConfirmType,val type:String
+class DialogAddNewFolder(
+    private val callBack: AddNewFolderDialogCallBack
 ) : DialogFragment() {
-    private lateinit var binding: DialogConfirmBinding
+    private lateinit var binding: DialogAddFolderBinding
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -68,7 +47,7 @@ class DialogConfirm(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogConfirmBinding.inflate(layoutInflater)
+        binding = DialogAddFolderBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -79,18 +58,17 @@ class DialogConfirm(
     }
 
     private fun initView() {
-        binding.imvTitle.setImageResource(dialogType.imageRes)
-        binding.tvTitle.text = requireContext().getText(dialogType.title)
-        binding.tvInstruction.text = requireContext().getString(dialogType.content,type)
-        binding.btnCancel.text = requireContext().getText(dialogType.negativeText)
-        binding.btnConfirm.text = requireContext().getText(dialogType.positiveText)
         initButton()
     }
 
     private fun initButton() {
         binding.btnConfirm.clickWithDebounce {
-            callBack.onPositiveClicked()
-            dismiss()
+            if (binding.edtName.text.isNotBlank()) {
+                callBack.onPositiveClicked(binding.edtName.text.toString())
+                dismiss()
+            } else {
+                showSnackBar(getString(R.string.invalid_folder_name), getColor(R.color.theme_01))
+            }
         }
         binding.btnCancel.clickWithDebounce {
             dismiss()

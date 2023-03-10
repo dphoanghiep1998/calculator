@@ -18,5 +18,9 @@
         android:id="@+id/fragmentHome"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.FragmentHome"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentCalculator"
+            app:destination="@id/fragmentCalculator" />
+    </fragment>
 </navigation>
