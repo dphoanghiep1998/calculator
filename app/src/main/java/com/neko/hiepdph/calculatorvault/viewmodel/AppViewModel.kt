@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neko.hiepdph.calculatorvault.common.share_preference.AppSharePreference
 import com.neko.hiepdph.calculatorvault.common.utils.FileUtils
+import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.data.database.model.HistoryModel
 import com.neko.hiepdph.calculatorvault.data.repositories.AppRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,9 +22,9 @@ class AppViewModel @Inject constructor(
     var userActionRate = false
     var shouldShowRate = MutableLiveData(false)
 
-    fun createFolder(parentDir: File, fileName: String) {
+    fun createFolder(parentDir: File, fileName: String,callback:ICreateFile) {
         viewModelScope.launch(Dispatchers.IO) {
-            FileUtils.createSecretFile(parentDir, fileName)
+            FileUtils.createSecretFile(parentDir, fileName,callback)
         }
     }
 

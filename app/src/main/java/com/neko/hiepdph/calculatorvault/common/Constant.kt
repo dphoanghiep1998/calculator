@@ -55,6 +55,8 @@ object Constant {
     const val OPEN_ALARMS_TAB_INTENT_ID = 9996
 
     const val SECRET_KEY = 9996
+    const val DEFAULT_SECRET_PASSWORD = "1234"
+    const val DEFAULT_SECRET_PASSWORD_SUFFIX = "%"
 
 
     const val PICTURE_FOLDER_NAME = "PICTURE_CALCULATOR_VAULT_${SECRET_KEY}"
@@ -63,10 +65,10 @@ object Constant {
     const val DOCUMENTS_FOLDER_NAME = "DOCUMENTS_CALCULATOR_VAULT_${SECRET_KEY}"
 
     const val TYPE_PICTURE = "TYPE_PICTURE"
-    const val TYPE_AUDIOS =  "TYPE_AUDIOS"
-    const val TYPE_VIDEOS =  "TYPE_VIDEOS"
-    const val TYPE_DOCUMENT =  "TYPE_DOCUMENT"
-    const val TYPE_ADD_MORE =  "TYPE_ADD_MORE"
+    const val TYPE_AUDIOS = "TYPE_AUDIOS"
+    const val TYPE_VIDEOS = "TYPE_VIDEOS"
+    const val TYPE_DOCUMENT = "TYPE_DOCUMENT"
+    const val TYPE_ADD_MORE = "TYPE_ADD_MORE"
 
 
 }

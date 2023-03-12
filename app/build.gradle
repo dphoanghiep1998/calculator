@@ -281,6 +281,9 @@ dependencies {
     //flex lau lam roi toi moi dung
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
+    //calculator
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.2.0")
+
     //Ads
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.6.0")

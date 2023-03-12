@@ -4,19 +4,35 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupMenu
+import android.widget.PopupWindow
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeGridLayoutBinding
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeListLayoutBinding
+import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuItemOptionBinding
+import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 
 
-class AdapterFolder : RecyclerView.Adapter<ViewHolder>() {
+class AdapterFolder(
+    context: Context,
+    val onItemPress: () -> Unit,
+    val onRenamePress: (customFolder: CustomFolder) -> Unit,
+    val onDeletePress: (customFolder: CustomFolder) -> Unit
+) : RecyclerView.Adapter<ViewHolder>() {
+    private var popupWindow: PopupWindow? = null
+    private var bindingLayout: LayoutMenuItemOptionBinding? = null
 
     companion object {
         var isSwitchView = false
+    }
+    init {
+        initPopupWindow(context)
     }
 
     private val LIST_ITEM = 0
@@ -34,7 +50,7 @@ class AdapterFolder : RecyclerView.Adapter<ViewHolder>() {
     fun setData(list: List<CustomFolder>) {
         listFolder.clear()
         listFolder.addAll(list.toMutableList())
-        notifyItemRangeChanged(0, listFolder.size)
+       notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -66,6 +82,9 @@ class AdapterFolder : RecyclerView.Adapter<ViewHolder>() {
                         if (customFolder.type == Constant.TYPE_ADD_MORE) View.VISIBLE else View.GONE
                     binding.tvCount.text =
                         customFolder.itemCount.toString() + " " + itemView.context.getString(R.string.item)
+                    binding.imvOption.clickWithDebounce {
+                        showOption(binding.imvOption, customFolder)
+                    }
                 }
             }
             GRID_ITEM -> {
@@ -75,7 +94,9 @@ class AdapterFolder : RecyclerView.Adapter<ViewHolder>() {
                     binding.imvOption.visibility =
                         if (customFolder.type == Constant.TYPE_ADD_MORE) View.VISIBLE else View.GONE
                     binding.tvCount.text = customFolder.itemCount.toString()
-
+                    binding.imvOption.clickWithDebounce {
+                        showOption(binding.imvOption, customFolder)
+                    }
 
                 }
             }
@@ -96,7 +117,35 @@ class AdapterFolder : RecyclerView.Adapter<ViewHolder>() {
             Constant.TYPE_VIDEOS -> R.drawable.ic_item_videos
             Constant.TYPE_AUDIOS -> R.drawable.ic_item_audios
             Constant.TYPE_DOCUMENT -> R.drawable.ic_item_files
-            else -> R.drawable.ic_item_files
+            else -> R.drawable.ic_folder_additional
         }
+    }
+
+    private fun initPopupWindow(context: Context) {
+        val inflater: LayoutInflater =
+            (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?)!!
+        bindingLayout = LayoutMenuItemOptionBinding.inflate(inflater, null, false)
+
+        popupWindow = PopupWindow(
+            bindingLayout?.root,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            true
+        )
+    }
+
+    private fun showOption(view: View, customFolder: CustomFolder) {
+        bindingLayout?.root?.clickWithDebounce {
+            popupWindow?.dismiss()
+        }
+        bindingLayout?.tvDelete?.clickWithDebounce {
+            onDeletePress.invoke(customFolder)
+            popupWindow?.dismiss()
+        }
+        bindingLayout?.tvRename?.clickWithDebounce {
+            onRenamePress.invoke(customFolder)
+            popupWindow?.dismiss()
+        }
+        popupWindow?.showAsDropDown(view)
     }
 }

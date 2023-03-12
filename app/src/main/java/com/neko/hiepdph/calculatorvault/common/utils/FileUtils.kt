@@ -7,6 +7,16 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 
+interface IDeleteFile{
+   fun onSuccess()
+   fun onFailed()
+
+}
+
+interface ICreateFile{
+    fun onSuccess()
+    fun onFailed()
+}
 object FileUtils {
     fun generateFile(context: Context, fileName: String): File? {
         val csvFile = File(context.filesDir, fileName)
@@ -32,13 +42,17 @@ object FileUtils {
         return intent
     }
 
-    fun createSecretFile(parentDir: File, name: String) {
+    fun createSecretFile(parentDir: File, name: String,callback: ICreateFile) {
         try {
             val folder = File(parentDir, name)
             if (!folder.exists()) {
                 folder.mkdir()
+                callback.onSuccess()
+            }else{
+                callback.onFailed()
             }
         } catch (e: Exception) {
+            callback.onFailed()
             e.printStackTrace()
         }
 
@@ -57,5 +71,20 @@ object FileUtils {
             mutableListOf()
         }
 
+    }
+
+    fun deleteFolderInDirectory(pathFolder:String,callback:IDeleteFile){
+        try{
+            val folder = File(pathFolder)
+            val delete = folder.deleteRecursively()
+            if(delete){
+                callback.onSuccess()
+            }else{
+                callback.onFailed()
+            }
+        }catch (e:Exception){
+            callback.onFailed()
+            e.printStackTrace()
+        }
     }
 }

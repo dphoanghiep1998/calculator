@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.utils.FileUtils
+import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
+import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
 import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +20,16 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor() : ViewModel() {
     var listFolder = MutableLiveData(mutableListOf<CustomFolder>())
 
-    fun createFolder(parentDir: File, fileName: String) {
-        FileUtils.createSecretFile(parentDir, fileName)
+    fun createFolder(parentDir: File, fileName: String,callback: ICreateFile) {
+        viewModelScope.launch (Dispatchers.IO){
+            FileUtils.createSecretFile(parentDir, fileName,callback)
+        }
+    }
+
+    fun deleteFolder(path:String,callback:IDeleteFile){
+        viewModelScope.launch(Dispatchers.IO) {
+            FileUtils.deleteFolderInDirectory(path,callback)
+        }
     }
 
     fun getListFolder(context: Context, parentDir: File) {

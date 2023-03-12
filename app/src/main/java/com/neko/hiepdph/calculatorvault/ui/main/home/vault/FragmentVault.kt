@@ -1,38 +1,33 @@
-package com.neko.hiepdph.calculatorvault.ui.main.home
+package com.neko.hiepdph.calculatorvault.ui.main.home.vault
 
 import android.content.Context
-import android.graphics.Insets
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
-import com.neko.hiepdph.calculatorvault.common.utils.buildMinVersionR
+import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
+import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
+import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
 import com.neko.hiepdph.calculatorvault.databinding.FragmentHomeBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
-import com.neko.hiepdph.calculatorvault.dialog.AddNewFolderDialogCallBack
-import com.neko.hiepdph.calculatorvault.dialog.DialogAddNewFolder
+import com.neko.hiepdph.calculatorvault.dialog.*
 import com.neko.hiepdph.calculatorvault.ui.main.home.adapter.AdapterFolder
-import com.neko.hiepdph.calculatorvault.ui.main.home.adapter.GridSpacingItemDecoration
-import com.neko.hiepdph.calculatorvault.viewmodel.AppViewModel
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class FragmentHome : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+class FragmentVault: Fragment() {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var popupWindow: PopupWindow
     private lateinit var adapter: AdapterFolder
     private val viewModel: HomeViewModel by viewModels()
@@ -40,11 +35,15 @@ class FragmentHome : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
         observeListFile()
-        return binding.root
+        viewModel.getListFolder(requireContext(), requireActivity().filesDir)
     }
 
     private fun observeListFile() {
@@ -53,15 +52,41 @@ class FragmentHome : Fragment() {
         }
     }
 
+
     private fun initView() {
         initRecyclerView()
         initPopupWindow()
         initButton()
-        viewModel.getListFolder(requireContext(), requireActivity().filesDir)
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterFolder()
+        adapter = AdapterFolder(requireContext(), onItemPress = {
+
+        }, onDeletePress = {
+            val dialogConfirm = DialogConfirm(object : ConfirmDialogCallBack {
+                override fun onPositiveClicked() {
+                    val callback = object : IDeleteFile {
+                        override fun onSuccess() {
+                            viewModel.getListFolder(
+                                requireContext(), requireActivity().filesDir
+                            )
+                            showSnackBar(
+                                getString(R.string.delete_success), SnackBarType.SUCCESS
+                            )
+                        }
+
+                        override fun onFailed() {
+                            showSnackBar(getString(R.string.delete_failed), SnackBarType.FAILED)
+                        }
+
+                    }
+                    viewModel.deleteFolder(it.path, callback)
+                }
+            }, DialogConfirmType.DELETE, it.name)
+            dialogConfirm.show(childFragmentManager, dialogConfirm.tag)
+        }, onRenamePress = {
+
+        })
         binding.rcvFolder.adapter = adapter
         if (!AdapterFolder.isSwitchView) {
             val gridLayoutManager = GridLayoutManager(requireContext(), 1)
@@ -79,13 +104,22 @@ class FragmentHome : Fragment() {
             popupWindow.showAsDropDown(binding.imvOption, 0, 0)
         }
         binding.imvCalculator.clickWithDebounce {
-            navigateToPage(R.id.fragmentHome, R.id.action_fragmentHome_to_fragmentCalculator)
         }
         binding.imvNewFolder.clickWithDebounce {
             val dialogAddNewFolder = DialogAddNewFolder(object : AddNewFolderDialogCallBack {
                 override fun onPositiveClicked(name: String) {
-                    viewModel.createFolder(requireActivity().filesDir, name)
-                    viewModel.getListFolder(requireContext(), requireActivity().filesDir)
+                    val callback = object : ICreateFile {
+                        override fun onSuccess() {
+                            showSnackBar(getString(R.string.create_success), SnackBarType.SUCCESS)
+                            viewModel.getListFolder(requireContext(), requireActivity().filesDir)
+                        }
+
+                        override fun onFailed() {
+                            showSnackBar(getString(R.string.create_failed), SnackBarType.FAILED)
+                        }
+
+                    }
+                    viewModel.createFolder(requireActivity().filesDir, name, callback)
                 }
 
             })
@@ -111,8 +145,6 @@ class FragmentHome : Fragment() {
             popupWindow.dismiss()
         }
         if (!AdapterFolder.isSwitchView) {
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-            binding.rcvFolder.layoutManager = gridLayoutManager
             bindingLayout.tvList.setText(R.string.grid)
             bindingLayout.tvList.setCompoundDrawablesWithIntrinsicBounds(
                 ContextCompat.getDrawable(
@@ -120,8 +152,6 @@ class FragmentHome : Fragment() {
                 ), null, null, null
             )
         } else {
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
-            binding.rcvFolder.layoutManager = gridLayoutManager
             bindingLayout.tvList.setText(R.string.list)
             bindingLayout.tvList.setCompoundDrawablesWithIntrinsicBounds(
                 ContextCompat.getDrawable(
@@ -129,6 +159,7 @@ class FragmentHome : Fragment() {
                 ), null, null, null
             )
         }
+
         bindingLayout.tvList.clickWithDebounce {
             AdapterFolder.isSwitchView = !AdapterFolder.isSwitchView
             if (!AdapterFolder.isSwitchView) {
@@ -159,6 +190,11 @@ class FragmentHome : Fragment() {
             val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             binding.rcvFolder.layoutManager = gridLayoutManager
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 

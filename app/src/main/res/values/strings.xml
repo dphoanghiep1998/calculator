@@ -58,7 +58,7 @@
     <string name="list">List</string>
     <string name="sort">Sort</string>
     <string name="delete">Delete</string>
-    <string name="delete_instruction">Are you sure to delete the selected %s ?</string>
+    <string name="delete_instruction">Are you sure to delete %s ?</string>
     <string name="yes">Yes</string>
     <string name="unlock">Unlock</string>
     <string name="unlock_instruction">Are you sure to unlock the selected %s ?</string>
@@ -67,4 +67,21 @@
     <string name="item">item</string>
     <string name="grid">Grid</string>
     <string name="invalid_folder_name">Invalid folder\'s name</string>
+    <string name="rename">Rename</string>
+    <string name="delete_success">Delete success!</string>
+    <string name="delete_failed">Delete failed!</string>
+    <string name="create_success">Create success!</string>
+    <string name="create_failed">Create failed</string>
+    <string name="invalid_expression">Invalid expression</string>
+    <string name="browser">Browser</string>
+    <string name="note">Note</string>
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="setting">Setting</string>
+    <string name="language">Language</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="about_us">About Us</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="drawer_text">Calculator - Hide photos</string>
 </resources>

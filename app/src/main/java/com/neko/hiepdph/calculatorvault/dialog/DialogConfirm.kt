@@ -10,6 +10,7 @@ import android.view.Window
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
 
@@ -43,7 +44,7 @@ interface ConfirmDialogCallBack {
 }
 
 class DialogConfirm(
-    private val callBack: ConfirmDialogCallBack, private val dialogType: DialogConfirmType,val type:String
+    private val callBack: ConfirmDialogCallBack, private val dialogType: DialogConfirmType,val name:String
 ) : DialogFragment() {
     private lateinit var binding: DialogConfirmBinding
 
@@ -81,7 +82,7 @@ class DialogConfirm(
     private fun initView() {
         binding.imvTitle.setImageResource(dialogType.imageRes)
         binding.tvTitle.text = requireContext().getText(dialogType.title)
-        binding.tvInstruction.text = requireContext().getString(dialogType.content,type)
+        binding.tvInstruction.text = requireContext().getString(dialogType.content,name)
         binding.btnCancel.text = requireContext().getText(dialogType.negativeText)
         binding.btnConfirm.text = requireContext().getText(dialogType.positiveText)
         initButton()

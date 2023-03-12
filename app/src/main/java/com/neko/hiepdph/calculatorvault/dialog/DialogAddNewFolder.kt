@@ -10,6 +10,7 @@ import android.view.Window
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.common.extensions.getColor
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
@@ -67,7 +68,7 @@ class DialogAddNewFolder(
                 callBack.onPositiveClicked(binding.edtName.text.toString())
                 dismiss()
             } else {
-                showSnackBar(getString(R.string.invalid_folder_name), getColor(R.color.theme_01))
+                showSnackBar(getString(R.string.invalid_folder_name),SnackBarType.FAILED)
             }
         }
         binding.btnCancel.clickWithDebounce {

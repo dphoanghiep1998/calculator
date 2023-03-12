@@ -8,6 +8,9 @@ import kotlin.math.roundToInt
 
 val String.Companion.EMPTY: String get() = ""
 val String.Companion.SPACE_SEPARATOR: String get() = " "
+const val SQRT_SYMBOL = "\u221A"
+const val DIVIDE_SYMBOL = "\u00F7"
+const val PI_SYMBOL = "\u03C0"
 
 fun String.specialTrim(): String =
     this.trim { it <= ' ' }.replace(" +".toRegex(), String.SPACE_SEPARATOR)

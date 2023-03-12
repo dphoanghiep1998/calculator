@@ -69,6 +69,11 @@ class CalculatorMain @JvmOverloads constructor(
         typedArray.recycle()
     }
 
+    companion object {
+        var isChangeFunctionEnabled = false //2nd
+        var isFlexDegEnabled = false //deg
+    }
+
     private fun initView() {
         binding.btnSwitch.setOnClickListener {
             expandState = !expandState
@@ -164,23 +169,41 @@ class CalculatorMain @JvmOverloads constructor(
             callback?.onPressButtonCloseBracket()
         }
         binding.btn2nd.setOnClickListener {
+            isChangeFunctionEnabled = !isChangeFunctionEnabled
+            changeFunction()
             callback?.onPressButton2nd()
         }
         binding.btnFlexDeg.setOnClickListener {
-            callback?.onPressButtonDeg()
-            callback?.onPressButtonRad()
+            isFlexDegEnabled = !isFlexDegEnabled
+            if (!isFlexDegEnabled) {
+                callback?.onPressButtonDeg()
+            } else {
+                callback?.onPressButtonRad()
+            }
         }
         binding.btnFlexTan.setOnClickListener {
-            callback?.onPressButtonTan()
-            callback?.onPressButtonArcTan()
+            if (!isChangeFunctionEnabled) {
+                callback?.onPressButtonTan()
+            } else {
+                callback?.onPressButtonArcTan()
+            }
         }
         binding.btnFlexSin.setOnClickListener {
-            callback?.onPressButtonSin()
-            callback?.onPressButtonArcSin()
+            if (!isChangeFunctionEnabled) {
+                callback?.onPressButtonSin()
+            } else {
+                callback?.onPressButtonArcSin()
+            }
         }
         binding.btnFlexCos.setOnClickListener {
-            callback?.onPressButtonCos()
-            callback?.onPressButtonArcCos()
+            if (!isChangeFunctionEnabled) {
+                callback?.onPressButtonCos()
+            } else {
+                callback?.onPressButtonArcCos()
+            }
+        }
+        binding.btnPercent.setOnClickListener {
+            callback?.onPressButtonPercent()
         }
 
     }
@@ -209,6 +232,26 @@ class CalculatorMain @JvmOverloads constructor(
             btnSwitch.setBackgroundResource(R.drawable.bg_item_calculator_normal)
         }
 
+    }
+
+    private fun changeFunction() {
+        if (isChangeFunctionEnabled) {
+            binding.btnFlexCos.changeText("arccos")
+            binding.btnFlexSin.changeText("arcsin")
+            binding.btnFlexTan.changeText("arctan")
+        } else {
+            binding.btnFlexCos.changeText("cos")
+            binding.btnFlexSin.changeText("sin")
+            binding.btnFlexTan.changeText("tan")
+        }
+    }
+
+    private fun changeFlexDeg() {
+        if (isFlexDegEnabled) {
+            binding.btnFlexDeg.changeText("rad")
+        } else {
+            binding.btnFlexDeg.changeText("deg")
+        }
     }
 
     private fun switchToExpandLayout() {

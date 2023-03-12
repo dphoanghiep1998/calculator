@@ -33,6 +33,10 @@ enum class InterAds {
     SPLASH, INTRO, NEW_RECORD, SWITCH_TAB, DETAIL_INFO
 }
 
+enum class SnackBarType {
+    SUCCESS, FAILED
+}
+
 
 fun Fragment.navigateToPage(id: Int, actionId: Int, bundle: Bundle? = null) {
     if (findNavController().currentDestination?.id == id && isAdded) {
@@ -43,15 +47,19 @@ fun Fragment.navigateToPage(id: Int, actionId: Int, bundle: Bundle? = null) {
     }
 }
 
-fun Fragment.getColor(res:Int):Int{
-    return requireContext().getColor(res)
+fun Fragment.getColor(res: Int): Int {
+    return ContextCompat.getColor(requireContext(),res)
 }
 
 @SuppressLint("ResourceAsColor")
-fun Fragment.showSnackBar(text: String,color:Int) {
+fun Fragment.showSnackBar(text: String, type: SnackBarType) {
     val snackBar: Snackbar = Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT)
     snackBar.setAction("Action", null)
-    snackBar.setBackgroundTint(color);
+    when (type) {
+        SnackBarType.FAILED -> snackBar.setBackgroundTint(getColor(R.color.theme_01))
+        SnackBarType.SUCCESS -> snackBar.setBackgroundTint(getColor(R.color.theme_08))
+
+    }
     val sbView = snackBar.view
     val textView =
         sbView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
