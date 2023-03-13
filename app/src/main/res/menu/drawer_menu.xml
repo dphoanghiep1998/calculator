@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu  xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/item_vault"
+        android:id="@+id/fragmentVault"
         android:icon="@drawable/ic_vault"
         android:title="@string/vault" />
     <item
-        android:id="@+id/item_browser"
+        android:id="@+id/fragmentBrowser"
         android:icon="@drawable/ic_browser"
         android:menuCategory = "secondary"
         android:title="@string/browser" />
     <item
-        android:id="@+id/item_note"
+        android:id="@+id/fragmentNote"
         android:icon="@drawable/ic_note"
         android:title="@string/note" />
     <item
-        android:id="@+id/item_recycle_bin"
+        android:id="@+id/fragmentRecycleBin"
         android:icon="@drawable/ic_delete"
         android:title="@string/recycle_bin" />
     <item
-        android:id="@+id/item_setting"
+        android:id="@+id/fragmentSetting"
         android:icon="@drawable/ic_setting"
         android:title="@string/setting" />
     <item
-        android:id="@+id/item_language"
+        android:id="@+id/fragmentLanguage"
         android:icon="@drawable/ic_language"
         android:title="@string/language" />
     <item
