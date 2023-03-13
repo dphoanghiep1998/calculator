@@ -1,15 +1,19 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.MainActivity
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
@@ -24,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class FragmentVault: Fragment() {
+class FragmentVault : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -57,6 +61,33 @@ class FragmentVault: Fragment() {
         initRecyclerView()
         initPopupWindow()
         initButton()
+        initToolBar()
+    }
+
+    private fun initToolBar() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu -> Log.d("TAG", "onMenuItemSelected: ")
+                    R.id.add_folder -> showAddFolderDialog()
+                    R.id.option -> showOptionDialog()
+                    R.id.navigate_calculator -> navigateToCalculator()
+                }
+                return true
+            }
+
+        })
+    }
+
+
+    private fun navigateToCalculator() {
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun initRecyclerView() {
@@ -100,31 +131,32 @@ class FragmentVault: Fragment() {
     }
 
     private fun initButton() {
-        binding.imvOption.clickWithDebounce {
-            popupWindow.showAsDropDown(binding.imvOption, 0, 0)
-        }
-        binding.imvCalculator.clickWithDebounce {
-        }
-        binding.imvNewFolder.clickWithDebounce {
-            val dialogAddNewFolder = DialogAddNewFolder(object : AddNewFolderDialogCallBack {
-                override fun onPositiveClicked(name: String) {
-                    val callback = object : ICreateFile {
-                        override fun onSuccess() {
-                            showSnackBar(getString(R.string.create_success), SnackBarType.SUCCESS)
-                            viewModel.getListFolder(requireContext(), requireActivity().filesDir)
-                        }
 
-                        override fun onFailed() {
-                            showSnackBar(getString(R.string.create_failed), SnackBarType.FAILED)
-                        }
+    }
 
+    private fun showOptionDialog() {
+//        popupWindow.showAsDropDown(binding.too, 0, 0)
+    }
+
+    private fun showAddFolderDialog() {
+        val dialogAddNewFolder = DialogAddNewFolder(object : AddNewFolderDialogCallBack {
+            override fun onPositiveClicked(name: String) {
+                val callback = object : ICreateFile {
+                    override fun onSuccess() {
+                        showSnackBar(getString(R.string.create_success), SnackBarType.SUCCESS)
+                        viewModel.getListFolder(requireContext(), requireActivity().filesDir)
                     }
-                    viewModel.createFolder(requireActivity().filesDir, name, callback)
-                }
 
-            })
-            dialogAddNewFolder.show(childFragmentManager, dialogAddNewFolder.tag)
-        }
+                    override fun onFailed() {
+                        showSnackBar(getString(R.string.create_failed), SnackBarType.FAILED)
+                    }
+
+                }
+                viewModel.createFolder(requireActivity().filesDir, name, callback)
+            }
+
+        })
+        dialogAddNewFolder.show(childFragmentManager, dialogAddNewFolder.tag)
     }
 
     private fun initPopupWindow() {

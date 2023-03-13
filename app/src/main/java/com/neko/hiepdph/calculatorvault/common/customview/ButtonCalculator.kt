@@ -38,11 +38,28 @@ class ButtonCalculator @JvmOverloads constructor(
         typedArray.recycle()
     }
 
-    fun changeText(text:String){
+    fun changeText(text: String) {
         binding.tvButton.text = text
     }
-    fun changeImageRes(imageRes:Int){
+
+    fun changeImageRes(imageRes: Int) {
         binding.imvButton.setImageResource(imageRes)
+    }
+
+    fun hideImageView() {
+        binding.imvButton.hide()
+    }
+
+    fun showImageView() {
+        binding.imvButton.show()
+    }
+
+    fun hideTextView() {
+        binding.tvButton.hide()
+    }
+
+    fun showTextView() {
+        binding.tvButton.show()
     }
 
     private fun initView() {

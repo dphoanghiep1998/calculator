@@ -1,14 +1,14 @@
 package com.neko.hiepdph.calculatorvault.activities
 
 import android.os.Bundle
-import android.view.MenuItem
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.databinding.ActivityHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +24,21 @@ class HomeActivity : AppCompatActivity() {
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initArchitecture()
+
+//        addMenuProvider(object : MenuProvider {
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                menuInflater.inflate(R.menu.toolbar_menu, menu)
+//            }
+//
+//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//                return true
+//            }
+//
+//        })
+    }
+
+    private fun showDialogAddFolder() {
+
     }
 
     private fun initArchitecture() {
@@ -33,16 +48,26 @@ class HomeActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         setupActionBarWithNavController(navController, binding.drawerLayout)
         binding.navigationView.setupWithNavController(navController)
-        val config = AppBarConfiguration.Builder(navController.graph).setDrawerLayout(
+        val config = AppBarConfiguration.Builder(navController.graph).setOpenableLayout(
             binding.drawerLayout
         ).build()
+
         NavigationUI.setupWithNavController(binding.toolbar, navController, config)
+
 
         binding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.item_vault -> navController.navigate(R.id.fragmentVault)
-                R.id.item_browser -> navController.navigate(R.id.fragmentBrowser)
-                R.id.item_note -> navController.navigate(R.id.fragmentNote)
+                R.id.item_browser -> {
+                    navController.navigate(R.id.fragmentBrowser, null, NavOptions.Builder()
+                        .setPopUpTo(R.id.fragmentBrowser, true)
+                        .build())
+                }
+                R.id.item_note -> {
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    supportActionBar?.displayOptions = ActionBar.DISPLAY_HOME_AS_UP
+                    navController.navigate(R.id.fragmentNote)
+                }
                 R.id.item_recycle_bin -> navController.navigate(R.id.fragmentRecycleBin)
                 R.id.item_setting -> navController.navigate(R.id.fragmentSetting)
                 R.id.item_language -> navController.navigate(R.id.fragmentLanguage)
@@ -55,6 +80,7 @@ class HomeActivity : AppCompatActivity() {
             true
         }
     }
+
 
     private fun showPrivacy() {
 

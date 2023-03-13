@@ -8,6 +8,9 @@ import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.databinding.CalculatorViewBinding
 import com.neko.hiepdph.calculatorvault.common.extensions.hide
 import com.neko.hiepdph.calculatorvault.common.extensions.show
+import com.neko.hiepdph.calculatorvault.common.utils.ARC_COS
+import com.neko.hiepdph.calculatorvault.common.utils.ARC_SIN
+import com.neko.hiepdph.calculatorvault.common.utils.ARC_TAN
 
 interface CalculatorFunction {
     fun onPressButton0()
@@ -236,13 +239,31 @@ class CalculatorMain @JvmOverloads constructor(
 
     private fun changeFunction() {
         if (isChangeFunctionEnabled) {
-            binding.btnFlexCos.changeText("arccos")
-            binding.btnFlexSin.changeText("arcsin")
-            binding.btnFlexTan.changeText("arctan")
+            binding.btnFlexCos.apply {
+                changeText(ARC_COS)
+            }
+            binding.btnFlexSin.apply {
+                changeText(ARC_SIN)
+
+            }
+            binding.btnFlexTan.apply {
+                changeText(ARC_TAN)
+
+            }
         } else {
-            binding.btnFlexCos.changeText("cos")
-            binding.btnFlexSin.changeText("sin")
-            binding.btnFlexTan.changeText("tan")
+            binding.btnFlexCos.apply {
+                changeText("cos")
+
+            }
+            binding.btnFlexSin.apply {
+                changeText("sin")
+
+
+            }
+            binding.btnFlexTan.apply {
+                changeText("tan")
+
+            }
         }
     }
 
