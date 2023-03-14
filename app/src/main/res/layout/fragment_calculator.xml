@@ -36,6 +36,8 @@
         android:background="@android:color/transparent"
         android:fontFamily="@font/app_font_400"
         android:gravity="end|bottom"
+        android:scrollbars="vertical"
+        android:maxLength="20"
         android:textColor="@color/neutral_06"
         android:textSize="@dimen/_40sdp"
         app:layout_constraintBottom_toTopOf="@id/tv_result"

@@ -2,6 +2,7 @@ package com.neko.hiepdph.calculatorvault.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,10 +42,15 @@ class FragmentCalculator : Fragment() {
     }
 
     private fun initView() {
+        initInputText()
         initCalculator()
         initResultView()
         initButton()
         observePassword()
+    }
+
+    private fun initInputText() {
+        binding.tvInput.movementMethod = ScrollingMovementMethod()
     }
 
     private fun observePassword() {

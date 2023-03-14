@@ -11,9 +11,9 @@ val String.Companion.SPACE_SEPARATOR: String get() = " "
 const val SQRT_SYMBOL = "\u221A"
 const val DIVIDE_SYMBOL = "\u00F7"
 const val PI_SYMBOL = "\u03C0"
-const val ARC_SIN = "aSin"
-const val ARC_COS = "aCos"
-const val ARC_TAN = "aTan"
+const val ARC_SIN = "sin⁻¹"
+const val ARC_COS = "cos⁻¹"
+const val ARC_TAN = "tan⁻¹"
 
 fun String.specialTrim(): String =
     this.trim { it <= ' ' }.replace(" +".toRegex(), String.SPACE_SEPARATOR)

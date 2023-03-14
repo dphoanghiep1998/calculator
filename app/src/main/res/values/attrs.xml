@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="textSize" format="dimension" />
-
+    <attr name="cornerRadiusBotLeft" format="dimension" />
+    <attr name="cornerRadiusBotRight" format="dimension" />
+    <attr name="cornerRadiusTopLeft" format="dimension" />
+    <attr name="cornerRadiusTopRight" format="dimension" />
+    <declare-styleable name="RoundedImageView">
+        <attr name="cornerRadiusBotLeft" />
+        <attr name="cornerRadiusBotRight" />
+        <attr name="cornerRadiusTopLeft" />
+        <attr name="cornerRadiusTopRight" />
+    </declare-styleable>
     <declare-styleable name="ButtonCalculator">
         <attr name="src" format="reference" />
         <attr name="buttonText" format="string" />
