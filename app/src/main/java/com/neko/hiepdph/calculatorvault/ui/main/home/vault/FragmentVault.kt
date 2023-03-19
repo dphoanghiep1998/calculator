@@ -14,8 +14,10 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
+import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
+import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
@@ -47,7 +49,7 @@ class FragmentVault : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeListFile()
-        viewModel.getListFolder(requireContext(), requireActivity().filesDir)
+        viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
     }
 
     private fun observeListFile() {
@@ -61,27 +63,28 @@ class FragmentVault : Fragment() {
         initRecyclerView()
         initPopupWindow()
         initButton()
-        initToolBar()
+//        initToolBar()
     }
 
-    private fun initToolBar() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
-            }
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.menu -> Log.d("TAG", "onMenuItemSelected: ")
-                    R.id.add_folder -> showAddFolderDialog()
-                    R.id.option -> showOptionDialog()
-                    R.id.navigate_calculator -> navigateToCalculator()
-                }
-                return true
-            }
-
-        })
-    }
+//    private fun initToolBar() {
+//        requireActivity().addMenuProvider(object : MenuProvider {
+//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
+//            }
+//
+//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//                when (menuItem.itemId) {
+//                    R.id.menu -> Log.d("TAG", "onMenuItemSelected: ")
+//                    R.id.add_folder -> showAddFolderDialog()
+//                    R.id.option -> showOptionDialog()
+//                    R.id.navigate_calculator -> navigateToCalculator()
+//                }
+//                return true
+//            }
+//
+//        })
+//    }
 
 
     private fun navigateToCalculator() {
@@ -92,13 +95,24 @@ class FragmentVault : Fragment() {
 
     private fun initRecyclerView() {
         adapter = AdapterFolder(requireContext(), onItemPress = {
-
+            when (it.type) {
+                Constant.TYPE_PICTURE -> {
+                    navigateToPage(
+                        R.id.fragmentVault,
+                        R.id.action_fragmentVault_to_fragmentPersistent
+                    )
+                }
+                Constant.TYPE_VIDEOS -> {}
+                Constant.TYPE_AUDIOS -> {}
+                Constant.TYPE_DOCUMENT -> {}
+                else -> {}
+            }
         }, onDeletePress = {
             val dialogConfirm = DialogConfirm(object : ConfirmDialogCallBack {
                 override fun onPositiveClicked() {
                     val callback = object : IDeleteFile {
                         override fun onSuccess() {
-                            viewModel.getListFolder(
+                            viewModel.getListFolderVault(
                                 requireContext(), requireActivity().filesDir
                             )
                             showSnackBar(
@@ -144,7 +158,7 @@ class FragmentVault : Fragment() {
                 val callback = object : ICreateFile {
                     override fun onSuccess() {
                         showSnackBar(getString(R.string.create_success), SnackBarType.SUCCESS)
-                        viewModel.getListFolder(requireContext(), requireActivity().filesDir)
+                        viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
                     }
 
                     override fun onFailed() {

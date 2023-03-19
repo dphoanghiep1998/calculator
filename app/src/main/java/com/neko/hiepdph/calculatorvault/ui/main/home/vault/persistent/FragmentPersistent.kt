@@ -5,15 +5,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentPersistentBinding
+import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
 
 enum class PersistentType {
-    VIDEOS, AUDIOS, DOCUMENTS, PICTURES, OTHER
+    VIDEOS, AUDIOS, DOCUMENTS, PICTURES;
+
+    companion object {
+        @JvmStatic
+        fun fromString(value: String): PersistentType {
+            return when (value) {
+                "VIDEOS" -> VIDEOS
+                "AUDIOS" -> AUDIOS
+                "DOCUMENTS" -> DOCUMENTS
+                "PICTURES" -> PICTURES
+                else -> throw IllegalArgumentException("Invalid enum value: $value")
+            }
+        }
+    }
 }
 
 class FragmentPersistent : Fragment() {
     private var _binding: FragmentPersistentBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: HomeViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -22,6 +41,26 @@ class FragmentPersistent : Fragment() {
         _binding = FragmentPersistentBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        binding.tvTest.setOnClickListener {
+            navigateToPage(
+                R.id.fragmentPersistent,
+                R.id.action_fragmentPersistent_to_fragmentAddFile
+            )
+        }
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

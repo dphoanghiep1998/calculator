@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_6sdp">
+
+    <com.neko.hiepdph.calculatorvault.common.customview.RoundedImageView
+        android:id="@+id/imv_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:cornerRadiusBotLeft="@dimen/_12sdp"
+        app:cornerRadiusBotRight="@dimen/_12sdp"
+        app:cornerRadiusTopLeft="@dimen/_12sdp"
+        app:cornerRadiusTopRight="@dimen/_12sdp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        app:layout_constraintTop_toTopOf="@id/imv_thumb"
+        app:layout_constraintEnd_toEndOf="@id/imv_thumb"
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:paddingVertical="@dimen/_6sdp"
+        android:id="@+id/check_box"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

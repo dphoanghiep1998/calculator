@@ -1,6 +1,7 @@
 package com.neko.hiepdph.calculatorvault.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,9 @@ import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.utils.FileUtils
 import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
+import com.neko.hiepdph.calculatorvault.common.utils.MediaStoreUtils
 import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
+import com.neko.hiepdph.calculatorvault.data.model.GroupFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,24 +22,25 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
     var listFolder = MutableLiveData(mutableListOf<CustomFolder>())
+    var listGroupData = MutableLiveData(mutableListOf<GroupFile>())
 
-    fun createFolder(parentDir: File, fileName: String,callback: ICreateFile) {
-        viewModelScope.launch (Dispatchers.IO){
-            FileUtils.createSecretFile(parentDir, fileName,callback)
-        }
-    }
-
-    fun deleteFolder(path:String,callback:IDeleteFile){
+    fun createFolder(parentDir: File, fileName: String, callback: ICreateFile) {
         viewModelScope.launch(Dispatchers.IO) {
-            FileUtils.deleteFolderInDirectory(path,callback)
+            FileUtils.createSecretFile(parentDir, fileName, callback)
         }
     }
 
-    fun getListFolder(context: Context, parentDir: File) {
+    fun deleteFolder(path: String, callback: IDeleteFile) {
+        viewModelScope.launch(Dispatchers.IO) {
+            FileUtils.deleteFolderInDirectory(path, callback)
+        }
+    }
+
+    fun getListFolderVault(context: Context, parentDir: File) {
         viewModelScope.launch(Dispatchers.IO) {
             val listCustomFolder = mutableListOf<CustomFolder>()
             val listFile = FileUtils.getFoldersInDirectory(parentDir.path)
-            var type = Constant.TYPE_ADD_MORE
+            var type: String
             for (file in listFile) {
                 val name = when (file.name) {
                     Constant.PICTURE_FOLDER_NAME -> {
@@ -65,6 +69,14 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                 listCustomFolder.add(CustomFolder(name, count, type, file.path))
             }
             listFolder.postValue(listCustomFolder)
+        }
+    }
+
+    fun getListFolderImage(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val folder = MediaStoreUtils.getParentFolder(context).toMutableList()
+            Log.d("TAG", "getListFolderImage: "+folder.size)
+            listGroupData.postValue(folder)
         }
     }
 }

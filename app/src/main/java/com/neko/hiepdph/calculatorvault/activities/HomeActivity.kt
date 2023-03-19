@@ -1,9 +1,13 @@
 package com.neko.hiepdph.calculatorvault.activities
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -27,16 +31,16 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         initArchitecture()
 
-//        addMenuProvider(object : MenuProvider {
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                menuInflater.inflate(R.menu.toolbar_menu, menu)
-//            }
-//
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                return true
-//            }
-//
-//        })
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return true
+            }
+
+        })
     }
 
     private fun showDialogAddFolder() {
@@ -66,32 +70,18 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.toolbar, navController, config)
 
 
-//        binding.navigationView.setNavigationItemSelectedListener {
-//            when (it.itemId) {
-////                R.id.fra -> navController.navigate(R.id.fragmentVault)
-////                R.id.item_browser -> {
-////                    navController.navigate(R.id.fragmentBrowser, null, NavOptions.Builder()
-////                        .setPopUpTo(R.id.fragmentBrowser, true)
-////                        .build())
-////                }
-////                R.id.item_note -> {
-////                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-////                    supportActionBar?.displayOptions = ActionBar.DISPLAY_HOME_AS_UP
-////                    navController.navigate(R.id.fragmentNote)
-////                }
-////                R.id.item_recycle_bin -> navController.navigate(R.id.fragmentRecycleBin)
-////                R.id.item_setting -> navController.navigate(R.id.fragmentSetting)
-////                R.id.item_language -> navController.navigate(R.id.fragmentLanguage)
-//                R.id.item_theme -> changeTheme()
-//                R.id.item_rate_app -> rateApp()
-//                R.id.item_share_app -> shareApp()
-//                R.id.item_about_us -> showAboutUs()
-//                R.id.item_privacy -> showPrivacy()
-//            }
-//            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-//            drawerLayout.closeDrawer(GravityCompat.START)
-//            true
-//        }
+        binding.navigationView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.item_theme -> changeTheme()
+                R.id.item_rate_app -> rateApp()
+                R.id.item_share_app -> shareApp()
+                R.id.item_about_us -> showAboutUs()
+                R.id.item_privacy -> showPrivacy()
+            }
+            val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
     }
 
 

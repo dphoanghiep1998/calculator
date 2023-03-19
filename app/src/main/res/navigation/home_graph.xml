@@ -9,8 +9,11 @@
         android:id="@+id/fragmentVault"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.FragmentVault"
         android:label="@string/vault"
-        app:menu="@menu/toolbar_menu_vault"
-         />
+        app:menu="@menu/toolbar_menu_vault">
+        <action
+            android:id="@+id/action_fragmentVault_to_fragmentPersistent"
+            app:destination="@id/fragmentPersistent" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentBrowser"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.browser.FragmentBrowser"
@@ -37,4 +40,25 @@
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.recyclebin.FragmentRecycleBin"
         android:label="@string/recycle_bin"
         tools:layout="@layout/fragment_recycle_bin" />
+    <fragment
+        android:id="@+id/fragmentPersistent"
+        android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.persistent.FragmentPersistent"
+        android:label="fragment_persistent"
+        tools:layout="@layout/fragment_persistent">
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_fragmentPersistent_to_fragmentAddFile"
+            app:destination="@id/fragmentAddFile" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAddFile"
+        android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.FragmentAddFile"
+        android:label="fragment_add_file"
+        tools:layout="@layout/fragment_add_file" >
+        <argument
+            android:name="type"
+            app:argType="string"/>
+    </fragment>
 </navigation>

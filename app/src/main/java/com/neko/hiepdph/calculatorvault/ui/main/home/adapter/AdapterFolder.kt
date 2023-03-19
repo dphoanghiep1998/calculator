@@ -21,7 +21,7 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 
 class AdapterFolder(
     context: Context,
-    val onItemPress: () -> Unit,
+    val onItemPress: (customFolder:CustomFolder) -> Unit,
     val onRenamePress: (customFolder: CustomFolder) -> Unit,
     val onDeletePress: (customFolder: CustomFolder) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
@@ -85,6 +85,9 @@ class AdapterFolder(
                     binding.imvOption.clickWithDebounce {
                         showOption(binding.imvOption, customFolder)
                     }
+                    binding.root.clickWithDebounce {
+                        onItemPress.invoke(customFolder)
+                    }
                 }
             }
             GRID_ITEM -> {
@@ -96,6 +99,9 @@ class AdapterFolder(
                     binding.tvCount.text = customFolder.itemCount.toString()
                     binding.imvOption.clickWithDebounce {
                         showOption(binding.imvOption, customFolder)
+                    }
+                    binding.root.clickWithDebounce {
+                        onItemPress.invoke(customFolder)
                     }
 
                 }
