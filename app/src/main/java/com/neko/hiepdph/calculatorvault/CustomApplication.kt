@@ -79,10 +79,10 @@ class CustomApplication : Application(), Application.ActivityLifecycleCallbacks,
     }
 
     private fun initOpenAds() {
-        appOpenAdsManager = AppOpenAdManager(
-            this, BuildConfig.open_app_id, BuildConfig.open_app_id, BuildConfig.open_app_id
-        )
-        appOpenAdsManager?.loadAd()
+//        appOpenAdsManager = AppOpenAdManager(
+//            this, BuildConfig.open_app_id, BuildConfig.open_app_id, BuildConfig.open_app_id
+//        )
+//        appOpenAdsManager?.loadAd()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)

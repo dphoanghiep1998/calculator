@@ -53,7 +53,6 @@ class HomeActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_home) as NavHostFragment
         val navController = navHostFragment.navController
         setupActionBarWithNavController(navController, binding.drawerLayout)
-        binding.navigationView.setupWithNavController(navController)
         val config = AppBarConfiguration.Builder(
             setOf(
                 R.id.fragmentLanguage,
@@ -66,12 +65,30 @@ class HomeActivity : AppCompatActivity() {
         ).setOpenableLayout(
             binding.drawerLayout
         ).build()
-
+        NavigationUI.setupWithNavController(binding.navigationView, navController)
         NavigationUI.setupWithNavController(binding.toolbar, navController, config)
 
 
         binding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
+                R.id.fragmentVault ->{
+                    navController.navigate(R.id.fragmentVault)
+                }
+                R.id.fragmentLanguage ->{
+                    navController.navigate(R.id.fragmentLanguage)
+                }
+                R.id.fragmentBrowser ->{
+                    navController.navigate(R.id.fragmentBrowser)
+                }
+                R.id.fragmentNote ->{
+                    navController.navigate(R.id.fragmentNote)
+                }
+                R.id.fragmentSetting ->{
+                    navController.navigate(R.id.fragmentSetting)
+                }
+                R.id.fragmentRecycleBin ->{
+                    navController.navigate(R.id.fragmentRecycleBin)
+                }
                 R.id.item_theme -> changeTheme()
                 R.id.item_rate_app -> rateApp()
                 R.id.item_share_app -> shareApp()

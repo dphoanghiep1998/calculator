@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -17,13 +16,13 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.neko.hiepdph.calculatorvault.R
-import com.neko.hiepdph.calculatorvault.common.utils.buildMinVersionM
 import com.gianghv.libads.*
 import com.google.android.material.snackbar.Snackbar
+import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.utils.buildMinVersionM
 
 enum class NativeType {
     HISTORY, INFORMATION, SETTINGS, LANGUAGE, RECORD, DETAIL_INFORMATION, UNIT, TARGET
@@ -47,8 +46,15 @@ fun Fragment.navigateToPage(id: Int, actionId: Int, bundle: Bundle? = null) {
     }
 }
 
+fun Fragment.navigateToPage(id: Int, navDirections: NavDirections) {
+    if (findNavController().currentDestination?.id == id && isAdded) {
+        findNavController().navigate(navDirections)
+        return
+    }
+}
+
 fun Fragment.getColor(res: Int): Int {
-    return ContextCompat.getColor(requireContext(),res)
+    return ContextCompat.getColor(requireContext(), res)
 }
 
 @SuppressLint("ResourceAsColor")

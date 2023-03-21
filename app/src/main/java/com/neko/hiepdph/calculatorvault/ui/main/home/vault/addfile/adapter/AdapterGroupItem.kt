@@ -5,13 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.data.model.GroupFile
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAddFileBinding
 
 class AdapterGroupItem : RecyclerView.Adapter<AdapterGroupItem.GroupItemViewHolder>() {
     private var listGroupItem = mutableListOf<GroupFile>()
-    fun setData(listDataItem: List<GroupFile>) {
+    private var mType: String = Constant.TYPE_PICTURE
+    fun setData(listDataItem: List<GroupFile>, type: String) {
         listGroupItem = listDataItem.toMutableList()
+        mType = type
         notifyDataSetChanged()
     }
 
@@ -31,7 +34,8 @@ class AdapterGroupItem : RecyclerView.Adapter<AdapterGroupItem.GroupItemViewHold
     override fun onBindViewHolder(holder: GroupItemViewHolder, position: Int) {
         with(holder) {
             val model = listGroupItem[adapterPosition]
-            Glide.with(itemView.context).load(model.dataPathList[0]).centerCrop().error(itemView.context.getDrawable(R.drawable.ic_delete)).into(binding.imvThumb)
+            Glide.with(itemView.context).load(model.dataPathList[0]).centerCrop()
+                .error(itemView.context.getDrawable(R.drawable.ic_delete)).into(binding.imvThumb)
             binding.tvNameQuantity.text = "${model.name} (${model.itemCount})"
 
 

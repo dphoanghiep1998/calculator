@@ -20,7 +20,7 @@ class FragmentAddFile : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: AdapterGroupItem
     private val viewModel: HomeViewModel by activityViewModels()
-    val args:FragmentAddFileArgs by navArgs()
+    private val args:FragmentAddFileArgs by navArgs()
 
 
     override fun onCreateView(
@@ -33,32 +33,25 @@ class FragmentAddFile : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        getImageGroupFile()
+        getDataFromArgs()
+        observeListGroupData()
     }
 
     override fun onResume() {
         super.onResume()
-        observeListGroupData()
+//        observeListGroupData()
     }
 
     private fun getDataFromArgs(){
-        when(args.type){
-            Constant.TYPE_PICTURE -> {}
-            Constant.TYPE_AUDIOS -> {}
-            Constant.TYPE_VIDEOS -> {}
-            Constant.TYPE_DOCUMENT -> {}
-            else -> {
-
-            }
-        }
+        getDataGroupFile(args.type)
     }
 
 
     private fun initView() {
         initRecyclerView()
     }
-    private fun getImageGroupFile(){
-        viewModel.getListFolderImage(requireContext())
+    private fun getDataGroupFile(type:String){
+        viewModel.getListFolder(requireContext(),type)
     }
 
     private fun initRecyclerView() {
@@ -69,7 +62,7 @@ class FragmentAddFile : Fragment() {
     }
     private fun observeListGroupData(){
         viewModel.listGroupData.observe(viewLifecycleOwner){
-            adapter.setData(it)
+            adapter.setData(it,args.type)
         }
     }
 

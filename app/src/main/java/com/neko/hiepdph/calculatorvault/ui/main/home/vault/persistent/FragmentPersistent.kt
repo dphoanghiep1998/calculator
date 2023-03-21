@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentPersistentBinding
@@ -31,7 +32,7 @@ enum class PersistentType {
 class FragmentPersistent : Fragment() {
     private var _binding: FragmentPersistentBinding? = null
     private val binding get() = _binding!!
-
+    private val args: FragmentPersistentArgs by navArgs()
     private val viewModel: HomeViewModel by activityViewModels()
 
 
@@ -47,12 +48,12 @@ class FragmentPersistent : Fragment() {
         initView()
     }
 
+
     private fun initView() {
         binding.tvTest.setOnClickListener {
-            navigateToPage(
-                R.id.fragmentPersistent,
-                R.id.action_fragmentPersistent_to_fragmentAddFile
-            )
+            val action =
+                FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(args.type)
+            navigateToPage(R.id.fragmentPersistent, action)
         }
         initRecyclerView()
     }

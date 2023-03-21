@@ -72,9 +72,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getListFolderImage(context: Context) {
+    fun getListFolder(context: Context,type:String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentFolder(context).toMutableList()
+            val folder = MediaStoreUtils.getParentFolder(context,type).toMutableList()
             Log.d("TAG", "getListFolderImage: "+folder.size)
             listGroupData.postValue(folder)
         }

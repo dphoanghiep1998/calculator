@@ -69,6 +69,29 @@ object Constant {
     const val TYPE_VIDEOS = "TYPE_VIDEOS"
     const val TYPE_DOCUMENT = "TYPE_DOCUMENT"
     const val TYPE_ADD_MORE = "TYPE_ADD_MORE"
+     val extraAudioMimeTypes = arrayListOf("application/ogg")
+    val extraDocumentMimeTypes = arrayListOf(
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/javascript"
+    )
+
+    val archiveMimeTypes = arrayListOf(
+        "application/zip",
+        "application/octet-stream",
+        "application/json",
+        "application/x-tar",
+        "application/x-rar-compressed",
+        "application/x-zip-compressed",
+        "application/x-7z-compressed",
+        "application/x-compressed",
+        "application/x-gzip",
+        "application/java-archive",
+        "multipart/x-zip"
+    )
+
 
 
 }
