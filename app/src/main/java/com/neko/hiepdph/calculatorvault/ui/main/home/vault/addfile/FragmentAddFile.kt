@@ -51,7 +51,13 @@ class FragmentAddFile : Fragment() {
         initRecyclerView()
     }
     private fun getDataGroupFile(type:String){
-        viewModel.getListFolder(requireContext(),type)
+        when(type){
+            Constant.TYPE_VIDEOS -> viewModel.getListVideoFolder(requireContext())
+            Constant.TYPE_DOCUMENT ->viewModel.getListDocumentFolder(requireContext())
+            Constant.TYPE_AUDIOS ->viewModel.getListAudioFolder(requireContext())
+            Constant.TYPE_PICTURE ->viewModel.getListImageFolder(requireContext())
+        }
+
     }
 
     private fun initRecyclerView() {

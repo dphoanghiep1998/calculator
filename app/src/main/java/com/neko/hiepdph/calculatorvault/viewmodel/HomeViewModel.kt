@@ -72,11 +72,36 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getListFolder(context: Context,type:String) {
+    fun getListImageFolder(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentFolder(context,type).toMutableList()
-            Log.d("TAG", "getListFolderImage: "+folder.size)
+            val folder = MediaStoreUtils.getParentImageFolder(context).toMutableList()
+            Log.d("TAG", "getListFolderImage: " + folder.size)
             listGroupData.postValue(folder)
         }
     }
+
+    fun getListAudioFolder(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val folder = MediaStoreUtils.getParentAudiosFolder(context).toMutableList()
+            Log.d("TAG", "getListFolderImage: " + folder.size)
+            listGroupData.postValue(folder)
+        }
+    }
+
+    fun getListVideoFolder(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val folder = MediaStoreUtils.getParentVideosFolder(context).toMutableList()
+            Log.d("TAG", "getListFolderImage: " + folder.size)
+            listGroupData.postValue(folder)
+        }
+    }
+
+    fun getListDocumentFolder(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val folder = MediaStoreUtils.getParentDocumentFolder(context).toMutableList()
+            Log.d("TAG", "getListFolderImage: " + folder.size)
+            listGroupData.postValue(folder)
+        }
+    }
+
 }
