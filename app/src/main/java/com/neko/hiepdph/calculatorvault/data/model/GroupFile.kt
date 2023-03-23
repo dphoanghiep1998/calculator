@@ -1,12 +1,19 @@
 package com.neko.hiepdph.calculatorvault.data.model
 
+import android.graphics.Bitmap
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class GroupFile(
     var name: String,
     var type: String,
     var path: String,
-    var dataPathList: MutableList<String>,
-    var folderPath: String
-) {
-    val itemCount:Int
-        get() = dataPathList.size
+    var dataList: MutableList<String>,
+    var dataThumb: MutableList<Bitmap?>,
+    var folderPath: String,
+    var dataTypeList: MutableSet<String>? = null //document only
+) : Parcelable {
+    val itemCount: Int
+        get() = dataList.size
 }

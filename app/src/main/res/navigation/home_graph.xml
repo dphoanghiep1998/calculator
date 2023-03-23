@@ -60,5 +60,15 @@
         <argument
             android:name="type"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_fragmentAddFile_to_fragmentListItem"
+            app:destination="@id/fragmentListItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentListItem"
+        android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.FragmentListItem"
+        android:label="FragmentListItem" >
+        <argument android:name="folder"
+            app:argType="com.neko.hiepdph.calculatorvault.data.model.GroupFile"/>
     </fragment>
 </navigation>

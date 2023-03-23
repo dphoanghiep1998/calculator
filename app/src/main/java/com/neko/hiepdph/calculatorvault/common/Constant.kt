@@ -58,18 +58,17 @@ object Constant {
     const val DEFAULT_SECRET_PASSWORD = "1234"
     const val DEFAULT_SECRET_PASSWORD_SUFFIX = "%"
 
-
+    const val FILES_FOLDER_NAME = "FILE_CALCULATOR_VAULT_${SECRET_KEY}"
     const val PICTURE_FOLDER_NAME = "PICTURE_CALCULATOR_VAULT_${SECRET_KEY}"
     const val AUDIOS_FOLDER_NAME = "AUDIOS_CALCULATOR_VAULT_${SECRET_KEY}"
     const val VIDEOS_FOLDER_NAME = "VIDEOS_CALCULATOR_VAULT_${SECRET_KEY}"
-    const val DOCUMENTS_FOLDER_NAME = "DOCUMENTS_CALCULATOR_VAULT_${SECRET_KEY}"
 
     const val TYPE_PICTURE = "TYPE_PICTURE"
     const val TYPE_AUDIOS = "TYPE_AUDIOS"
     const val TYPE_VIDEOS = "TYPE_VIDEOS"
-    const val TYPE_DOCUMENT = "TYPE_DOCUMENT"
+    const val TYPE_FILE = "TYPE_FILE"
     const val TYPE_ADD_MORE = "TYPE_ADD_MORE"
-     val extraAudioMimeTypes = arrayListOf("application/ogg")
+    val extraAudioMimeTypes = arrayListOf("application/ogg")
     val extraDocumentMimeTypes = arrayListOf(
         "application/pdf",
         "application/msword",
@@ -92,6 +91,15 @@ object Constant {
         "multipart/x-zip"
     )
 
+    const val TYPE_PDF = ".pdf"
+    const val TYPE_PPT = ".ppt"
+    const val TYPE_PPTX = ".pptx"
+    const val TYPE_WORD = ".doc"
+    const val TYPE_WORDX = ".docx"
+    const val TYPE_EXCEL = ".xlsx"
+    const val TYPE_TEXT = ".txt"
+    const val TYPE_CSV = ".csv"
+    const val TYPE_ZIP = ".zip"
 
 
 }

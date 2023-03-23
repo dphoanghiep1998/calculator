@@ -1,7 +1,7 @@
 package com.neko.hiepdph.calculatorvault.viewmodel
 
 import android.content.Context
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +12,7 @@ import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
 import com.neko.hiepdph.calculatorvault.common.utils.MediaStoreUtils
 import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
+import com.neko.hiepdph.calculatorvault.data.model.FileItem
 import com.neko.hiepdph.calculatorvault.data.model.GroupFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
     var listFolder = MutableLiveData(mutableListOf<CustomFolder>())
-    var listGroupData = MutableLiveData(mutableListOf<GroupFile>())
+
+    var listGroupImageData = MutableLiveData(mutableListOf<GroupFile>())
+    var listGroupVideoData = MutableLiveData(mutableListOf<GroupFile>())
+    var listGroupAudioData = MutableLiveData(mutableListOf<GroupFile>())
+    var listGroupFileData = MutableLiveData(mutableListOf<GroupFile>())
+
 
     fun createFolder(parentDir: File, fileName: String, callback: ICreateFile) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,9 +61,9 @@ class HomeViewModel @Inject constructor() : ViewModel() {
                         type = Constant.TYPE_VIDEOS
                         context.getString(R.string.videos)
                     }
-                    Constant.DOCUMENTS_FOLDER_NAME -> {
-                        type = Constant.TYPE_DOCUMENT
-                        context.getString(R.string.documents)
+                    Constant.FILES_FOLDER_NAME -> {
+                        type = Constant.TYPE_FILE
+                        context.getString(R.string.files)
                     }
                     else -> {
                         type = Constant.TYPE_ADD_MORE
@@ -72,36 +78,25 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getListImageFolder(context: Context) {
+
+    fun getListFolderItem(context: Context, type: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentImageFolder(context).toMutableList()
-            Log.d("TAG", "getListFolderImage: " + folder.size)
-            listGroupData.postValue(folder)
+            val folder = MediaStoreUtils.getParentFolderName(context, type).toMutableList()
+            when (type) {
+                Constant.TYPE_PICTURE -> listGroupImageData.postValue(folder)
+                Constant.TYPE_AUDIOS -> listGroupAudioData.postValue(folder)
+                Constant.TYPE_VIDEOS -> listGroupVideoData.postValue(folder)
+                Constant.TYPE_FILE -> listGroupFileData.postValue(folder)
+            }
         }
     }
 
-    fun getListAudioFolder(context: Context) {
+    fun getImageChildFromFolder(context: Context, path: String): LiveData<MutableList<FileItem>> {
         viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentAudiosFolder(context).toMutableList()
-            Log.d("TAG", "getListFolderImage: " + folder.size)
-            listGroupData.postValue(folder)
+            val listImageChild = MediaStoreUtils.getChildImageFromPath(context, path)
+
         }
     }
 
-    fun getListVideoFolder(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentVideosFolder(context).toMutableList()
-            Log.d("TAG", "getListFolderImage: " + folder.size)
-            listGroupData.postValue(folder)
-        }
-    }
-
-    fun getListDocumentFolder(context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentDocumentFolder(context).toMutableList()
-            Log.d("TAG", "getListFolderImage: " + folder.size)
-            listGroupData.postValue(folder)
-        }
-    }
 
 }

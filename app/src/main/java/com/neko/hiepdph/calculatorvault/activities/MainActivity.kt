@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.createFolder(filesDir, Constant.PICTURE_FOLDER_NAME, callback)
             viewModel.createFolder(filesDir, Constant.VIDEOS_FOLDER_NAME, callback)
             viewModel.createFolder(filesDir, Constant.AUDIOS_FOLDER_NAME, callback)
-            viewModel.createFolder(filesDir, Constant.DOCUMENTS_FOLDER_NAME, callback)
+            viewModel.createFolder(filesDir, Constant.FILES_FOLDER_NAME, callback)
             AppSharePreference.INSTANCE.saveInitFirstDone(true)
         }
     }

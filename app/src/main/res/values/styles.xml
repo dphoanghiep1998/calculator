@@ -46,4 +46,9 @@
         <item name="boxStrokeColor">@color/neutral_05</item>
         <item name="boxStrokeWidth">0dp</item>
     </style>
+
+    <style name="roundedImageViewRounded">
+            <item name="cornerFamily">rounded</item>
+            <item name="cornerSize">50%</item>
+    </style>
 </resources>

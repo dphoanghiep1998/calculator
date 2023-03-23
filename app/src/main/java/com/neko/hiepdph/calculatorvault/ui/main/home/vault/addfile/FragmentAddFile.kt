@@ -1,16 +1,18 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddFileBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.adapter.AdapterGroupItem
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
@@ -20,7 +22,7 @@ class FragmentAddFile : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: AdapterGroupItem
     private val viewModel: HomeViewModel by activityViewModels()
-    private val args:FragmentAddFileArgs by navArgs()
+    private val args: FragmentAddFileArgs by navArgs()
 
 
     override fun onCreateView(
@@ -42,7 +44,7 @@ class FragmentAddFile : Fragment() {
 //        observeListGroupData()
     }
 
-    private fun getDataFromArgs(){
+    private fun getDataFromArgs() {
         getDataGroupFile(args.type)
     }
 
@@ -50,26 +52,41 @@ class FragmentAddFile : Fragment() {
     private fun initView() {
         initRecyclerView()
     }
-    private fun getDataGroupFile(type:String){
-        when(type){
-            Constant.TYPE_VIDEOS -> viewModel.getListVideoFolder(requireContext())
-            Constant.TYPE_DOCUMENT ->viewModel.getListDocumentFolder(requireContext())
-            Constant.TYPE_AUDIOS ->viewModel.getListAudioFolder(requireContext())
-            Constant.TYPE_PICTURE ->viewModel.getListImageFolder(requireContext())
-        }
 
+    private fun getDataGroupFile(type: String) {
+        viewModel.getListFolderItem(requireContext(), type)
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterGroupItem()
+        adapter = AdapterGroupItem(onClickFolderItem = {
+            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(it)
+            navigateToPage(R.id.fragmentAddFile,action)
+        })
         binding.rcvGroupItem.adapter = adapter
-        val gridLayoutManager = GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
+            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
+        } else {
+            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+        }
         binding.rcvGroupItem.layoutManager = gridLayoutManager
     }
-    private fun observeListGroupData(){
-        viewModel.listGroupData.observe(viewLifecycleOwner){
-            adapter.setData(it,args.type)
+
+    private fun observeListGroupData() {
+        when (args.type) {
+            Constant.TYPE_PICTURE -> viewModel.listGroupImageData.observe(viewLifecycleOwner) {
+                adapter.setData(it, args.type)
+            }
+            Constant.TYPE_AUDIOS -> viewModel.listGroupAudioData.observe(viewLifecycleOwner) {
+                adapter.setData(it, args.type)
+            }
+            Constant.TYPE_VIDEOS -> viewModel.listGroupVideoData.observe(viewLifecycleOwner) {
+                adapter.setData(it, args.type)
+            }
+            Constant.TYPE_FILE -> viewModel.listGroupFileData.observe(viewLifecycleOwner) {
+                adapter.setData(it, args.type)
+            }
         }
+
     }
 
 

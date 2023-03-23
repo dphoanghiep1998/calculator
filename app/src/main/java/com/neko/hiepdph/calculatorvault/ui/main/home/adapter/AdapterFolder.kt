@@ -122,7 +122,7 @@ class AdapterFolder(
             Constant.TYPE_PICTURE -> R.drawable.ic_item_pictures
             Constant.TYPE_VIDEOS -> R.drawable.ic_item_videos
             Constant.TYPE_AUDIOS -> R.drawable.ic_item_audios
-            Constant.TYPE_DOCUMENT -> R.drawable.ic_item_files
+            Constant.TYPE_FILE -> R.drawable.ic_item_files
             else -> R.drawable.ic_folder_additional
         }
     }

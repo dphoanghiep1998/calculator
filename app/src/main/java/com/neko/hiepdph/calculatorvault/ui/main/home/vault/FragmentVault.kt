@@ -106,7 +106,7 @@ class FragmentVault : Fragment() {
                 Constant.TYPE_AUDIOS -> {
                     navigateToPage(R.id.fragmentVault, action)
                 }
-                Constant.TYPE_DOCUMENT -> {
+                Constant.TYPE_FILE -> {
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 else -> {}

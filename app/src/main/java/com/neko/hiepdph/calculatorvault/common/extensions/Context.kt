@@ -11,6 +11,25 @@ import android.widget.Toast
 import com.neko.hiepdph.calculatorvault.R
 import java.io.File
 
+
+
+fun Context.getDataColumn(uri: Uri, selection: String? = null, selectionArgs: Array<String>? = null): String? {
+    try {
+        val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
+        val cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
+        cursor?.use {
+            if (cursor.moveToFirst()) {
+                val data = cursor.getStringValue(MediaStore.Files.FileColumns.DATA)
+                if (data != "null") {
+                    return data
+                }
+            }
+        }
+    } catch (e: Exception) {
+    }
+    return null
+}
+
 fun Context.queryCursor(
     uri: Uri,
     projection: Array<String>,
@@ -34,23 +53,6 @@ fun Context.queryCursor(
             showErrorToast(e)
         }
     }
-}
-
-fun Context.getDataColumn(uri: Uri, selection: String? = null, selectionArgs: Array<String>? = null): String? {
-    try {
-        val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
-        val cursor = contentResolver.query(uri, projection, selection, selectionArgs, null)
-        cursor?.use {
-            if (cursor.moveToFirst()) {
-                val data = cursor.getStringValue(MediaStore.Files.FileColumns.DATA)
-                if (data != "null") {
-                    return data
-                }
-            }
-        }
-    } catch (e: Exception) {
-    }
-    return null
 }
 
 fun Context.toast(id: Int, length: Int = Toast.LENGTH_SHORT) {
