@@ -1,10 +1,12 @@
 package com.neko.hiepdph.calculatorvault.data.model
 
 class FileItem(
-    val path: String,
-    val name: String,
-    var size: Long = 0L,
-    var modified: Long = 0L,
-    var mediaStoreId: Long = 0L,
-    var type: String
-) {}
+    val filePath: String,
+    val fileName: String,
+    var fileSize: Long,
+    var fileModified: Long,
+    var fileMediaStoreId: Long,
+    var fileType: String,
+    var fileDuration: Int? = null,
+
+    ) : ObjectItem(filePath, fileName, fileSize, fileModified, fileMediaStoreId) {}

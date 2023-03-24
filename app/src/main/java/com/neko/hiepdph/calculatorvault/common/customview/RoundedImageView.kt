@@ -23,7 +23,6 @@ class RoundedImageView @JvmOverloads constructor(
             cornerRadiusBL = getDimension(R.styleable.RoundedImageView_cornerRadiusBotLeft, 0F)
             cornerRadiusTR = getDimension(R.styleable.RoundedImageView_cornerRadiusTopRight, 0F)
             cornerRadiusBR = getDimension(R.styleable.RoundedImageView_cornerRadiusBotRight, 0F)
-
         }
     }
 

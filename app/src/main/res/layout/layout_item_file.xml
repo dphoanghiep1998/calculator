@@ -44,8 +44,13 @@
 
     <CheckBox
         android:id="@+id/checkbox"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:button="@null"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_margin="@dimen/_2sdp"
+        android:background="@drawable/bg_checkbox_pick_selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

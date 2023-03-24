@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         NotificationMain.scheduleDailyNotification(this)
         createSecretFolderFirstTime()
-        requestAllFileManage()
+//        requestAllFileManage()
     }
 
     private fun requestAllFileManage(){

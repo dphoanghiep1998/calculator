@@ -1,6 +1,7 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,7 @@ class FragmentListItem : Fragment() {
     private var _binding: FragmentListItemBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel:HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
     private var adapterListItem: AdapterListItem? = null
     private val args: FragmentListItemArgs by navArgs()
 
@@ -33,13 +34,47 @@ class FragmentListItem : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        observeData()
     }
 
     private fun initView() {
         initRecycleView()
     }
-    private fun observeData(){
-        viewModel.listChildImageItem.observe(){
+
+    private fun observeData() {
+        when (args.folder.type) {
+            Constant.TYPE_PICTURE -> {
+                viewModel.getImageChildFromFolder(requireContext(), args.folder.folderPath)
+                viewModel.listImageItem.observe(viewLifecycleOwner) {
+                    Log.d("TAG", "observeData: "+args.folder.type)
+                    adapterListItem?.setData(it, Constant.TYPE_PICTURE)
+                }
+            }
+            Constant.TYPE_VIDEOS -> {
+                viewModel.getVideoChildFromFolder(requireContext(), args.folder.folderPath)
+                viewModel.listVideoItem.observe(viewLifecycleOwner) {
+                    Log.d("TAG", "observeData: "+args.folder.type)
+
+                    adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
+                }
+            }
+            Constant.TYPE_AUDIOS -> {
+
+                viewModel.getAudioChildFromFolder(requireContext(), args.folder.folderPath)
+                viewModel.listAudioItem.observe(viewLifecycleOwner) {
+                    Log.d("TAG", "observeData: "+args.folder.type)
+
+                    adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
+                }
+            }
+            Constant.TYPE_FILE -> {
+                viewModel.getFileChildFromFolder(requireContext(), args.folder.folderPath)
+                viewModel.listFileItem.observe(viewLifecycleOwner) {
+                    adapterListItem?.setData(it, Constant.TYPE_FILE)
+                }
+            }
+        }
+
     }
 
     private fun initRecycleView() {
@@ -48,7 +83,7 @@ class FragmentListItem : Fragment() {
         when (args.folder.type) {
             Constant.TYPE_PICTURE, Constant.TYPE_VIDEOS -> {
                 val gridLayoutManager =
-                    GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+                    GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
                 binding.rcvGroupItem.layoutManager = gridLayoutManager
             }
             Constant.TYPE_AUDIOS, Constant.TYPE_FILE -> {

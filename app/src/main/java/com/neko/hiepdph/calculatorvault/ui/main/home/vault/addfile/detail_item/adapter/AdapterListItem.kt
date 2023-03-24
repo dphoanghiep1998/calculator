@@ -3,18 +3,27 @@ package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
-import com.neko.hiepdph.calculatorvault.data.model.FileItem
+import com.neko.hiepdph.calculatorvault.data.model.AudioItem
+import com.neko.hiepdph.calculatorvault.data.model.ImageItem
+import com.neko.hiepdph.calculatorvault.data.model.ObjectItem
+import com.neko.hiepdph.calculatorvault.data.model.VideoItem
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAudiosBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemFileBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemPictureBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemVideosBinding
 
+
 class AdapterListItem : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var listItem = mutableListOf<FileItem>()
+    private var listItem = mutableListOf<ObjectItem>()
     private var mType: String = Constant.TYPE_PICTURE
 
-    fun setData(listDataItem: List<FileItem>, type: String) {
+    fun setData(listDataItem: List<ObjectItem>, type: String) {
         mType = type
         listItem = listDataItem.toMutableList()
         notifyDataSetChanged()
@@ -81,5 +90,46 @@ class AdapterListItem : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            0 -> {
+                with(holder as ItemPictureViewHolder) {
+                    val item = listItem[adapterPosition] as ImageItem
+                    var requestOptions = RequestOptions()
+                    requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
+                    Glide.with(itemView.context).load(item.path).apply(requestOptions)
+                        .error(R.drawable.ic_delete).into(binding.imvThumb)
+                }
+            }
+            1 -> {
+                with(holder as ItemVideoViewHolder) {
+                    val item = listItem[adapterPosition] as VideoItem
+                    var requestOptions = RequestOptions()
+                    requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
+                    Glide.with(itemView.context).load(item.videoPath).apply(requestOptions)
+                        .error(R.drawable.ic_delete).into(binding.imvThumb)
+                    binding.tvDuration.text = item.videoDuration.toString()
+                }
+            }
+            2 -> {
+                with(holder as ItemAudioViewHolder) {
+                    val item = listItem[adapterPosition] as AudioItem
+                    var requestOptions = RequestOptions()
+                    requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
+                    Glide.with(itemView.context).load(item.thumbBitmap).apply(requestOptions)
+                        .error(R.drawable.ic_delete)
+                        .into(binding.imvThumb)
+
+                    binding.tvNameAudio.text = item.audioName
+                    binding.tvDurationAuthor.text =
+                }
+            }
+            3 -> {
+                with(holder as ItemFileViewHolder) {
+                    val item = listItem[adapterPosition]
+                    Glide.with(itemView.context).load(item.path).error(R.drawable.ic_delete)
+                        .into(binding.imvThumb)
+                }
+            }
+        }
     }
 }

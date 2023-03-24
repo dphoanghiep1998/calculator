@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import com.neko.hiepdph.calculatorvault.common.Constant
@@ -13,8 +15,7 @@ import com.neko.hiepdph.calculatorvault.common.Constant.extraDocumentMimeTypes
 import com.neko.hiepdph.calculatorvault.common.extensions.getLongValue
 import com.neko.hiepdph.calculatorvault.common.extensions.getStringValue
 import com.neko.hiepdph.calculatorvault.common.extensions.queryCursor
-import com.neko.hiepdph.calculatorvault.data.model.FileItem
-import com.neko.hiepdph.calculatorvault.data.model.GroupFile
+import com.neko.hiepdph.calculatorvault.data.model.*
 import java.io.File
 import java.util.*
 
@@ -34,9 +35,12 @@ object MediaStoreUtils {
         try {
             context.queryCursor(uri, projection) { cursor ->
                 try {
+                    val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
+                    if (name.startsWith(".")) {
+                        return@queryCursor
+                    }
                     val fullMimetype = cursor.getStringValue(MediaStore.Files.FileColumns.MIME_TYPE)
                         ?.lowercase(Locale.getDefault()) ?: return@queryCursor
-                    val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
                     val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
                     val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
                     if (size == 0L) {
@@ -54,7 +58,9 @@ object MediaStoreUtils {
                             if (mimetype == "image") {
 
                                 val parentFolder = File(path).parentFile?.name ?: "No_name"
-
+                                if (parentFolder.startsWith(".")) {
+                                    return@queryCursor
+                                }
                                 if (!folders.containsKey(parentFolder)) {
                                     folders[parentFolder] = GroupFile(
                                         parentFolder,
@@ -177,10 +183,7 @@ object MediaStoreUtils {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_ZIP)
                                     }
                                 }
-                                Log.d(
-                                    "TAG",
-                                    "getParentFolderName: " + folders[parentFolder]?.dataTypeList
-                                )
+
                             }
                         }
 
@@ -208,11 +211,10 @@ object MediaStoreUtils {
         }
     }
 
-    fun getChildImageFromPath(context: Context, path: String): List<FileItem> {
+    fun getChildImageFromPath(context: Context, path: String): List<ImageItem> {
         try {
-
-            val listImageChild = mutableListOf<FileItem>()
-            val uri = MediaStore.Files.getContentUri("external")
+            val listImageChild = mutableListOf<ImageItem>()
+            val uri = MediaStore.Images.Media.getContentUri("external")
             val projection = arrayOf(
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -220,19 +222,25 @@ object MediaStoreUtils {
                 MediaStore.Images.Media.DATE_MODIFIED,
                 MediaStore.Images.Media._ID
             )
-            val selectionArgs = arrayOf("$path/%")
-            context.queryCursor(uri, projection, selectionArgs = selectionArgs) { cursor ->
+            val selection = MediaStore.Images.Media.DATA + " LIKE ?"
+            val selectionArgs = arrayOf("%$path%")
+
+            context.queryCursor(uri, projection, selection, selectionArgs) { cursor ->
+
                 val id = cursor.getLongValue(MediaStore.Images.Media._ID)
                 val childPath = cursor.getStringValue(MediaStore.Images.Media.DATA)
                 val size = cursor.getLongValue(MediaStore.Images.Media.SIZE)
                 val modified = cursor.getLongValue(MediaStore.Images.Media.SIZE)
                 val name = cursor.getStringValue(MediaStore.Images.Media.DISPLAY_NAME)
+                Log.d("TAG", "childpath: " + childPath)
 
-                listImageChild.add(
-                    FileItem(
-                        childPath, name, size, modified, id, Constant.TYPE_PICTURE
+                if (childPath.isNotBlank() && childPath != path) {
+                    listImageChild.add(
+                        ImageItem(
+                            childPath, name, size, modified, id
+                        )
                     )
-                )
+                }
 
             }
             return listImageChild
@@ -243,68 +251,103 @@ object MediaStoreUtils {
 
     }
 
-    fun getChildVideoFromPath(context: Context, path: String) {
-        val uri = MediaStore.Files.getContentUri("external")
-        val projection = arrayOf(
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.DATE_MODIFIED,
-            MediaStore.Images.Media._ID
-        )
-        val selectionArgs = arrayOf("$path/%")
-        context.queryCursor(uri, projection, selectionArgs = selectionArgs) { cursor ->
-            val id = cursor.getLongValue(MediaStore.Images.Media._ID)
-            val childPath = cursor.getLongValue(MediaStore.Images.Media.DATA)
-            val size = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val modified = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val name = cursor.getStringValue(MediaStore.Images.Media.DISPLAY_NAME)
+    fun getChildVideoFromPath(context: Context, path: String): List<VideoItem> {
 
+        val listVideoChild = mutableListOf<VideoItem>()
+        try {
+            val uri = MediaStore.Video.Media.getContentUri("external")
+            val projection = arrayOf(
+                MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media.DISPLAY_NAME,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.DATE_MODIFIED,
+                MediaStore.Video.Media._ID
+            )
+            val selection = MediaStore.Video.Media.DATA + " LIKE ?"
+            val selectionArgs = arrayOf("$path/%")
+            context.queryCursor(uri, projection, selection, selectionArgs) { cursor ->
+                val id = cursor.getLongValue(MediaStore.Video.Media._ID)
+                val childPath = cursor.getStringValue(MediaStore.Video.Media.DATA)
+                val size = cursor.getLongValue(MediaStore.Video.Media.SIZE)
+                val modified = cursor.getLongValue(MediaStore.Video.Media.DATE_MODIFIED)
+                val name = cursor.getStringValue(MediaStore.Video.Media.DISPLAY_NAME)
+
+                if (childPath.isNotBlank()) {
+                    val duration = getDuration(context, childPath)
+                    listVideoChild.add(
+                        VideoItem(childPath, name, size, modified, id, duration)
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return listVideoChild
 
     }
 
-    fun getChildAudioFromPath(context: Context, path: String) {
+    fun getChildAudioFromPath(context: Context, path: String): List<AudioItem> {
+        val listAudioChild = mutableListOf<AudioItem>()
+
+        try {
+            val uri = MediaStore.Audio.Media.getContentUri("external")
+            val projection = arrayOf(
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.SIZE,
+                MediaStore.Audio.Media.DATE_MODIFIED,
+                MediaStore.Audio.Media._ID
+            )
+            val selection = MediaStore.Audio.Media.DATA + " LIKE ?"
+
+            val selectionArgs = arrayOf("$path/%")
+            context.queryCursor(uri, projection, selection, selectionArgs) { cursor ->
+                val id = cursor.getLongValue(MediaStore.Audio.Media._ID)
+                val childPath = cursor.getStringValue(MediaStore.Audio.Media.DATA)
+                val size = cursor.getLongValue(MediaStore.Audio.Media.SIZE)
+                val modified = cursor.getLongValue(MediaStore.Audio.Media.DATE_MODIFIED)
+                val name = cursor.getStringValue(MediaStore.Audio.Media.DISPLAY_NAME)
+
+                if (childPath.isNotBlank()) {
+                    val duration = getDuration(context, childPath)
+                    val thumb = getThumbnail(path)
+                    listAudioChild.add(
+                        AudioItem(childPath, name, size, modified, id, duration, thumb)
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return listAudioChild
+    }
+
+    fun getChildFileFromPath(context: Context, path: String): List<FileItem> {
+        val listFileChild = mutableListOf<FileItem>()
         val uri = MediaStore.Files.getContentUri("external")
         val projection = arrayOf(
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.DATE_MODIFIED,
-            MediaStore.Images.Media._ID
+            MediaStore.Files.FileColumns.DATA,
+            MediaStore.Files.FileColumns.DISPLAY_NAME,
+            MediaStore.Files.FileColumns.SIZE,
+            MediaStore.Files.FileColumns.DATE_MODIFIED,
+            MediaStore.Files.FileColumns._ID
         )
+        val selection = MediaStore.Audio.Media.DATA + " LIKE ?"
         val selectionArgs = arrayOf("$path/%")
         context.queryCursor(uri, projection, selectionArgs = selectionArgs) { cursor ->
-            val id = cursor.getLongValue(MediaStore.Images.Media._ID)
-            val childPath = cursor.getLongValue(MediaStore.Images.Media.DATA)
-            val size = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val modified = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val name = cursor.getStringValue(MediaStore.Images.Media.DISPLAY_NAME)
+            val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
+            val childPath = cursor.getLongValue(MediaStore.Files.FileColumns.DATA)
+            val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
+            val modified = cursor.getLongValue(MediaStore.Files.FileColumns.DATE_MODIFIED)
+            val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
 
         }
+        return mutableListOf()
 
     }
 
-    fun getChildFileFromPath(context: Context, path: String) {
-        val uri = MediaStore.Files.getContentUri("external")
-        val projection = arrayOf(
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.DATE_MODIFIED,
-            MediaStore.Images.Media._ID
-        )
-        val selectionArgs = arrayOf("$path/%")
-        context.queryCursor(uri, projection, selectionArgs = selectionArgs) { cursor ->
-            val id = cursor.getLongValue(MediaStore.Images.Media._ID)
-            val childPath = cursor.getLongValue(MediaStore.Images.Media.DATA)
-            val size = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val modified = cursor.getLongValue(MediaStore.Images.Media.SIZE)
-            val name = cursor.getStringValue(MediaStore.Images.Media.DISPLAY_NAME)
-
-        }
-
+    private fun getDuration(context: Context, path: String): Int {
+        val mp = MediaPlayer.create(context, Uri.parse(path))
+        return mp.duration
     }
-
-
 }
