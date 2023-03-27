@@ -67,7 +67,6 @@ class DialogAddNewFolder(
                 dismiss()
             } else {
                 showSnackBar(
-                    binding.root,requireContext(),
                     getString(R.string.invalid_folder_name),
                     SnackBarType.FAILED
                 )

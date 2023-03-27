@@ -143,8 +143,6 @@ class FragmentVault : Fragment() {
                             )
                             lifecycleScope.launch(Dispatchers.Main) {
                                 showSnackBar(
-                                    rootView,
-                                    requireContext(),
                                     getString(R.string.delete_success),
                                     SnackBarType.SUCCESS
                                 )
@@ -154,8 +152,6 @@ class FragmentVault : Fragment() {
 
                         override fun onFailed() {
                             showSnackBar(
-                                rootView,
-                                requireContext(),
                                 getString(R.string.delete_failed),
                                 SnackBarType.FAILED
                             )
@@ -201,8 +197,6 @@ class FragmentVault : Fragment() {
 
                         lifecycleScope.launch(Dispatchers.Main) {
                             showSnackBar(
-                                rootView,
-                                requireContext(),
                                 getString(R.string.create_success),
                                 SnackBarType.SUCCESS
                             )
@@ -213,8 +207,6 @@ class FragmentVault : Fragment() {
                     override fun onFailed() {
                         lifecycleScope.launch(Dispatchers.Main) {
                             showSnackBar(
-                                rootView,
-                                requireContext(),
                                 getString(R.string.create_failed),
                                 SnackBarType.FAILED
                             )
