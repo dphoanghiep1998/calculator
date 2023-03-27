@@ -100,6 +100,7 @@ object Constant {
     const val TYPE_TEXT = ".txt"
     const val TYPE_CSV = ".csv"
     const val TYPE_ZIP = ".zip"
+    const val TYPE_OTHER = "TYPE_OTHER"
 
 
 }

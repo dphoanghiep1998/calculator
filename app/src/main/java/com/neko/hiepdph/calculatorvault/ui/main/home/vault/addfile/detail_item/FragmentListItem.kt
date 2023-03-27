@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.data.model.ObjectItem
 import com.neko.hiepdph.calculatorvault.databinding.FragmentListItemBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter.AdapterListItem
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
@@ -19,6 +20,7 @@ import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
 class FragmentListItem : Fragment() {
     private var _binding: FragmentListItemBinding? = null
     private val binding get() = _binding!!
+
 
     private val viewModel: HomeViewModel by activityViewModels()
     private var adapterListItem: AdapterListItem? = null
@@ -42,35 +44,44 @@ class FragmentListItem : Fragment() {
     }
 
     private fun observeData() {
+
         when (args.folder.type) {
             Constant.TYPE_PICTURE -> {
                 viewModel.getImageChildFromFolder(requireContext(), args.folder.folderPath)
                 viewModel.listImageItem.observe(viewLifecycleOwner) {
-                    Log.d("TAG", "observeData: "+args.folder.type)
-                    adapterListItem?.setData(it, Constant.TYPE_PICTURE)
+                    it?.let {
+                        adapterListItem?.setData(it, Constant.TYPE_PICTURE)
+                    }
                 }
             }
             Constant.TYPE_VIDEOS -> {
                 viewModel.getVideoChildFromFolder(requireContext(), args.folder.folderPath)
                 viewModel.listVideoItem.observe(viewLifecycleOwner) {
-                    Log.d("TAG", "observeData: "+args.folder.type)
+                    it?.let {
+                        adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
 
-                    adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
+                    }
                 }
             }
             Constant.TYPE_AUDIOS -> {
 
                 viewModel.getAudioChildFromFolder(requireContext(), args.folder.folderPath)
                 viewModel.listAudioItem.observe(viewLifecycleOwner) {
-                    Log.d("TAG", "observeData: "+args.folder.type)
-
-                    adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
+                    it?.let {
+                        adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
+                    }
                 }
             }
             Constant.TYPE_FILE -> {
-                viewModel.getFileChildFromFolder(requireContext(), args.folder.folderPath)
+                args.fileType?.let {
+                    viewModel.getFileChildFromFolder(requireContext(), args.folder.folderPath,
+                        it
+                    )
+                }
                 viewModel.listFileItem.observe(viewLifecycleOwner) {
-                    adapterListItem?.setData(it, Constant.TYPE_FILE)
+                    it?.let {
+                        adapterListItem?.setData(it, Constant.TYPE_FILE)
+                    }
                 }
             }
         }
@@ -93,5 +104,10 @@ class FragmentListItem : Fragment() {
             }
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

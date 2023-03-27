@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_option"
         android:orderInCategory="300"
         android:title=""
-        app:showAsAction="" />
+        app:showAsAction="ifRoom" />
 
     <!--    <item android:id="@+id/item_checkbox"-->
     <!--        android:checkable="true"-->

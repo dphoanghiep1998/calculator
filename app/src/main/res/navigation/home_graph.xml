@@ -43,10 +43,12 @@
     <fragment
         android:id="@+id/fragmentPersistent"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.persistent.FragmentPersistent"
-        android:label="fragment_persistent"
         tools:layout="@layout/fragment_persistent">
         <argument
             android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="title"
             app:argType="string" />
         <action
             android:id="@+id/action_fragmentPersistent_to_fragmentAddFile"
@@ -56,10 +58,10 @@
         android:id="@+id/fragmentAddFile"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.FragmentAddFile"
         android:label="fragment_add_file"
-        tools:layout="@layout/fragment_add_file" >
+        tools:layout="@layout/fragment_add_file">
         <argument
             android:name="type"
-            app:argType="string"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_fragmentAddFile_to_fragmentListItem"
             app:destination="@id/fragmentListItem" />
@@ -67,8 +69,13 @@
     <fragment
         android:id="@+id/fragmentListItem"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.FragmentListItem"
-        android:label="FragmentListItem" >
-        <argument android:name="folder"
-            app:argType="com.neko.hiepdph.calculatorvault.data.model.GroupFile"/>
+        android:label="FragmentListItem">
+        <argument
+            android:name="folder"
+            app:argType="com.neko.hiepdph.calculatorvault.data.model.GroupFile" />
+        <argument
+            android:name="fileType"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

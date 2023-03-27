@@ -1,5 +1,6 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -14,8 +15,10 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAddFileFileBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAddFilePictureBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAddFileVideoBinding
 
-class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AdapterGroupItem(
+    private val onClickFolderItem: (GroupFile, type: String?) -> Unit,
+
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var listGroupItem = mutableListOf<GroupFile>()
     private var fileDataFolder = mutableListOf<String>()
     private var mType: String = Constant.TYPE_PICTURE
@@ -26,6 +29,7 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
             if (listGroupItem.isNotEmpty()) {
                 fileDataFolder.clear()
                 fileDataFolder.addAll(listGroupItem[0].dataTypeList!!)
+                Log.d("TAG", "setData: "+fileDataFolder)
             }
 
         }
@@ -113,7 +117,7 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
                     binding.tvNameQuantity.text = "${model.name} (${model.itemCount})"
 
                     binding.root.clickWithDebounce {
-                        onClickFolderItem.invoke(listGroupItem[adapterPosition])
+                        onClickFolderItem.invoke(listGroupItem[adapterPosition],null)
                     }
                 }
             }
@@ -125,7 +129,7 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
                         .into(binding.imvThumb)
                     binding.tvNameQuantity.text = "${model.name} (${model.itemCount})"
                     binding.root.clickWithDebounce {
-                        onClickFolderItem.invoke(listGroupItem[adapterPosition])
+                        onClickFolderItem.invoke(listGroupItem[adapterPosition],null)
                     }
                 }
             }
@@ -137,7 +141,7 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
                         .into(binding.imvThumb)
                     binding.tvNameQuantity.text = "${model.name} (${model.itemCount})"
                     binding.root.clickWithDebounce {
-                        onClickFolderItem.invoke(listGroupItem[adapterPosition])
+                        onClickFolderItem.invoke(listGroupItem[adapterPosition],null)
                     }
                 }
             }
@@ -149,11 +153,11 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
                             binding.imvThumb.setImageResource(R.drawable.ic_pdf_album)
                             binding.tvName.text = itemView.context.getString(R.string.pdf)
                         }
-                        Constant.TYPE_PPT -> {
+                        Constant.TYPE_PPT,Constant.TYPE_PPTX -> {
                             binding.imvThumb.setImageResource(R.drawable.ic_ppt_album)
                             binding.tvName.text = itemView.context.getString(R.string.ppt)
                         }
-                        Constant.TYPE_WORD -> {
+                        Constant.TYPE_WORD,Constant.TYPE_WORDX -> {
                             binding.imvThumb.setImageResource(R.drawable.ic_word_album)
                             binding.tvName.text = itemView.context.getString(R.string.word)
                         }
@@ -175,7 +179,7 @@ class AdapterGroupItem(private val onClickFolderItem: (GroupFile) -> Unit) :
                         }
                     }
                     binding.root.clickWithDebounce {
-                        onClickFolderItem.invoke(listGroupItem[adapterPosition])
+                        onClickFolderItem.invoke(listGroupItem[0], fileDataFolder[adapterPosition])
                     }
 
                 }

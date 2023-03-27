@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/neutral_06"
         android:textSize="@dimen/_14sdp"
+        android:paddingHorizontal="@dimen/_12sdp"
         app:layout_constraintEnd_toStartOf="@id/checkbox"
         app:layout_constraintBottom_toTopOf="@id/tv_duration_author"
         app:layout_constraintStart_toEndOf="@id/imv_thumb"
@@ -39,6 +40,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/neutral_05"
         android:textSize="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="@id/imv_thumb"
         app:layout_constraintStart_toStartOf="@id/tv_name_audio"
         app:layout_constraintTop_toBottomOf="@id/tv_name_audio" />

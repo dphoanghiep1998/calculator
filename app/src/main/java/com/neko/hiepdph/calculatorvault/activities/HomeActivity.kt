@@ -1,6 +1,7 @@
 package com.neko.hiepdph.calculatorvault.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -30,22 +31,16 @@ class HomeActivity : AppCompatActivity() {
         _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initArchitecture()
-
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return true
-            }
-
-        })
     }
 
-    private fun showDialogAddFolder() {
-
+    override fun onPause() {
+        super.onPause()
+        Log.d("TAG1234", "onPause: ")
     }
+
+
+
+
 
     private fun initArchitecture() {
         setSupportActionBar(binding.toolbar)

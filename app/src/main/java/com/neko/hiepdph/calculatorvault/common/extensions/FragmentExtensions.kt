@@ -58,23 +58,25 @@ fun Fragment.getColor(res: Int): Int {
 }
 
 @SuppressLint("ResourceAsColor")
-fun Fragment.showSnackBar(text: String, type: SnackBarType) {
-    val snackBar: Snackbar = Snackbar.make(requireView(), text, Snackbar.LENGTH_SHORT)
-    snackBar.setAction("Action", null)
-    when (type) {
-        SnackBarType.FAILED -> snackBar.setBackgroundTint(getColor(R.color.theme_01))
-        SnackBarType.SUCCESS -> snackBar.setBackgroundTint(getColor(R.color.theme_08))
+fun showSnackBar(view: View?, context: Context, text: String, type: SnackBarType) {
+    view?.let {
+        val snackBar: Snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT)
+        snackBar.setAction("Action", null)
+        when (type) {
+            SnackBarType.FAILED -> snackBar.setBackgroundTint(context.getColor(R.color.theme_01))
+            SnackBarType.SUCCESS -> snackBar.setBackgroundTint(context.getColor(R.color.theme_08))
 
+        }
+        val sbView = snackBar.view
+        val textView =
+            sbView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        val drawable = ContextCompat.getDrawable(context, R.drawable.ic_back)
+        drawable?.setTint(ContextCompat.getColor(context, R.color.white))
+        textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        textView.compoundDrawablePadding =
+            context.resources.getDimensionPixelOffset(R.dimen.snackbar_icon_padding)
+        snackBar.show()
     }
-    val sbView = snackBar.view
-    val textView =
-        sbView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
-    val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_back)
-    drawable?.setTint(ContextCompat.getColor(requireContext(), R.color.white))
-    textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
-    textView.compoundDrawablePadding =
-        resources.getDimensionPixelOffset(R.dimen.snackbar_icon_padding)
-    snackBar.show()
 
 }
 

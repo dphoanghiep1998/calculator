@@ -138,7 +138,7 @@ object MediaStoreUtils {
                                 if (!folders.containsKey(parentFolder)) {
                                     folders[parentFolder] = GroupFile(
                                         parentFolder,
-                                        Constant.TYPE_AUDIOS,
+                                        Constant.TYPE_FILE,
                                         path,
                                         mutableListOf(),
                                         mutableListOf(),
@@ -149,37 +149,21 @@ object MediaStoreUtils {
                                 if (path.isNotEmpty()) {
                                     if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PDF)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_CSV)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_CSV)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_CSV)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_PPT)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PPT)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPT)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_PPTX)
-                                    ) {
-                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPT)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_TEXT)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PPT)) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPTX)
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_TEXT)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_TEXT)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_WORD)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_WORD)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_EXCEL)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_EXCEL)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_EXCEL)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_WORDX)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_WORDX)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
-                                    } else if (name.lowercase(Locale.ROOT)
-                                            .endsWith(Constant.TYPE_ZIP)
-                                    ) {
+                                    } else if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_ZIP)) {
                                         folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_ZIP)
                                     }
                                 }
@@ -205,7 +189,10 @@ object MediaStoreUtils {
             mr.setDataSource(path)
             val byte1 = mr.embeddedPicture
             mr.release()
-            if (byte1 != null) BitmapFactory.decodeByteArray(byte1, 0, byte1.size) else null
+            if (byte1 != null)
+                BitmapFactory.decodeByteArray(byte1, 0, byte1.size)
+            else
+                null
         } catch (e: java.lang.Exception) {
             null
         }
@@ -310,7 +297,7 @@ object MediaStoreUtils {
 
                 if (childPath.isNotBlank()) {
                     val duration = getDuration(context, childPath)
-                    val thumb = getThumbnail(path)
+                    val thumb = getThumbnail(childPath)
                     listAudioChild.add(
                         AudioItem(childPath, name, size, modified, id, duration, thumb)
                     )
@@ -322,27 +309,124 @@ object MediaStoreUtils {
         return listAudioChild
     }
 
-    fun getChildFileFromPath(context: Context, path: String): List<FileItem> {
+    fun getChildFileFromPath(context: Context, path: String, type: String): List<FileItem> {
         val listFileChild = mutableListOf<FileItem>()
-        val uri = MediaStore.Files.getContentUri("external")
-        val projection = arrayOf(
-            MediaStore.Files.FileColumns.DATA,
-            MediaStore.Files.FileColumns.DISPLAY_NAME,
-            MediaStore.Files.FileColumns.SIZE,
-            MediaStore.Files.FileColumns.DATE_MODIFIED,
-            MediaStore.Files.FileColumns._ID
-        )
-        val selection = MediaStore.Audio.Media.DATA + " LIKE ?"
-        val selectionArgs = arrayOf("$path/%")
-        context.queryCursor(uri, projection, selectionArgs = selectionArgs) { cursor ->
-            val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
-            val childPath = cursor.getLongValue(MediaStore.Files.FileColumns.DATA)
-            val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
-            val modified = cursor.getLongValue(MediaStore.Files.FileColumns.DATE_MODIFIED)
-            val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
+        try {
+            val uri = MediaStore.Files.getContentUri("external")
+            val projection = arrayOf(
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.DISPLAY_NAME,
+                MediaStore.Files.FileColumns.SIZE,
+                MediaStore.Files.FileColumns.DATE_MODIFIED,
+                MediaStore.Files.FileColumns._ID,
+                MediaStore.Files.FileColumns.MIME_TYPE
+            )
+            context.queryCursor(uri, projection) { cursor ->
+                val fullMimetype = cursor.getStringValue(MediaStore.Files.FileColumns.MIME_TYPE)
+                    ?.lowercase(Locale.getDefault()) ?: return@queryCursor
+                val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
+                val childPath = cursor.getLongValue(MediaStore.Files.FileColumns.DATA)
+                val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
+                val modified = cursor.getLongValue(MediaStore.Files.FileColumns.DATE_MODIFIED)
+                val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
 
+                val mimetype = fullMimetype.substringBefore("/")
+
+                if (mimetype == "text" || extraDocumentMimeTypes.contains(fullMimetype) || archiveMimeTypes.contains(
+                        fullMimetype
+                    )
+                ) {
+
+                    if (path.isNotEmpty()) {
+                        when (type) {
+                            Constant.TYPE_PDF -> {
+                                if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, Constant.TYPE_PDF
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_PPT, Constant.TYPE_PPTX -> {
+                                if (name.lowercase(Locale.ROOT)
+                                        .endsWith(Constant.TYPE_PPTX) || (name.lowercase(Locale.ROOT)
+                                        .endsWith(Constant.TYPE_PPT))
+                                ) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_WORDX, Constant.TYPE_WORD -> {
+                                if (name.lowercase(Locale.ROOT)
+                                        .endsWith(Constant.TYPE_WORD) || name.lowercase(Locale.ROOT)
+                                        .endsWith(Constant.TYPE_WORDX)
+                                ) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_EXCEL -> {
+                                if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_EXCEL)) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_CSV -> {
+                                if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_CSV)) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_TEXT -> {
+                                if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_TEXT)) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+                                        )
+                                    )
+                                }
+                            }
+                            Constant.TYPE_ZIP -> {
+                                if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_ZIP)) {
+                                    listFileChild.add(
+                                        FileItem(
+                                            path, name, size, modified, id, type
+                                        )
+                                    )
+                                }
+                            }
+//                        Constant.TYPE_OTHER -> {
+//                            if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
+//                                listFileChild.add(
+//                                    FileItem(
+//                                        path, name, size, modified, id, Constant.TYPE_PDF
+//                                    )
+//                                )
+//                            }
+//                        }
+                        }
+
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            return listFileChild
         }
-        return mutableListOf()
+        return listFileChild
 
     }
 

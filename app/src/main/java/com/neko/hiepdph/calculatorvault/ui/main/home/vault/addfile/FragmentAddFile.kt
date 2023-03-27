@@ -10,7 +10,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.R
-import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddFileBinding
@@ -58,9 +57,11 @@ class FragmentAddFile : Fragment() {
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterGroupItem(onClickFolderItem = {
-            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(it)
-            navigateToPage(R.id.fragmentAddFile,action)
+        adapter = AdapterGroupItem(onClickFolderItem = { groupFile, fileType ->
+            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
+                groupFile, fileType
+            )
+            navigateToPage(R.id.fragmentAddFile, action)
         })
         binding.rcvGroupItem.adapter = adapter
         val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
@@ -74,16 +75,24 @@ class FragmentAddFile : Fragment() {
     private fun observeListGroupData() {
         when (args.type) {
             Constant.TYPE_PICTURE -> viewModel.listGroupImageData.observe(viewLifecycleOwner) {
-                adapter.setData(it, args.type)
+                it?.let {
+                    adapter.setData(it, args.type)
+                }
             }
             Constant.TYPE_AUDIOS -> viewModel.listGroupAudioData.observe(viewLifecycleOwner) {
-                adapter.setData(it, args.type)
+                it?.let {
+                    adapter.setData(it, args.type)
+                }
             }
             Constant.TYPE_VIDEOS -> viewModel.listGroupVideoData.observe(viewLifecycleOwner) {
-                adapter.setData(it, args.type)
+                it?.let {
+                    adapter.setData(it, args.type)
+                }
             }
             Constant.TYPE_FILE -> viewModel.listGroupFileData.observe(viewLifecycleOwner) {
-                adapter.setData(it, args.type)
+                it?.let {
+                    adapter.setData(it, args.type)
+                }
             }
         }
 

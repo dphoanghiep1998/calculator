@@ -12,10 +12,8 @@ import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.common.extensions.getColor
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.databinding.DialogAddFolderBinding
-import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
 
 
 interface AddNewFolderDialogCallBack {
@@ -48,7 +46,7 @@ class DialogAddNewFolder(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogAddFolderBinding.inflate(layoutInflater)
+        binding = DialogAddFolderBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,7 +66,11 @@ class DialogAddNewFolder(
                 callBack.onPositiveClicked(binding.edtName.text.toString())
                 dismiss()
             } else {
-                showSnackBar(getString(R.string.invalid_folder_name),SnackBarType.FAILED)
+                showSnackBar(
+                    binding.root,requireContext(),
+                    getString(R.string.invalid_folder_name),
+                    SnackBarType.FAILED
+                )
             }
         }
         binding.btnCancel.clickWithDebounce {

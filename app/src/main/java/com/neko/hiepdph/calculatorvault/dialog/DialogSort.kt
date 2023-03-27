@@ -9,44 +9,21 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.neko.hiepdph.calculatorvault.R
-import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
+import com.neko.hiepdph.calculatorvault.databinding.DialogSortBinding
 
 
-enum class DialogConfirmType(
-    val title: Int,
-    val content: Int,
-    val imageRes: Int,
-    val negativeText: Int,
-    val positiveText: Int
-) {
-    DELETE(
-        R.string.delete,
-        R.string.delete_instruction,
-        R.drawable.ic_delete,
-        R.string.cancel,
-        R.string.yes
-    ),
-    UNLOCK(
-        R.string.unlock,
-        R.string.unlock_instruction,
-        R.drawable.ic_unlock,
-        R.string.cancel,
-        R.string.yes
-    ),
-
-}
-
-interface ConfirmDialogCallBack {
+interface SortDialogCallBack {
     fun onPositiveClicked()
 }
 
-class DialogConfirm(
-    private val callBack: ConfirmDialogCallBack, private val dialogType: DialogConfirmType,val name:String
-) : DialogFragment() {
-    private lateinit var binding: DialogConfirmBinding
+class DialogSort(
+    private val callBack: SortDialogCallBack,
+
+    ) : DialogFragment() {
+    private lateinit var binding: DialogSortBinding
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -69,7 +46,7 @@ class DialogConfirm(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogConfirmBinding.inflate(inflater,container,false)
+        binding = DialogSortBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -79,25 +56,34 @@ class DialogConfirm(
         initView()
     }
 
+    override fun show(manager: FragmentManager, tag: String?) {
+        try {
+            val ft = manager?.beginTransaction()
+            ft?.add(this, tag)
+            ft?.commitAllowingStateLoss()
+        } catch (ignored: IllegalStateException) {
+
+        }
+    }
+
     private fun initView() {
-        binding.imvTitle.setImageResource(dialogType.imageRes)
-        binding.tvTitle.text = requireContext().getText(dialogType.title)
-        binding.tvInstruction.text = requireContext().getString(dialogType.content,name)
-        binding.btnCancel.text = requireContext().getText(dialogType.negativeText)
-        binding.btnConfirm.text = requireContext().getText(dialogType.positiveText)
+
         initButton()
     }
 
     private fun initButton() {
         binding.btnConfirm.clickWithDebounce {
             callBack.onPositiveClicked()
-            dismiss()
+            dismissAllowingStateLoss()
         }
         binding.btnCancel.clickWithDebounce {
-            dismiss()
+            dismissAllowingStateLoss()
         }
         binding.root.clickWithDebounce {
-            dismiss()
+            dismissAllowingStateLoss()
+        }
+        binding.containerMain.setOnClickListener {
+
         }
     }
 

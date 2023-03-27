@@ -93,4 +93,9 @@
     <string name="text">Text</string>
     <string name="csv">CSV</string>
     <string name="zip">ZIP</string>
+    <string name="name">Name</string>
+    <string name="size">Size</string>
+    <string name="random">Random</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 </resources>

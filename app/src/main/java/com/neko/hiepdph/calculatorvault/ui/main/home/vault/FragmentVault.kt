@@ -3,14 +3,15 @@ package com.neko.hiepdph.calculatorvault.ui.main.home.vault
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
@@ -27,6 +28,8 @@ import com.neko.hiepdph.calculatorvault.dialog.*
 import com.neko.hiepdph.calculatorvault.ui.main.home.adapter.AdapterFolder
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -37,11 +40,13 @@ class FragmentVault : Fragment() {
     private lateinit var popupWindow: PopupWindow
     private lateinit var adapter: AdapterFolder
     private val viewModel: HomeViewModel by viewModels()
+    private var rootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        rootView = binding.root
         return binding.root
     }
 
@@ -50,6 +55,8 @@ class FragmentVault : Fragment() {
         initView()
         observeListFile()
         viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
+        Log.d("TAG", "showSnackBar123: " + rootView)
+
     }
 
     private fun observeListFile() {
@@ -63,29 +70,28 @@ class FragmentVault : Fragment() {
         initRecyclerView()
         initPopupWindow()
         initButton()
-//        initToolBar()
+        initToolBar()
     }
 
+    private fun initToolBar() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
+            }
 
-//    private fun initToolBar() {
-//        requireActivity().addMenuProvider(object : MenuProvider {
-//            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
-//            }
-//
-//            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                when (menuItem.itemId) {
-//                    R.id.menu -> Log.d("TAG", "onMenuItemSelected: ")
-//                    R.id.add_folder -> showAddFolderDialog()
-//                    R.id.option -> showOptionDialog()
-//                    R.id.navigate_calculator -> navigateToCalculator()
-//                }
-//                return true
-//            }
-//
-//        })
-//    }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                val menuItemView = requireActivity().findViewById<View>(R.id.option)
+                when (menuItem.itemId) {
+                    R.id.add_folder -> showAddFolderDialog()
+                    R.id.option -> showOptionDialog(menuItemView)
+                    R.id.navigate_calculator -> navigateToCalculator()
+                }
+                return true
+            }
 
+        })
+    }
 
     private fun navigateToCalculator() {
         val intent = Intent(requireActivity(), MainActivity::class.java)
@@ -95,21 +101,37 @@ class FragmentVault : Fragment() {
 
     private fun initRecyclerView() {
         adapter = AdapterFolder(requireContext(), onItemPress = {
-            val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(it.type)
             when (it.type) {
                 Constant.TYPE_PICTURE -> {
+                    val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
+                        it.type, getString(R.string.pictures)
+                    )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_VIDEOS -> {
+                    val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
+                        it.type, getString(R.string.videos)
+                    )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_AUDIOS -> {
+                    val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
+                        it.type, getString(R.string.audios)
+                    )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_FILE -> {
+                    val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
+                        it.type, getString(R.string.files)
+                    )
                     navigateToPage(R.id.fragmentVault, action)
                 }
-                else -> {}
+                else -> {
+                    val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
+                        it.type, it.name
+                    )
+                    navigateToPage(R.id.fragmentVault, action)
+                }
             }
         }, onDeletePress = {
             val dialogConfirm = DialogConfirm(object : ConfirmDialogCallBack {
@@ -119,20 +141,33 @@ class FragmentVault : Fragment() {
                             viewModel.getListFolderVault(
                                 requireContext(), requireActivity().filesDir
                             )
-                            showSnackBar(
-                                getString(R.string.delete_success), SnackBarType.SUCCESS
-                            )
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                showSnackBar(
+                                    rootView,
+                                    requireContext(),
+                                    getString(R.string.delete_success),
+                                    SnackBarType.SUCCESS
+                                )
+                            }
+
                         }
 
                         override fun onFailed() {
-                            showSnackBar(getString(R.string.delete_failed), SnackBarType.FAILED)
+                            showSnackBar(
+                                rootView,
+                                requireContext(),
+                                getString(R.string.delete_failed),
+                                SnackBarType.FAILED
+                            )
                         }
 
                     }
                     viewModel.deleteFolder(it.path, callback)
                 }
             }, DialogConfirmType.DELETE, it.name)
-            dialogConfirm.show(childFragmentManager, dialogConfirm.tag)
+
+            dialogConfirm.show(parentFragmentManager, dialogConfirm.tag)
+
         }, onRenamePress = {
 
         })
@@ -148,12 +183,13 @@ class FragmentVault : Fragment() {
 
     }
 
+
     private fun initButton() {
 
     }
 
-    private fun showOptionDialog() {
-//        popupWindow.showAsDropDown(binding.too, 0, 0)
+    private fun showOptionDialog(menuItemView: View) {
+        popupWindow.showAsDropDown(menuItemView, 0, 0)
     }
 
     private fun showAddFolderDialog() {
@@ -161,12 +197,28 @@ class FragmentVault : Fragment() {
             override fun onPositiveClicked(name: String) {
                 val callback = object : ICreateFile {
                     override fun onSuccess() {
-                        showSnackBar(getString(R.string.create_success), SnackBarType.SUCCESS)
+                        Log.d("TAG", "showAddFolderDialog: " + rootView)
+
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            showSnackBar(
+                                rootView,
+                                requireContext(),
+                                getString(R.string.create_success),
+                                SnackBarType.SUCCESS
+                            )
+                        }
                         viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
                     }
 
                     override fun onFailed() {
-                        showSnackBar(getString(R.string.create_failed), SnackBarType.FAILED)
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            showSnackBar(
+                                rootView,
+                                requireContext(),
+                                getString(R.string.create_failed),
+                                SnackBarType.FAILED
+                            )
+                        }
                     }
 
                 }
@@ -174,7 +226,7 @@ class FragmentVault : Fragment() {
             }
 
         })
-        dialogAddNewFolder.show(childFragmentManager, dialogAddNewFolder.tag)
+        dialogAddNewFolder.show(parentFragmentManager, dialogAddNewFolder.tag)
     }
 
     private fun initPopupWindow() {
@@ -192,6 +244,14 @@ class FragmentVault : Fragment() {
             popupWindow.dismiss()
         }
         bindingLayout.tvSort.clickWithDebounce {
+            val dialogSort = DialogSort(callBack = object : SortDialogCallBack {
+                override fun onPositiveClicked() {
+
+                }
+
+            })
+            dialogSort.show(parentFragmentManager, dialogSort.tag)
+            Log.d("TAG", "initPopupWindow: " + dialogSort)
             popupWindow.dismiss()
         }
         if (!AdapterFolder.isSwitchView) {
@@ -243,9 +303,7 @@ class FragmentVault : Fragment() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         _binding = null
+        super.onDestroy()
     }
-
-
 }

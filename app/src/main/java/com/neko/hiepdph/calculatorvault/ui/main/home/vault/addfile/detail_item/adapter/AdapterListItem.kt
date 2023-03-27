@@ -1,5 +1,6 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,10 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
-import com.neko.hiepdph.calculatorvault.data.model.AudioItem
-import com.neko.hiepdph.calculatorvault.data.model.ImageItem
-import com.neko.hiepdph.calculatorvault.data.model.ObjectItem
-import com.neko.hiepdph.calculatorvault.data.model.VideoItem
+import com.neko.hiepdph.calculatorvault.data.model.*
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemAudiosBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemFileBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutItemPictureBinding
@@ -96,7 +94,7 @@ class AdapterListItem : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     val item = listItem[adapterPosition] as ImageItem
                     var requestOptions = RequestOptions()
                     requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
-                    Glide.with(itemView.context).load(item.path).apply(requestOptions)
+                    Glide.with(itemView.context).load(item.imagePath).apply(requestOptions)
                         .error(R.drawable.ic_delete).into(binding.imvThumb)
                 }
             }
@@ -115,21 +113,38 @@ class AdapterListItem : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     val item = listItem[adapterPosition] as AudioItem
                     var requestOptions = RequestOptions()
                     requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
-                    Glide.with(itemView.context).load(item.thumbBitmap).apply(requestOptions)
-                        .error(R.drawable.ic_delete)
-                        .into(binding.imvThumb)
+                    Glide.with(itemView.context).asBitmap().load(item.thumbBitmap).apply(requestOptions)
+                        .error(R.drawable.ic_delete).into(binding.imvThumb)
 
                     binding.tvNameAudio.text = item.audioName
-                    binding.tvDurationAuthor.text =
+                    binding.tvDurationAuthor.text = item.audioDuration.toString()
                 }
             }
             3 -> {
                 with(holder as ItemFileViewHolder) {
-                    val item = listItem[adapterPosition]
-                    Glide.with(itemView.context).load(item.path).error(R.drawable.ic_delete)
-                        .into(binding.imvThumb)
+                    val item = listItem[adapterPosition] as FileItem
+                    Glide.with(itemView.context).load(getImageForItemFile(item))
+                        .error(R.drawable.ic_delete).into(binding.imvThumb)
+
+                    binding.tvNameDocument.text = item.fileName
+                    binding.tvSize.text= item.fileSize.toString()
                 }
             }
         }
+    }
+
+    private fun getImageForItemFile(item: FileItem): Int {
+       return when (item.fileType) {
+            Constant.TYPE_WORDX -> R.drawable.ic_docx
+            Constant.TYPE_WORD -> R.drawable.ic_doc
+            Constant.TYPE_CSV -> R.drawable.ic_csv
+            Constant.TYPE_PPT -> R.drawable.ic_ppt
+            Constant.TYPE_TEXT -> R.drawable.ic_txt
+            Constant.TYPE_ZIP -> R.drawable.ic_zip
+            Constant.TYPE_PPTX -> R.drawable.ic_pptx
+            Constant.TYPE_EXCEL -> R.drawable.ic_excel
+            Constant.TYPE_PDF -> R.drawable.ic_pdf
+           else -> 0
+       }
     }
 }

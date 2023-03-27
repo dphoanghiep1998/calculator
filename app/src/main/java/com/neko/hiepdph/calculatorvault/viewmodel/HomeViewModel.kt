@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
-import com.neko.hiepdph.calculatorvault.common.utils.FileUtils
-import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
-import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
-import com.neko.hiepdph.calculatorvault.common.utils.MediaStoreUtils
+import com.neko.hiepdph.calculatorvault.common.utils.*
 import com.neko.hiepdph.calculatorvault.data.model.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,15 +19,15 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor() : ViewModel() {
     var listFolder = MutableLiveData(mutableListOf<CustomFolder>())
 
-    var listGroupImageData = MutableLiveData(mutableListOf<GroupFile>())
-    var listGroupVideoData = MutableLiveData(mutableListOf<GroupFile>())
-    var listGroupAudioData = MutableLiveData(mutableListOf<GroupFile>())
-    var listGroupFileData = MutableLiveData(mutableListOf<GroupFile>())
+    var listGroupImageData = SelfCleaningLiveData<MutableList<GroupFile>>()
+    var listGroupVideoData = SelfCleaningLiveData<MutableList<GroupFile>>()
+    var listGroupAudioData = SelfCleaningLiveData<MutableList<GroupFile>>()
+    var listGroupFileData = SelfCleaningLiveData<MutableList<GroupFile>>()
 
-    var listImageItem = MutableLiveData(mutableListOf<ImageItem>())
-    var listAudioItem = MutableLiveData(mutableListOf<AudioItem>())
-    var listVideoItem = MutableLiveData(mutableListOf<VideoItem>())
-    var listFileItem = MutableLiveData(mutableListOf<FileItem>())
+    var listImageItem = SelfCleaningLiveData<MutableList<ImageItem>>()
+    var listAudioItem = SelfCleaningLiveData<MutableList<AudioItem>>()
+    var listVideoItem = SelfCleaningLiveData<MutableList<VideoItem>>()
+    var listFileItem = SelfCleaningLiveData<MutableList<FileItem>>()
 
 
     fun createFolder(parentDir: File, fileName: String, callback: ICreateFile) {
@@ -95,27 +92,34 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getImageChildFromFolder(context: Context, path: String) {
-        Log.d("TAG", "getImageChildFromFolder: "+path)
+        Log.d("TAG", "getImageChildFromFolder: " + path)
         viewModelScope.launch(Dispatchers.IO) {
-            val listImageChild = MediaStoreUtils.getChildImageFromPath(context, path).toMutableList()
+            val listImageChild =
+                MediaStoreUtils.getChildImageFromPath(context, path).toMutableList()
             listImageItem.postValue(listImageChild)
         }
     }
+
     fun getAudioChildFromFolder(context: Context, path: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val listAudioChild = MediaStoreUtils.getChildAudioFromPath(context, path).toMutableList()
+            val listAudioChild =
+                MediaStoreUtils.getChildAudioFromPath(context, path).toMutableList()
             listAudioItem.postValue(listAudioChild)
         }
     }
+
     fun getVideoChildFromFolder(context: Context, path: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val listVideoChild = MediaStoreUtils.getChildVideoFromPath(context, path).toMutableList()
+            val listVideoChild =
+                MediaStoreUtils.getChildVideoFromPath(context, path).toMutableList()
             listVideoItem.postValue(listVideoChild)
         }
     }
-    fun getFileChildFromFolder(context: Context, path: String) {
+
+    fun getFileChildFromFolder(context: Context, path: String, type: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val listFileChild = MediaStoreUtils.getChildFileFromPath(context, path).toMutableList()
+            val listFileChild =
+                MediaStoreUtils.getChildFileFromPath(context, path, type).toMutableList()
             listFileItem.postValue(listFileChild)
         }
     }

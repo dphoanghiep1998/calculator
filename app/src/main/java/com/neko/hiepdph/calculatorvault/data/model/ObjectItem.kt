@@ -1,9 +1,9 @@
 package com.neko.hiepdph.calculatorvault.data.model
 
 open class ObjectItem(
-    val path: String,
-    val name: String,
-    var size: Long = 0L,
-    var modified: Long = 0L,
-    var mediaStoreId: Long = 0L,
+    private val path: String,
+    private val name: String,
+    private val size: Long = 0L,
+    private val modified: Long = 0L,
+    private val mediaStoreId: Long = 0L,
 )

@@ -1,13 +1,13 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.persistent
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentPersistentBinding
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
@@ -40,17 +40,19 @@ class FragmentPersistent : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPersistentBinding.inflate(inflater, container, false)
+        (requireActivity() as HomeActivity).supportActionBar?.title = args.title
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initToolBar()
     }
 
 
     private fun initView() {
-        binding.tvTest.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             val action =
                 FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(args.type)
             navigateToPage(R.id.fragmentPersistent, action)
@@ -60,6 +62,19 @@ class FragmentPersistent : Fragment() {
 
     private fun initRecyclerView() {
 
+    }
+    private fun initToolBar() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+                return true
+            }
+
+        })
     }
 
 
