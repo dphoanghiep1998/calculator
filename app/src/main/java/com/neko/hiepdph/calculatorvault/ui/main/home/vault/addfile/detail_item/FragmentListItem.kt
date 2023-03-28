@@ -2,17 +2,17 @@ package com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
-import com.neko.hiepdph.calculatorvault.data.model.ObjectItem
 import com.neko.hiepdph.calculatorvault.databinding.FragmentListItemBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter.AdapterListItem
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
@@ -37,10 +37,32 @@ class FragmentListItem : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeData()
+        (requireActivity() as HomeActivity).supportActionBar?.title = args.folder.name
     }
 
     private fun initView() {
+        initToolBar()
         initRecycleView()
+    }
+
+    private fun initToolBar() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+                menuInflater.inflate(R.menu.toolbar_menu_pick, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.check_box_toolbar -> {
+                        Log.d("TAG", "onMenuItemSelected: ")
+                        menuItem.isChecked = !menuItem.isChecked
+                    }
+                }
+                return true
+            }
+
+        })
     }
 
     private fun observeData() {
@@ -74,8 +96,8 @@ class FragmentListItem : Fragment() {
             }
             Constant.TYPE_FILE -> {
                 args.fileType?.let {
-                    viewModel.getFileChildFromFolder(requireContext(), args.folder.folderPath,
-                        it
+                    viewModel.getFileChildFromFolder(
+                        requireContext(), args.folder.folderPath, it
                     )
                 }
                 viewModel.listFileItem.observe(viewLifecycleOwner) {

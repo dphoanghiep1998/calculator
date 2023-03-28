@@ -98,4 +98,6 @@
     <string name="random">Random</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
+    <string name="library">Library</string>
+    <string name="audios_album">Audios album</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddFileBinding
@@ -44,6 +45,7 @@ class FragmentAddFile : Fragment() {
     }
 
     private fun getDataFromArgs() {
+        (requireActivity() as HomeActivity).supportActionBar?.title = args.title
         getDataGroupFile(args.type)
     }
 

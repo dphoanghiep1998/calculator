@@ -10,18 +10,21 @@ import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.common.enums.Order
+import com.neko.hiepdph.calculatorvault.common.enums.Sort
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
+import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
 import com.neko.hiepdph.calculatorvault.databinding.FragmentHomeBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 import com.neko.hiepdph.calculatorvault.dialog.*
@@ -36,11 +39,15 @@ import kotlinx.coroutines.launch
 class FragmentVault : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var popupWindow: PopupWindow
     private lateinit var adapter: AdapterFolder
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
     private var rootView: View? = null
+
+    companion object {
+        var sortType: Sort = Sort.NAME
+        var order: Order = Order.ASC
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -55,13 +62,13 @@ class FragmentVault : Fragment() {
         initView()
         observeListFile()
         viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
-        Log.d("TAG", "showSnackBar123: " + rootView)
 
     }
 
     private fun observeListFile() {
         viewModel.listFolder.observe(viewLifecycleOwner) {
-            adapter.setData(it)
+            Log.d("TAG", "observeListFile: " + sortList(it))
+            adapter.setData(sortList(it))
         }
     }
 
@@ -143,8 +150,7 @@ class FragmentVault : Fragment() {
                             )
                             lifecycleScope.launch(Dispatchers.Main) {
                                 showSnackBar(
-                                    getString(R.string.delete_success),
-                                    SnackBarType.SUCCESS
+                                    getString(R.string.delete_success), SnackBarType.SUCCESS
                                 )
                             }
 
@@ -152,8 +158,7 @@ class FragmentVault : Fragment() {
 
                         override fun onFailed() {
                             showSnackBar(
-                                getString(R.string.delete_failed),
-                                SnackBarType.FAILED
+                                getString(R.string.delete_failed), SnackBarType.FAILED
                             )
                         }
 
@@ -193,12 +198,10 @@ class FragmentVault : Fragment() {
             override fun onPositiveClicked(name: String) {
                 val callback = object : ICreateFile {
                     override fun onSuccess() {
-                        Log.d("TAG", "showAddFolderDialog: " + rootView)
 
                         lifecycleScope.launch(Dispatchers.Main) {
                             showSnackBar(
-                                getString(R.string.create_success),
-                                SnackBarType.SUCCESS
+                                getString(R.string.create_success), SnackBarType.SUCCESS
                             )
                         }
                         viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
@@ -207,8 +210,7 @@ class FragmentVault : Fragment() {
                     override fun onFailed() {
                         lifecycleScope.launch(Dispatchers.Main) {
                             showSnackBar(
-                                getString(R.string.create_failed),
-                                SnackBarType.FAILED
+                                getString(R.string.create_failed), SnackBarType.FAILED
                             )
                         }
                     }
@@ -237,13 +239,13 @@ class FragmentVault : Fragment() {
         }
         bindingLayout.tvSort.clickWithDebounce {
             val dialogSort = DialogSort(callBack = object : SortDialogCallBack {
-                override fun onPositiveClicked() {
-
+                override fun onPositiveClicked(mSortType: Sort, mOrder: Order) {
+                    sortType = mSortType
+                    order = mOrder
+                    viewModel.listFolder.postValue(viewModel.listFolder.value)
                 }
-
-            })
+            }, sortType, order)
             dialogSort.show(parentFragmentManager, dialogSort.tag)
-            Log.d("TAG", "initPopupWindow: " + dialogSort)
             popupWindow.dismiss()
         }
         if (!AdapterFolder.isSwitchView) {
@@ -292,6 +294,38 @@ class FragmentVault : Fragment() {
             val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             binding.rcvFolder.layoutManager = gridLayoutManager
         }
+    }
+
+    private fun sortList(mList: MutableList<CustomFolder>): MutableList<CustomFolder> {
+        when (order) {
+            Order.ASC -> {
+                when (sortType) {
+                    Sort.RANDOM -> {
+                        mList.shuffle()
+                    }
+                    Sort.NAME -> {
+                        mList.sortBy { it.name }
+                    }
+                    Sort.SIZE -> {
+                        mList.sortBy { it.itemCount }
+                    }
+                }
+            }
+            Order.DES -> {
+                when (sortType) {
+                    Sort.RANDOM -> {
+                        mList.shuffle()
+                    }
+                    Sort.NAME -> {
+                        mList.sortByDescending { it.name }
+                    }
+                    Sort.SIZE -> {
+                        mList.sortByDescending { it.itemCount }
+                    }
+                }
+            }
+        }
+        return mList
     }
 
     override fun onDestroy() {

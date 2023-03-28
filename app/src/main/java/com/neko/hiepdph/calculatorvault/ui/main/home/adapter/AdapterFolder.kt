@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -16,12 +15,11 @@ import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeGridLayoutBinding
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeListLayoutBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuItemOptionBinding
-import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 
 
 class AdapterFolder(
     context: Context,
-    val onItemPress: (customFolder:CustomFolder) -> Unit,
+    val onItemPress: (customFolder: CustomFolder) -> Unit,
     val onRenamePress: (customFolder: CustomFolder) -> Unit,
     val onDeletePress: (customFolder: CustomFolder) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
@@ -31,6 +29,7 @@ class AdapterFolder(
     companion object {
         var isSwitchView = false
     }
+
     init {
         initPopupWindow(context)
     }
@@ -50,7 +49,7 @@ class AdapterFolder(
     fun setData(list: List<CustomFolder>) {
         listFolder.clear()
         listFolder.addAll(list.toMutableList())
-       notifyDataSetChanged()
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

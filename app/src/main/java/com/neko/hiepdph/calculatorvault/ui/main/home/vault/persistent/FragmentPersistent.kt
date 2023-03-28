@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
+import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentPersistentBinding
-import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
+import com.neko.hiepdph.calculatorvault.dialog.DialogAddFile
+import com.neko.hiepdph.calculatorvault.ui.main.home.vault.persistent.adapter.AdapterPersistent
+import com.neko.hiepdph.calculatorvault.viewmodel.PersistentViewModel
 
 enum class PersistentType {
     VIDEOS, AUDIOS, DOCUMENTS, PICTURES;
@@ -33,7 +38,8 @@ class FragmentPersistent : Fragment() {
     private var _binding: FragmentPersistentBinding? = null
     private val binding get() = _binding!!
     private val args: FragmentPersistentArgs by navArgs()
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: PersistentViewModel by viewModels()
+    private var adapterPersistent: AdapterPersistent? = null
 
 
     override fun onCreateView(
@@ -52,17 +58,98 @@ class FragmentPersistent : Fragment() {
 
 
     private fun initView() {
-        binding.floatingActionButton.setOnClickListener {
-            val action =
-                FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(args.type)
-            navigateToPage(R.id.fragmentPersistent, action)
-        }
+        initData()
         initRecyclerView()
+        initButton()
+    }
+    private fun getDataGroupFile(type: String) {
+        viewModel.getListFolderItem(requireContext(), type)
+    }
+    private fun initData() {
+        when (args.type) {
+            Constant.TYPE_PICTURE -> viewModel.listImageItem.observe(viewLifecycleOwner) {
+                it?.let {
+                    adapterPersistent?.setData(it, args.type)
+                }
+            }
+            Constant.TYPE_AUDIOS -> viewModel.listAudioItem.observe(viewLifecycleOwner) {
+                it?.let {
+                    adapterPersistent?.setData(it, args.type)
+                }
+            }
+            Constant.TYPE_VIDEOS -> viewModel.listVideoItem.observe(viewLifecycleOwner) {
+                it?.let {
+                    adapterPersistent?.setData(it, args.type)
+                }
+            }
+            Constant.TYPE_FILE -> viewModel.listFileItem.observe(viewLifecycleOwner) {
+                it?.let {
+                    adapterPersistent?.setData(it, args.type)
+                }
+            }
+        }
+    }
+
+    private fun initButton() {
+        binding.floatingActionButton.setOnClickListener {
+            val name = when (args.type) {
+                Constant.TYPE_PICTURE -> getString(R.string.library)
+                Constant.TYPE_AUDIOS -> getString(R.string.audios_album)
+                Constant.TYPE_VIDEOS -> getString(R.string.library)
+                Constant.TYPE_FILE -> getString(R.string.files)
+                else -> args.title
+            }
+
+            if (args.type == Constant.TYPE_ADD_MORE) {
+                val dialogFloatingButton = DialogAddFile(onClickPicture = {
+                    val action =
+                        FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
+                            Constant.TYPE_PICTURE, getString(R.string.library)
+                        )
+                    navigateToPage(R.id.fragmentPersistent, action)
+                }, onClickAudio = {
+                    val action =
+                        FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
+                            Constant.TYPE_AUDIOS, getString(R.string.audios_album)
+                        )
+                    navigateToPage(R.id.fragmentPersistent, action)
+                }, onClickVideo = {
+                    val action =
+                        FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
+                            Constant.TYPE_VIDEOS, getString(R.string.library)
+                        )
+                    navigateToPage(R.id.fragmentPersistent, action)
+                }, onClickFile = {
+                    val action =
+                        FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
+                            Constant.TYPE_FILE, getString(R.string.files)
+                        )
+                    navigateToPage(R.id.fragmentPersistent, action)
+                })
+                dialogFloatingButton.show(childFragmentManager, dialogFloatingButton.tag)
+            } else {
+                val action = FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
+                    args.type, name
+                )
+                navigateToPage(R.id.fragmentPersistent, action)
+            }
+        }
     }
 
     private fun initRecyclerView() {
+        adapterPersistent = AdapterPersistent(onClickItem = {
+
+        })
+        binding.rcvItemGroup.adapter = adapterPersistent
+        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
+            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
+        } else {
+            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+        }
+        binding.rcvItemGroup.layoutManager = gridLayoutManager
 
     }
+
     private fun initToolBar() {
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

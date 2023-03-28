@@ -11,19 +11,25 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.enums.Order
+import com.neko.hiepdph.calculatorvault.common.enums.Sort
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.DialogSortBinding
 
 
 interface SortDialogCallBack {
-    fun onPositiveClicked()
+    fun onPositiveClicked(mSortType: Sort, mOrder: Order)
 }
 
 class DialogSort(
     private val callBack: SortDialogCallBack,
+    private val sortType: Sort,
+    private val sortOrder: Order
 
-    ) : DialogFragment() {
+) : DialogFragment() {
     private lateinit var binding: DialogSortBinding
+    private var dSortType: Sort = sortType
+    private var dSortOrder: Order = sortOrder
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -67,13 +73,36 @@ class DialogSort(
     }
 
     private fun initView() {
-
+        initData()
         initButton()
+    }
+
+    private fun initData() {
+        when (sortType) {
+            Sort.NAME -> {
+                binding.checkboxName.isChecked = true
+            }
+            Sort.SIZE -> {
+                binding.checkboxSize.isChecked = true
+            }
+            Sort.RANDOM -> {
+                binding.checkboxRandom.isChecked = true
+            }
+        }
+
+        when (sortOrder) {
+            Order.ASC -> {
+                binding.checkboxAscending.isChecked = true
+            }
+            Order.DES -> {
+                binding.checkboxDescending.isChecked = true
+            }
+        }
     }
 
     private fun initButton() {
         binding.btnConfirm.clickWithDebounce {
-            callBack.onPositiveClicked()
+            callBack.onPositiveClicked(dSortType, dSortOrder)
             dismissAllowingStateLoss()
         }
         binding.btnCancel.clickWithDebounce {
@@ -85,6 +114,24 @@ class DialogSort(
         binding.containerMain.setOnClickListener {
 
         }
+
+        binding.checkboxAscending.setOnClickListener {
+            dSortOrder = Order.ASC
+        }
+        binding.checkboxDescending.setOnClickListener {
+            dSortOrder = Order.DES
+        }
+        binding.checkboxName.setOnClickListener {
+            dSortType = Sort.NAME
+        }
+        binding.checkboxSize.setOnClickListener {
+            dSortType = Sort.SIZE
+        }
+        binding.checkboxRandom.setOnClickListener {
+            dSortType = Sort.RANDOM
+        }
+
+
     }
 
     private val callback = object : BackPressDialogCallBack {
