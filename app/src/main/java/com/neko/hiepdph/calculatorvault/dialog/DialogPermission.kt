@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
+import com.neko.hiepdph.calculatorvault.databinding.DialogPermissionBinding
 import com.neko.hiepdph.calculatorvault.dialog.BackPressDialogCallBack
 import com.neko.hiepdph.calculatorvault.dialog.DialogCallBack
 
@@ -22,7 +23,7 @@ interface PermissionDialogCallBack {
 class DialogPermission(
     private val callBack: PermissionDialogCallBack,
 ) : DialogFragment() {
-    private lateinit var binding: Dialog
+    private lateinit var binding: DialogPermissionBinding
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -33,7 +34,7 @@ class DialogPermission(
         val dialog = DialogCallBack(requireContext(), callback)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(root)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.transparent)))
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.blur)))
 
         dialog.window!!.setLayout(
             (requireContext().resources.displayMetrics.widthPixels),
@@ -45,7 +46,7 @@ class DialogPermission(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogConfirmBinding.inflate(inflater, container, false)
+        binding = DialogPermissionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -60,16 +61,13 @@ class DialogPermission(
     }
 
     private fun initButton() {
-        binding.btnConfirm.clickWithDebounce {
+        binding.btnAllow.clickWithDebounce {
             callBack.onPositiveClicked()
             dismiss()
         }
-        binding.btnCancel.clickWithDebounce {
-            dismiss()
-        }
         binding.root.clickWithDebounce {
-            callBack.onNegative()
-            dismiss()
+//            callBack.onNegative()
+//            dismiss()
         }
     }
 }
