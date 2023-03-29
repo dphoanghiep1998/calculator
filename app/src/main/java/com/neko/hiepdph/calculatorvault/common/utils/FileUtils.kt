@@ -2,21 +2,27 @@ package com.neko.hiepdph.calculatorvault.common.utils
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 
-interface IDeleteFile{
-   fun onSuccess()
-   fun onFailed()
+interface IDeleteFile {
+    fun onSuccess()
+    fun onFailed()
 
 }
 
-interface ICreateFile{
+interface ICreateFile {
     fun onSuccess()
     fun onFailed()
 }
+
+interface IMoveFile {
+    fun onSuccess()
+    fun onFailed()
+
+    fun onDoneWithWarning()
+}
+
 object FileUtils {
     fun generateFile(context: Context, fileName: String): File? {
         val csvFile = File(context.filesDir, fileName)
@@ -42,13 +48,13 @@ object FileUtils {
         return intent
     }
 
-    fun createSecretFile(parentDir: File, name: String,callback: ICreateFile) {
+    fun createSecretFile(parentDir: File, name: String, callback: ICreateFile) {
         try {
             val folder = File(parentDir, name)
             if (!folder.exists()) {
                 folder.mkdir()
                 callback.onSuccess()
-            }else{
+            } else {
                 callback.onFailed()
             }
         } catch (e: Exception) {
@@ -73,18 +79,33 @@ object FileUtils {
 
     }
 
-    fun deleteFolderInDirectory(pathFolder:String,callback:IDeleteFile){
-        try{
+    fun deleteFolderInDirectory(pathFolder: String, callback: IDeleteFile) {
+        try {
             val folder = File(pathFolder)
             val delete = folder.deleteRecursively()
-            if(delete){
+            if (delete) {
                 callback.onSuccess()
-            }else{
+            } else {
                 callback.onFailed()
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             callback.onFailed()
             e.printStackTrace()
+        }
+    }
+
+    fun copyMoveTo(
+        filePath: List<String>, destinationPath: String, isCopy: Boolean, callback: IMoveFile
+    ) {
+        try {
+            val directory = File(destinationPath)
+
+            filePath.forEach {
+                val sourceFile = File(it)
+
+            }
+        } catch (e: Exception) {
+
         }
     }
 }

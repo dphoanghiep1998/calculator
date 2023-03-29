@@ -124,5 +124,11 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun moveMultipleFileToVault(filePath:List<String>,destinationPath:String,callback: IMoveFile){
+        viewModelScope.launch(Dispatchers.IO) {
+//                FileUtils.moveFileToVault(filePath, destinationPath,callback)
+        }
+    }
+
 
 }

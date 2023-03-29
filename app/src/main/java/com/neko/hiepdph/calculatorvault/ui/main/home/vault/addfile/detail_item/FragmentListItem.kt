@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
+import com.neko.hiepdph.calculatorvault.common.utils.IMoveFile
 import com.neko.hiepdph.calculatorvault.databinding.FragmentListItemBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter.AdapterListItem
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
@@ -25,6 +27,8 @@ class FragmentListItem : Fragment() {
     private val viewModel: HomeViewModel by activityViewModels()
     private var adapterListItem: AdapterListItem? = null
     private val args: FragmentListItemArgs by navArgs()
+    private var listPathSelected = mutableListOf<String>()
+    private var sizeList = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -43,6 +47,30 @@ class FragmentListItem : Fragment() {
     private fun initView() {
         initToolBar()
         initRecycleView()
+        initButton()
+    }
+
+    private fun initButton() {
+        binding.btnMoveToVault.clickWithDebounce {
+            Log.d("TAG", "initButton: "+ args.vaultPath)
+            Log.d("TAG", "initButton: "+listPathSelected)
+            viewModel.moveMultipleFileToVault(
+                listPathSelected,
+                args.vaultPath,
+                object : IMoveFile {
+                    override fun onSuccess() {
+                        Log.d("TAG", "success: ")
+                    }
+
+                    override fun onFailed() {
+                        Log.d("TAG", "failed: ")
+                    }
+
+                    override fun onDoneWithWarning() {
+                    }
+
+                })
+        }
     }
 
     private fun initToolBar() {
@@ -55,7 +83,6 @@ class FragmentListItem : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when (menuItem.itemId) {
                     R.id.check_box_toolbar -> {
-                        Log.d("TAG", "onMenuItemSelected: ")
                         menuItem.isChecked = !menuItem.isChecked
                     }
                 }
@@ -73,6 +100,7 @@ class FragmentListItem : Fragment() {
                 viewModel.listImageItem.observe(viewLifecycleOwner) {
                     it?.let {
                         adapterListItem?.setData(it, Constant.TYPE_PICTURE)
+                        sizeList = it.size
                     }
                 }
             }
@@ -81,7 +109,7 @@ class FragmentListItem : Fragment() {
                 viewModel.listVideoItem.observe(viewLifecycleOwner) {
                     it?.let {
                         adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
-
+                        sizeList = it.size
                     }
                 }
             }
@@ -91,6 +119,7 @@ class FragmentListItem : Fragment() {
                 viewModel.listAudioItem.observe(viewLifecycleOwner) {
                     it?.let {
                         adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
+                        sizeList = it.size
                     }
                 }
             }
@@ -103,6 +132,7 @@ class FragmentListItem : Fragment() {
                 viewModel.listFileItem.observe(viewLifecycleOwner) {
                     it?.let {
                         adapterListItem?.setData(it, Constant.TYPE_FILE)
+                        sizeList = it.size
                     }
                 }
             }
@@ -111,7 +141,13 @@ class FragmentListItem : Fragment() {
     }
 
     private fun initRecycleView() {
-        adapterListItem = AdapterListItem()
+        adapterListItem = AdapterListItem(onClickItem = {
+            listPathSelected.clear()
+            listPathSelected.addAll(it)
+            checkListPath()
+            checkCheckBoxAll()
+        })
+
         binding.rcvGroupItem.adapter = adapterListItem
         when (args.folder.type) {
             Constant.TYPE_PICTURE, Constant.TYPE_VIDEOS -> {
@@ -125,6 +161,27 @@ class FragmentListItem : Fragment() {
                 binding.rcvGroupItem.layoutManager = linearLayoutManager
             }
 
+        }
+    }
+
+    private fun checkCheckBoxAll() {
+        if (listPathSelected.size == sizeList && sizeList > 0) {
+
+        }
+    }
+
+    private fun checkListPath() {
+        if (listPathSelected.isEmpty()) {
+            binding.btnMoveToVault.apply {
+                setBackgroundResource(R.drawable.bg_neu04_corner_10)
+                isEnabled = false
+            }
+
+        } else {
+            binding.btnMoveToVault.apply {
+                setBackgroundResource(R.drawable.bg_primary_corner_10)
+                isEnabled = true
+            }
         }
     }
 

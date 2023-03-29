@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="all">
+
         <item
+            app:actionLayout="@layout/action_layout_checkbox_toolbar"
             android:id="@+id/check_box_toolbar"
-            android:checkable="true"
-            android:icon="@drawable/bg_checkbox_pick_selector"
             android:title=""
             app:showAsAction="always"
-            app:actionViewClass="android.widget.CheckBox" />
-    </group>
+          />
 </menu>

@@ -10,51 +10,23 @@ import android.view.Window
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
+import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
+import com.neko.hiepdph.calculatorvault.databinding.DialogAddFolderBinding
+import com.neko.hiepdph.calculatorvault.databinding.DialogPasswordBinding
 
 
-enum class DialogConfirmType(
-    val title: Int,
-    val content: Int,
-    val imageRes: Int,
-    val negativeText: Int,
-    val positiveText: Int
-) {
-    DELETE(
-        R.string.delete,
-        R.string.delete_instruction,
-        R.drawable.ic_delete,
-        R.string.cancel,
-        R.string.yes
-    ),
-    UNLOCK(
-        R.string.unlock,
-        R.string.unlock_instruction,
-        R.drawable.ic_unlock,
-        R.string.cancel,
-        R.string.yes
-    ),
-    TIP(
-        R.string.important_tip,
-        R.string.tips_instruction,
-        R.drawable.ic_unlock,
-        R.string.never_show,
-        R.string.go_it
-    )
-
-}
-
-interface ConfirmDialogCallBack {
+interface SetupPassWordCallBack {
     fun onPositiveClicked()
 }
 
-class DialogConfirm(
-    private val callBack: ConfirmDialogCallBack,
-    private val dialogType: DialogConfirmType,
-    val name: String
+class DialogPassword(
+    private val title:String,
+    private val content:String,
+    private val callBack: SetupPassWordCallBack
 ) : DialogFragment() {
-    private lateinit var binding: DialogConfirmBinding
+    private lateinit var binding: DialogPasswordBinding
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -65,7 +37,7 @@ class DialogConfirm(
         val dialog = DialogCallBack(requireContext(), callback)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(root)
-        dialog.window!!.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.transparent)))
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(requireContext().getColor(R.color.blur)))
 
         dialog.window!!.setLayout(
             (requireContext().resources.displayMetrics.widthPixels),
@@ -77,7 +49,7 @@ class DialogConfirm(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = DialogConfirmBinding.inflate(inflater, container, false)
+        binding = DialogPasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -88,24 +60,16 @@ class DialogConfirm(
     }
 
     private fun initView() {
-        binding.imvTitle.setImageResource(dialogType.imageRes)
-        binding.tvTitle.text = requireContext().getText(dialogType.title)
-        binding.tvInstruction.text = requireContext().getString(dialogType.content, name)
-        binding.btnCancel.text = requireContext().getText(dialogType.negativeText)
-        binding.btnConfirm.text = requireContext().getText(dialogType.positiveText)
         initButton()
     }
 
     private fun initButton() {
+        binding.tvTitle.text = title
+        binding.tvContent.text = content
         binding.btnConfirm.clickWithDebounce {
-            callBack.onPositiveClicked()
-            dismiss()
-        }
-        binding.btnCancel.clickWithDebounce {
-            dismiss()
+           callBack.onPositiveClicked()
         }
         binding.root.clickWithDebounce {
-            dismiss()
         }
     }
 

@@ -3,10 +3,9 @@ package com.neko.hiepdph.calculatorvault.common.share_preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.neko.hiepdph.calculatorvault.R
-import com.neko.hiepdph.calculatorvault.common.Constant
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.neko.hiepdph.calculatorvault.common.Constant
 import java.lang.reflect.Type
 
 
@@ -32,7 +31,6 @@ class AppSharePreference(private val context: Context?) {
     }
 
 
-
     inline fun <reified T> saveObjectToSharePreference(key: String, data: T) {
         val gson = Gson()
         val json = gson.toJson(data)
@@ -47,6 +45,22 @@ class AppSharePreference(private val context: Context?) {
             return gson.fromJson(serializedObject, type)
         }
         return null
+    }
+
+    fun setSecurityQuestion(values: String) {
+        saveString(Constant.KEY_SECURITY_QUESTION, values)
+    }
+
+    fun getSecurityQuestion(defaultValues: String): String {
+        return getString(Constant.KEY_SECURITY_QUESTION, defaultValues)
+    }
+
+    fun setSecurityAnswer(values: String) {
+        saveString(Constant.KEY_SECURITY_ANSWER, values)
+    }
+
+    fun getSecurityAnswer(defaultValues: String): String {
+        return getString(Constant.KEY_SECURITY_ANSWER, defaultValues)
     }
 
     fun setFaqClicked(values: Boolean) {

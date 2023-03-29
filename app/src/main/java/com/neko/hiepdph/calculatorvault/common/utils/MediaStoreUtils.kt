@@ -430,6 +430,7 @@ object MediaStoreUtils {
 
     }
 
+
     private fun getDuration(context: Context, path: String): Int {
         val mp = MediaPlayer.create(context, Uri.parse(path))
         return mp.duration

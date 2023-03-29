@@ -111,31 +111,31 @@ class FragmentVault : Fragment() {
             when (it.type) {
                 Constant.TYPE_PICTURE -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.pictures)
+                        it.type, getString(R.string.pictures),it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_VIDEOS -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.videos)
+                        it.type, getString(R.string.videos),it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_AUDIOS -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.audios)
+                        it.type, getString(R.string.audios),it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_FILE -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.files)
+                        it.type, getString(R.string.files),it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 else -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, it.name
+                        it.type, it.name,it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }

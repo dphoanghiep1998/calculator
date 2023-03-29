@@ -54,6 +54,10 @@ object Constant {
     const val TOMORROW_BIT = -2
     const val OPEN_ALARMS_TAB_INTENT_ID = 9996
 
+    const val KEY_SECURITY_QUESTION ="KEY_SECURITY_QUESTION"
+    const val KEY_SECURITY_ANSWER ="KEY_SECURITY_ANSWER"
+
+
     const val SECRET_KEY = 9996
     const val DEFAULT_SECRET_PASSWORD = "1234"
     const val DEFAULT_SECRET_PASSWORD_SUFFIX = "%"

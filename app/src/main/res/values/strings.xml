@@ -100,4 +100,18 @@
     <string name="descending">Descending</string>
     <string name="library">Library</string>
     <string name="audios_album">Audios album</string>
+    <string name="lock_ask_1">Where are you from ?</string>
+    <string name="question">Question :</string>
+    <string name="answer">Answer :</string>
+    <string name="instruction_setup_lock">Security questions allow you to reset your password if you forget it in the future. Please choose a question that is easy for you to remember. Once the answer is forgotten, the encrypted data may be lost.</string>
+    <string name="hint_lock_instruction">Enter your answer with no more than 50 letters</string>
+    <string name="lock_ask_2">What is your favorite number?</string>
+    <string name="lock_ask_3">What is your favorite color?</string>
+    <string name="lock_ask_4">What do you do in your free time?</string>
+    <string name="important_tip">Important tips</string>
+    <string name="tips_instruction">In case you forget your password, simply enter a number ‘11223344’ into Calculator and press ’=’ button, then retrieve your password by entering the answer of your security question.</string>
+    <string name="never_show">Never show</string>
+    <string name="go_it">Go it</string>
+    <string name="allow">Allow</string>
+    <string name="permission_title">Calculator - Vault needs file permission, this permission will be used for hidden features: Videos, Pictures, Music, Files...</string>
 </resources>

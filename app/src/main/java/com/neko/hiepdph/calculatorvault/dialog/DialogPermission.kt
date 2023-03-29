@@ -1,5 +1,3 @@
-package com.neko.hiepdph.calculatorvault.dialog
-
 import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,49 +10,19 @@ import androidx.fragment.app.DialogFragment
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.DialogConfirmBinding
+import com.neko.hiepdph.calculatorvault.dialog.BackPressDialogCallBack
+import com.neko.hiepdph.calculatorvault.dialog.DialogCallBack
 
 
-enum class DialogConfirmType(
-    val title: Int,
-    val content: Int,
-    val imageRes: Int,
-    val negativeText: Int,
-    val positiveText: Int
-) {
-    DELETE(
-        R.string.delete,
-        R.string.delete_instruction,
-        R.drawable.ic_delete,
-        R.string.cancel,
-        R.string.yes
-    ),
-    UNLOCK(
-        R.string.unlock,
-        R.string.unlock_instruction,
-        R.drawable.ic_unlock,
-        R.string.cancel,
-        R.string.yes
-    ),
-    TIP(
-        R.string.important_tip,
-        R.string.tips_instruction,
-        R.drawable.ic_unlock,
-        R.string.never_show,
-        R.string.go_it
-    )
-
-}
-
-interface ConfirmDialogCallBack {
+interface PermissionDialogCallBack {
     fun onPositiveClicked()
+    fun onNegative()
 }
 
-class DialogConfirm(
-    private val callBack: ConfirmDialogCallBack,
-    private val dialogType: DialogConfirmType,
-    val name: String
+class DialogPermission(
+    private val callBack: PermissionDialogCallBack,
 ) : DialogFragment() {
-    private lateinit var binding: DialogConfirmBinding
+    private lateinit var binding: Dialog
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -88,11 +56,6 @@ class DialogConfirm(
     }
 
     private fun initView() {
-        binding.imvTitle.setImageResource(dialogType.imageRes)
-        binding.tvTitle.text = requireContext().getText(dialogType.title)
-        binding.tvInstruction.text = requireContext().getString(dialogType.content, name)
-        binding.btnCancel.text = requireContext().getText(dialogType.negativeText)
-        binding.btnConfirm.text = requireContext().getText(dialogType.positiveText)
         initButton()
     }
 
@@ -105,17 +68,18 @@ class DialogConfirm(
             dismiss()
         }
         binding.root.clickWithDebounce {
+            callBack.onNegative()
             dismiss()
         }
     }
+}
 
-    private val callback = object : BackPressDialogCallBack {
-        override fun shouldInterceptBackPress(): Boolean {
-            return true
-        }
-
-        override fun onBackPressIntercepted() {
-        }
-
+private val callback = object : BackPressDialogCallBack {
+    override fun shouldInterceptBackPress(): Boolean {
+        return true
     }
+
+    override fun onBackPressIntercepted() {
+    }
+
 }

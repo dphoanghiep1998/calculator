@@ -23,6 +23,7 @@
         android:layout_marginBottom="@dimen/_12sdp"
         android:background="@drawable/bg_neu04_corner_10"
         android:drawablePadding="@dimen/_12sdp"
+        android:foreground="@drawable/fg_ripple_effect"
         android:paddingHorizontal="@dimen/_12sdp"
         android:paddingVertical="@dimen/_12sdp"
         android:text="@string/move_to_vault"

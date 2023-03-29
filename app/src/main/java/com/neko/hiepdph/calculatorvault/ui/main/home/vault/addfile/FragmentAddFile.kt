@@ -61,7 +61,7 @@ class FragmentAddFile : Fragment() {
     private fun initRecyclerView() {
         adapter = AdapterGroupItem(onClickFolderItem = { groupFile, fileType ->
             val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
-                groupFile, fileType
+                groupFile, fileType,args.vaultPath
             )
             navigateToPage(R.id.fragmentAddFile, action)
         })

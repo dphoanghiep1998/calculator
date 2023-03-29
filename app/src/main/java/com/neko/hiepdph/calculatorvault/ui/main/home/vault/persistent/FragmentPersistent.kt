@@ -104,32 +104,32 @@ class FragmentPersistent : Fragment() {
                 val dialogFloatingButton = DialogAddFile(onClickPicture = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_PICTURE, getString(R.string.library)
+                            Constant.TYPE_PICTURE, getString(R.string.library),args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickAudio = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_AUDIOS, getString(R.string.audios_album)
+                            Constant.TYPE_AUDIOS, getString(R.string.audios_album),args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickVideo = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_VIDEOS, getString(R.string.library)
+                            Constant.TYPE_VIDEOS, getString(R.string.library),args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickFile = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_FILE, getString(R.string.files)
+                            Constant.TYPE_FILE, getString(R.string.files),args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 })
                 dialogFloatingButton.show(childFragmentManager, dialogFloatingButton.tag)
             } else {
                 val action = FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                    args.type, name
+                    args.type, name,args.vaultPath
                 )
                 navigateToPage(R.id.fragmentPersistent, action)
             }
