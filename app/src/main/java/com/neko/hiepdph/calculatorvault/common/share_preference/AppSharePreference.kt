@@ -47,6 +47,14 @@ class AppSharePreference(private val context: Context?) {
         return null
     }
 
+    fun setThemeColor(values: Int){
+        saveInt(Constant.KEY_THEME_COLOR,values)
+    }
+
+    fun getThemeColor(defaultValues: Int):Int{
+        return getInt(Constant.KEY_THEME_COLOR,defaultValues)
+    }
+
     fun setSecurityQuestion(values: String) {
         saveString(Constant.KEY_SECURITY_QUESTION, values)
     }

@@ -114,4 +114,17 @@
     <string name="go_it">Go it</string>
     <string name="allow">Allow</string>
     <string name="permission_title">Calculator - Vault needs file permission, this permission will be used for hidden features: Videos, Pictures, Music, Files...</string>
+    <string name="general">General</string>
+    <string name="safe">Safe</string>
+    <string name="disguise_icon">Disguise Icon</string>
+    <string name="private_camera">Private Camera</string>
+    <string name="advanced">Advanced</string>
+    <string name="retrive_lost_files">Retrieve Lost Files</string>
+    <string name="backup">Back up</string>
+    <string name="device_migration">Device Migration</string>
+    <string name="change_language">Change Language</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="preventing_lost_files_help">Preventing Lost Files Help</string>
+    <string name="FAQ">FAQ</string>
+    <string name="recycle_bin_instruction">The files in the Recycle Bin will be automatically deleted after 60 days.</string>
 </resources>

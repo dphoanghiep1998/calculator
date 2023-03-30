@@ -2,20 +2,14 @@ package com.neko.hiepdph.calculatorvault.activities
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.databinding.ActivityHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,9 +33,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-
-
-
     private fun initArchitecture() {
         setSupportActionBar(binding.toolbar)
         val navHostFragment =
@@ -49,14 +40,12 @@ class HomeActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         setupActionBarWithNavController(navController, binding.drawerLayout)
         val config = AppBarConfiguration.Builder(
-            setOf(
-                R.id.fragmentLanguage,
-                R.id.fragmentVault,
-                R.id.fragmentSetting,
-                R.id.fragmentNote,
-                R.id.fragmentBrowser,
-                R.id.fragmentRecycleBin
-            )
+            R.id.fragmentLanguage,
+            R.id.fragmentVault,
+            R.id.fragmentSetting,
+            R.id.fragmentNote,
+            R.id.fragmentBrowser,
+            R.id.fragmentRecycleBin
         ).setOpenableLayout(
             binding.drawerLayout
         ).build()
@@ -66,23 +55,36 @@ class HomeActivity : AppCompatActivity() {
 
         binding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.fragmentVault ->{
+                R.id.fragmentVault -> {
+//                    val navOptions: NavOptions =
+//                        NavOptions.Builder().setPopUpTo(R.id.fragmentVault, true).build()
+//                    navController.navigate(R.id.fragmentVault, null, navOptions)
                     navController.navigate(R.id.fragmentVault)
                 }
-                R.id.fragmentLanguage ->{
-                    navController.navigate(R.id.fragmentLanguage)
+                R.id.fragmentLanguage -> {
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentLanguage, true).build()
+                    navController.navigate(R.id.fragmentLanguage, null, navOptions)
                 }
-                R.id.fragmentBrowser ->{
-                    navController.navigate(R.id.fragmentBrowser)
+                R.id.fragmentBrowser -> {
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentBrowser, true).build()
+                    navController.navigate(R.id.fragmentBrowser, null, navOptions)
                 }
-                R.id.fragmentNote ->{
-                    navController.navigate(R.id.fragmentNote)
+                R.id.fragmentNote -> {
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentNote, true).build()
+                    navController.navigate(R.id.fragmentNote, null, navOptions)
                 }
-                R.id.fragmentSetting ->{
-                    navController.navigate(R.id.fragmentSetting)
+                R.id.fragmentSetting -> {
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentSetting, true).build()
+                    navController.navigate(R.id.fragmentSetting, null, navOptions)
                 }
-                R.id.fragmentRecycleBin ->{
-                    navController.navigate(R.id.fragmentRecycleBin)
+                R.id.fragmentRecycleBin -> {
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentRecycleBin, true).build()
+                    navController.navigate(R.id.fragmentRecycleBin, null, navOptions)
                 }
                 R.id.item_theme -> changeTheme()
                 R.id.item_rate_app -> rateApp()
@@ -128,4 +130,5 @@ class HomeActivity : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
+
 }

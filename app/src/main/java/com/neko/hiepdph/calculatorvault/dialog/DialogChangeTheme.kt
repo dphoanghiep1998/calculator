@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.common.extensions.hide
 import com.neko.hiepdph.calculatorvault.common.extensions.show
+import com.neko.hiepdph.calculatorvault.common.share_preference.AppSharePreference
 import com.neko.hiepdph.calculatorvault.databinding.DialogChoseThemeBinding
 import java.lang.String
 
@@ -26,6 +28,7 @@ class DialogChangeTheme : DialogFragment() {
     private var rValue = 0
     private var gValue = 0
     private var bValue = 0
+    private var currentColor = 0
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -49,6 +52,7 @@ class DialogChangeTheme : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DialogChoseThemeBinding.inflate(inflater, container, false)
+        currentColor = AppSharePreference.INSTANCE.getThemeColor(requireContext().getColor(R.color.theme_default))
         return binding.root
     }
 
@@ -59,15 +63,15 @@ class DialogChangeTheme : DialogFragment() {
 
     private fun initView() {
         initButton()
+        initCheckBox()
         initSeekBar()
         initData()
     }
 
     private fun initData() {
-        val currentThemeColor = requireActivity().getColor(R.color.theme_default)
-        rValue = getRGB(currentThemeColor)[0]
-        gValue = getRGB(currentThemeColor)[1]
-        bValue = getRGB(currentThemeColor)[2]
+        rValue = getRGB(currentColor)[0]
+        gValue = getRGB(currentColor)[1]
+        bValue = getRGB(currentColor)[2]
 
         binding.seekB.progress = bValue
         binding.seekR.progress = rValue
@@ -128,15 +132,98 @@ class DialogChangeTheme : DialogFragment() {
         })
     }
 
+    private fun initCheckBox() {
+        val groupCheckBox = mutableListOf(
+            binding.themeDefault,
+            binding.theme01,
+            binding.theme02,
+            binding.theme03,
+            binding.theme04,
+            binding.theme05,
+            binding.theme06,
+            binding.theme07,
+            binding.theme08,
+            binding.theme09,
+            binding.theme10,
+            binding.theme11,
+            binding.theme12,
+            binding.theme13,
+            binding.theme14,
+            binding.theme15,
+        )
+        val groupColor = mutableListOf(
+            requireContext().getColor(R.color.theme_default),
+            requireContext().getColor(R.color.theme_01),
+            requireContext().getColor(R.color.theme_02),
+            requireContext().getColor(R.color.theme_03),
+            requireContext().getColor(R.color.theme_04),
+            requireContext().getColor(R.color.theme_05),
+            requireContext().getColor(R.color.theme_06),
+            requireContext().getColor(R.color.theme_07),
+            requireContext().getColor(R.color.theme_08),
+            requireContext().getColor(R.color.theme_09),
+            requireContext().getColor(R.color.theme_10),
+            requireContext().getColor(R.color.theme_11),
+            requireContext().getColor(R.color.theme_12),
+            requireContext().getColor(R.color.theme_13),
+            requireContext().getColor(R.color.theme_14),
+            requireContext().getColor(R.color.theme_15),
+        )
+        groupColor.forEachIndexed { index, item ->
+            Log.d("TAG", "currentColor: " + currentColor)
+            Log.d("TAG", "item: " + item)
+            if (item == currentColor) {
+                groupCheckBox[index].isChecked = true
+            }
+        }
+
+        groupCheckBox.forEachIndexed { index, item ->
+            item.setOnClickListener {
+                if (item.isChecked) {
+                    groupCheckBox.filter {
+                        it.isChecked
+                    }.forEach { it.isChecked = false }
+                    item.isChecked = true
+                    AppSharePreference.INSTANCE.setThemeColor(groupColor[index])
+                } else {
+                    item.isChecked = true
+                }
+            }
+        }
+    }
+
     private fun updateTheme() {
         binding.tvValueR.text = rValue.toString()
         binding.tvValueG.text = gValue.toString()
         binding.tvValueB.text = bValue.toString()
         binding.edtValue.setText(String.format("#%02X%02X%02X", rValue, gValue, bValue))
         binding.themeShowcase.setBackgroundColor(Color.rgb(rValue, gValue, bValue))
+        currentColor = Color.rgb(rValue, gValue, bValue)
     }
 
     private fun initButton() {
+        binding.tvCancel.setTextColor(
+            AppSharePreference.INSTANCE.getThemeColor(
+                requireContext().getColor(
+                    R.color.theme_default
+                )
+            )
+        )
+        binding.tvOk.setTextColor(
+            AppSharePreference.INSTANCE.getThemeColor(
+                requireContext().getColor(
+                    R.color.theme_default
+                )
+            )
+        )
+        binding.tvCustom.setTextColor(
+            AppSharePreference.INSTANCE.getThemeColor(
+                requireContext().getColor(
+                    R.color.theme_default
+                )
+            )
+        )
+
         binding.containerMain.clickWithDebounce { }
 
         binding.tvCustom.clickWithDebounce {
@@ -161,9 +248,8 @@ class DialogChangeTheme : DialogFragment() {
             dismiss()
         }
         binding.tvOk.clickWithDebounce {
+            AppSharePreference.INSTANCE.setThemeColor(currentColor)
             dismiss()
         }
     }
-
-
 }

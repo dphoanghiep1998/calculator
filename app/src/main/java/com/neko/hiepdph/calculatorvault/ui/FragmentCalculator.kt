@@ -79,6 +79,7 @@ class FragmentCalculator : Fragment() {
         binding.tvInput.append(input)
     }
 
+
 //    private fun removeLastCharacter() {
 //        val lastText = binding.tvInput.text.toString()
 //        if (lastText.isNotBlank()) {

@@ -44,6 +44,23 @@
     <color name="theme_14">#607D8B</color>
     <color name="theme_15">#000000</color>
 
+    <color name="theme_default_50">#8029BBCF</color>
+    <color name="theme_01_50">#80EA1E63</color>
+    <color name="theme_02_50">#80FA729A</color>
+    <color name="theme_03_50">#809D29B2</color>
+    <color name="theme_04_50">#80673BB6</color>
+    <color name="theme_05_50">#80362075</color>
+    <color name="theme_06_50">#803F51B5</color>
+    <color name="theme_07_50">#802196F5</color>
+    <color name="theme_08_50">#80029688</color>
+    <color name="theme_09_50">#80CBDC38</color>
+    <color name="theme_10_50">#80FFEC33</color>
+    <color name="theme_11_50">#80FF9700</color>
+    <color name="theme_12_50">#80FE5723</color>
+    <color name="theme_13_50">#80795549</color>
+    <color name="theme_14_50">#80607D8B</color>
+    <color name="theme_15_50">#80000000</color>
+
 
 
 

@@ -5,12 +5,13 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.neko.hiepdph.calculatorvault.R
-import com.neko.hiepdph.calculatorvault.databinding.CalculatorViewBinding
 import com.neko.hiepdph.calculatorvault.common.extensions.hide
 import com.neko.hiepdph.calculatorvault.common.extensions.show
+import com.neko.hiepdph.calculatorvault.common.share_preference.AppSharePreference
 import com.neko.hiepdph.calculatorvault.common.utils.ARC_COS
 import com.neko.hiepdph.calculatorvault.common.utils.ARC_SIN
 import com.neko.hiepdph.calculatorvault.common.utils.ARC_TAN
+import com.neko.hiepdph.calculatorvault.databinding.CalculatorViewBinding
 
 interface CalculatorFunction {
     fun onPressButton0()
@@ -77,7 +78,21 @@ class CalculatorMain @JvmOverloads constructor(
         var isFlexDegEnabled = false //deg
     }
 
+    private fun changeButtonColorTheme() {
+        val sharedPreferences = AppSharePreference.INSTANCE
+        binding.btnReset.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnDelete.setTint(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnPercent.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnDivide.setTint(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnTimes.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnSubtract.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+        binding.btnPlus.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+//        binding.btnEqual.changeTextColor(sharedPreferences.getThemeColor(context.getColor(R.color.primary)))
+    }
+
+
     private fun initView() {
+        changeButtonColorTheme()
         binding.btnSwitch.setOnClickListener {
             expandState = !expandState
             if (expandState) {

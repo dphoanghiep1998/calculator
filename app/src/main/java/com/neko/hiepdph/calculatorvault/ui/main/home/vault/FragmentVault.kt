@@ -8,10 +8,11 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
@@ -30,19 +31,17 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 import com.neko.hiepdph.calculatorvault.dialog.*
 import com.neko.hiepdph.calculatorvault.ui.main.home.adapter.AdapterFolder
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-@AndroidEntryPoint
 class FragmentVault : Fragment() {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+    //    private var _binding: FragmentHomeBinding? = null
+//    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
     private lateinit var popupWindow: PopupWindow
     private lateinit var adapter: AdapterFolder
     private val viewModel: HomeViewModel by activityViewModels()
-    private var rootView: View? = null
 
     companion object {
         var sortType: Sort = Sort.NAME
@@ -52,22 +51,24 @@ class FragmentVault : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        rootView = binding.root
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return binding.root
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         observeListFile()
         viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
+        Log.d("TAG", "onViewCreated: " + binding.rcvFolder)
 
     }
 
     private fun observeListFile() {
         viewModel.listFolder.observe(viewLifecycleOwner) {
-            Log.d("TAG", "observeListFile: " + sortList(it))
             adapter.setData(sortList(it))
         }
     }
@@ -77,29 +78,23 @@ class FragmentVault : Fragment() {
         initRecyclerView()
         initPopupWindow()
         initButton()
-        initToolBar()
     }
 
-    private fun initToolBar() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.clear()
-                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                val menuItemView = requireActivity().findViewById<View>(R.id.option)
-                when (menuItem.itemId) {
-                    R.id.add_folder -> showAddFolderDialog()
-                    R.id.option -> showOptionDialog(menuItemView)
-                    R.id.navigate_calculator -> navigateToCalculator()
-                }
-                return true
-            }
-
-        })
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val menuItemView = requireActivity().findViewById<View>(R.id.option)
+        when (item.itemId) {
+            R.id.add_folder -> showAddFolderDialog()
+            R.id.option -> showOptionDialog(menuItemView)
+            R.id.navigate_calculator -> navigateToCalculator()
+        }
+        return true
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.toolbar_menu_vault, menu)
+    }
     private fun navigateToCalculator() {
         val intent = Intent(requireActivity(), MainActivity::class.java)
         startActivity(intent)
@@ -111,31 +106,34 @@ class FragmentVault : Fragment() {
             when (it.type) {
                 Constant.TYPE_PICTURE -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.pictures),it.path
+                        it.type, getString(R.string.pictures), it.path
                     )
+//                    val navOptions: NavOptions =
+//                        NavOptions.Builder().setPopUpTo(R.id.fragmentVault, false).build()
+//                    findNavController().navigate(action,navOptions)
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_VIDEOS -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.videos),it.path
+                        it.type, getString(R.string.videos), it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_AUDIOS -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.audios),it.path
+                        it.type, getString(R.string.audios), it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_FILE -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, getString(R.string.files),it.path
+                        it.type, getString(R.string.files), it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 else -> {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
-                        it.type, it.name,it.path
+                        it.type, it.name, it.path
                     )
                     navigateToPage(R.id.fragmentVault, action)
                 }
@@ -287,6 +285,7 @@ class FragmentVault : Fragment() {
     }
 
     private fun changeLayoutRecyclerView() {
+        Log.d("TAG", "changeLayoutRecyclerView: " + binding.rcvFolder)
         if (!AdapterFolder.isSwitchView) {
             val gridLayoutManager = GridLayoutManager(requireContext(), 1)
             binding.rcvFolder.layoutManager = gridLayoutManager
@@ -328,8 +327,5 @@ class FragmentVault : Fragment() {
         return mList
     }
 
-    override fun onDestroy() {
-        _binding = null
-        super.onDestroy()
-    }
+
 }

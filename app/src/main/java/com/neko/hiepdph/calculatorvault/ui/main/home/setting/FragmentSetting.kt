@@ -1,60 +1,75 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.setting
 
 import android.os.Bundle
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.databinding.FragmentSettingBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentSetting.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FragmentSetting : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private var _binding: FragmentSettingBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+
+    private fun initView() {
+        val groupData = mutableListOf(
+            Pair(R.drawable.ic_setting_general, getString(R.string.general)),
+            Pair(R.drawable.ic_setting_safe, getString(R.string.safe)),
+            Pair(R.drawable.ic_setting_disguise, getString(R.string.disguise_icon)),
+            Pair(R.drawable.ic_setting_private_camera, getString(R.string.private_camera)),
+            Pair(R.drawable.ic_setting_advanced, getString(R.string.advanced)),
+            Pair(R.drawable.ic_retrieve_lost_file, getString(R.string.retrive_lost_files)),
+            Pair(R.drawable.ic_setting_back_up, getString(R.string.backup)),
+            Pair(R.drawable.ic_device_migration, getString(R.string.device_migration)),
+            Pair(R.drawable.ic_setting_language, getString(R.string.change_language)),
+            Pair(R.drawable.ic_setting_clear_cache, getString(R.string.clear_cache)),
+            Pair(
+                R.drawable.ic_setting_prevent_lost_file_help,
+                getString(R.string.preventing_lost_files_help)
+            ),
+            Pair(R.drawable.ic_setting_faq, getString(R.string.FAQ)),
+        )
+
+        val groupView = mutableListOf(
+            binding.itemGeneral,
+            binding.itemSafe,
+            binding.itemDisguiseIcon,
+            binding.itemPrivateCamera,
+            binding.itemAdvanced,
+            binding.itemRetrieveLostFiles,
+            binding.itemBackup,
+            binding.itemDeviceMigration,
+            binding.itemLanguage,
+            binding.itemClearCache,
+            binding.itemPreventingLostFileHelp,
+            binding.itemFaq,
+        )
+
+        groupView.forEachIndexed { index, item ->
+            item.imvItem.setBackgroundResource(groupData[index].first)
+            item.tvTitle.text = groupData[index].second
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentSetting.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentSetting().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+
 }

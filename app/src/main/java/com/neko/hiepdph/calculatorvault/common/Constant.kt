@@ -61,6 +61,7 @@ object Constant {
     const val SECRET_KEY = 9996
     const val DEFAULT_SECRET_PASSWORD = "1234"
     const val DEFAULT_SECRET_PASSWORD_SUFFIX = "%"
+    const val KEY_THEME_COLOR ="KEY_THEME_COLOR"
 
     const val FILES_FOLDER_NAME = "FILE_CALCULATOR_VAULT_${SECRET_KEY}"
     const val PICTURE_FOLDER_NAME = "PICTURE_CALCULATOR_VAULT_${SECRET_KEY}"
@@ -105,6 +106,11 @@ object Constant {
     const val TYPE_CSV = ".csv"
     const val TYPE_ZIP = ".zip"
     const val TYPE_OTHER = "TYPE_OTHER"
+
+    val photoExtensions: Array<String> get() = arrayOf(".jpg", ".png", ".jpeg", ".bmp", ".webp", ".heic", ".heif", ".apng", ".avif")
+    val videoExtensions: Array<String> get() = arrayOf(".mp4", ".mkv", ".webm", ".avi", ".3gp", ".mov", ".m4v", ".3gpp")
+    val audioExtensions: Array<String> get() = arrayOf(".mp3", ".wav", ".wma", ".ogg", ".m4a", ".opus", ".flac", ".aac")
+    val rawExtensions: Array<String> get() = arrayOf(".dng", ".orf", ".nef", ".arw", ".rw2", ".cr2", ".cr3")
 
 
 }
