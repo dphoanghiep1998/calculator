@@ -99,13 +99,23 @@ object FileUtils {
     ) {
         try {
             val directory = File(destinationPath)
-
+            if (!directory.exists()) {
+                directory.mkdirs()
+            }
             filePath.forEach {
                 val sourceFile = File(it)
+                var newName = sourceFile.name
+                var counter = 1
 
+                while (File(directory, newName).exists()) {
+                    newName = "${sourceFile.nameWithoutExtension}($counter).${sourceFile.extension}"
+                    counter++
+                }
+                val destinationFile = File(directory, newName)
+                sourceFile.copyTo(destinationFile)
             }
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
     }
 }

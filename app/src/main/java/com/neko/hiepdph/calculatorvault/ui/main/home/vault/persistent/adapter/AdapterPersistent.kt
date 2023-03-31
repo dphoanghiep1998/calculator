@@ -1,5 +1,6 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.vault.persistent.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,14 +14,15 @@ import com.neko.hiepdph.calculatorvault.data.model.*
 import com.neko.hiepdph.calculatorvault.databinding.*
 
 
-class AdapterPersistent(private val onClickItem: (ObjectItem) -> Unit) :
+class AdapterPersistent(private val onClickItem: (ListItem) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var listItem = mutableListOf<ObjectItem>()
+    private var listItem = mutableListOf<ListItem>()
     private var mType: String = Constant.TYPE_PICTURE
 
-    fun setData(listDataItem: List<ObjectItem>, type: String) {
+    fun setData(listDataItem: List<ListItem>, type: String) {
         mType = type
         listItem = listDataItem.toMutableList()
+        Log.d("TAG", "setData: "+listItem.size)
         notifyDataSetChanged()
     }
 
@@ -91,43 +93,43 @@ class AdapterPersistent(private val onClickItem: (ObjectItem) -> Unit) :
         when (holder.itemViewType) {
             0 -> {
                 with(holder as ItemPictureViewHolder) {
-                    val item = listItem[adapterPosition] as ImageItem
+                    val item = listItem[adapterPosition]
                     var requestOptions = RequestOptions()
                     requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
-                    Glide.with(itemView.context).load(item.imagePath).apply(requestOptions)
+                    Glide.with(itemView.context).load(item.mPath).apply(requestOptions)
                         .error(R.drawable.ic_delete).into(binding.imvThumb)
                 }
             }
             1 -> {
                 with(holder as ItemVideoViewHolder) {
-                    val item = listItem[adapterPosition] as VideoItem
+                    val item = listItem[adapterPosition]
                     var requestOptions = RequestOptions()
                     requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
-                    Glide.with(itemView.context).load(item.videoPath).apply(requestOptions)
+                    Glide.with(itemView.context).load(item.mPath).apply(requestOptions)
                         .error(R.drawable.ic_delete).into(binding.imvThumb)
-                    binding.tvDuration.text = item.videoDuration.toString()
+                    binding.tvDuration.text = item.getDuration(itemView.context).toString()
                 }
             }
             2 -> {
                 with(holder as ItemAudioViewHolder) {
-                    val item = listItem[adapterPosition] as AudioItem
+                    val item = listItem[adapterPosition]
                     var requestOptions = RequestOptions()
                     requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
-                    Glide.with(itemView.context).asBitmap().load(item.thumbBitmap)
-                        .apply(requestOptions).error(R.drawable.ic_delete).into(binding.imvThumb)
+//                    Glide.with(itemView.context).asBitmap().load(item.thumbBitmap)
+//                        .apply(requestOptions).error(R.drawable.ic_delete).into(binding.imvThumb)
 
-                    binding.tvNameAudio.text = item.audioName
-                    binding.tvDurationAuthor.text = item.audioDuration.toString()
+                    binding.tvNameAudio.text = item.mName
+                    binding.tvDurationAuthor.text = item.getDuration(itemView.context).toString()
                 }
             }
             3 -> {
                 with(holder as ItemFileViewHolder) {
-                    val item = listItem[adapterPosition] as FileItem
+                    val item = listItem[adapterPosition]
                     Glide.with(itemView.context).load(getImageForItemFile(item))
                         .error(R.drawable.ic_delete).into(binding.imvThumb)
 
-                    binding.tvNameDocument.text = item.fileName
-                    binding.tvSize.text = item.fileSize.toString()
+                    binding.tvNameDocument.text = item.mName
+                    binding.tvSize.text = item.mSize.toString()
                 }
             }
             4 -> {
@@ -136,8 +138,8 @@ class AdapterPersistent(private val onClickItem: (ObjectItem) -> Unit) :
         }
     }
 
-    private fun getImageForItemFile(item: FileItem): Int {
-        return when (item.fileType) {
+    private fun getImageForItemFile(item: ListItem): Int {
+        return when (item.type) {
             Constant.TYPE_WORDX -> R.drawable.ic_docx
             Constant.TYPE_WORD -> R.drawable.ic_doc
             Constant.TYPE_CSV -> R.drawable.ic_csv

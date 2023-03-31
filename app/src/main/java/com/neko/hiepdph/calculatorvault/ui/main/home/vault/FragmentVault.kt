@@ -8,13 +8,15 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.activities.MainActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.enums.Order
@@ -25,59 +27,87 @@ import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
-import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
+import com.neko.hiepdph.calculatorvault.data.model.VaultFileDirItem
 import com.neko.hiepdph.calculatorvault.databinding.FragmentHomeBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 import com.neko.hiepdph.calculatorvault.dialog.*
-import com.neko.hiepdph.calculatorvault.ui.main.home.adapter.AdapterFolder
-import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
+import com.neko.hiepdph.calculatorvault.ui.main.home.language.adapter.AdapterFolder
+import com.neko.hiepdph.calculatorvault.viewmodel.VaultViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class FragmentVault : Fragment() {
-    //    private var _binding: FragmentHomeBinding? = null
-//    private val binding get() = _binding!!
-    private lateinit var binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var popupWindow: PopupWindow
     private lateinit var adapter: AdapterFolder
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel by viewModels<VaultViewModel>()
 
     companion object {
         var sortType: Sort = Sort.NAME
         var order: Order = Order.ASC
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        setHasOptionsMenu(true)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        Log.d("TAG", "onCreateView: " + findNavController().currentDestination)
         return binding.root
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentHomeBinding.bind(view)
         initView()
         observeListFile()
-        viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
-        Log.d("TAG", "onViewCreated: " + binding.rcvFolder)
+        viewModel.getListFolderInVault(requireContext(), requireActivity().filesDir)
 
     }
 
     private fun observeListFile() {
-        viewModel.listFolder.observe(viewLifecycleOwner) {
+        viewModel.listFolderInVault.observe(viewLifecycleOwner) {
             adapter.setData(sortList(it))
         }
     }
 
 
     private fun initView() {
+        initToolBar()
         initRecyclerView()
         initPopupWindow()
         initButton()
+    }
+
+    private fun initToolBar() {
+        (requireActivity() as HomeActivity)?.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+                menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                val menuItemView = requireActivity().findViewById<View>(R.id.option)
+                when (menuItem.itemId) {
+                    R.id.add_folder -> showAddFolderDialog()
+                    R.id.option -> showOptionDialog(menuItemView)
+                    R.id.navigate_calculator -> navigateToCalculator()
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.CREATED)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.toolbar_menu_vault, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -91,10 +121,6 @@ class FragmentVault : Fragment() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.toolbar_menu_vault, menu)
-    }
     private fun navigateToCalculator() {
         val intent = Intent(requireActivity(), MainActivity::class.java)
         startActivity(intent)
@@ -108,9 +134,6 @@ class FragmentVault : Fragment() {
                     val action = FragmentVaultDirections.actionFragmentVaultToFragmentPersistent(
                         it.type, getString(R.string.pictures), it.path
                     )
-//                    val navOptions: NavOptions =
-//                        NavOptions.Builder().setPopUpTo(R.id.fragmentVault, false).build()
-//                    findNavController().navigate(action,navOptions)
                     navigateToPage(R.id.fragmentVault, action)
                 }
                 Constant.TYPE_VIDEOS -> {
@@ -143,7 +166,7 @@ class FragmentVault : Fragment() {
                 override fun onPositiveClicked() {
                     val callback = object : IDeleteFile {
                         override fun onSuccess() {
-                            viewModel.getListFolderVault(
+                            viewModel.getListFolderInVault(
                                 requireContext(), requireActivity().filesDir
                             )
                             lifecycleScope.launch(Dispatchers.Main) {
@@ -202,7 +225,7 @@ class FragmentVault : Fragment() {
                                 getString(R.string.create_success), SnackBarType.SUCCESS
                             )
                         }
-                        viewModel.getListFolderVault(requireContext(), requireActivity().filesDir)
+                        viewModel.getListFolderInVault(requireContext(), requireActivity().filesDir)
                     }
 
                     override fun onFailed() {
@@ -240,7 +263,7 @@ class FragmentVault : Fragment() {
                 override fun onPositiveClicked(mSortType: Sort, mOrder: Order) {
                     sortType = mSortType
                     order = mOrder
-                    viewModel.listFolder.postValue(viewModel.listFolder.value)
+                    viewModel.selfListFolderInVaultPostValue()
                 }
             }, sortType, order)
             dialogSort.show(parentFragmentManager, dialogSort.tag)
@@ -285,7 +308,6 @@ class FragmentVault : Fragment() {
     }
 
     private fun changeLayoutRecyclerView() {
-        Log.d("TAG", "changeLayoutRecyclerView: " + binding.rcvFolder)
         if (!AdapterFolder.isSwitchView) {
             val gridLayoutManager = GridLayoutManager(requireContext(), 1)
             binding.rcvFolder.layoutManager = gridLayoutManager
@@ -295,7 +317,7 @@ class FragmentVault : Fragment() {
         }
     }
 
-    private fun sortList(mList: MutableList<CustomFolder>): MutableList<CustomFolder> {
+    private fun sortList(mList: MutableList<VaultFileDirItem>): MutableList<VaultFileDirItem> {
         when (order) {
             Order.ASC -> {
                 when (sortType) {
@@ -306,7 +328,7 @@ class FragmentVault : Fragment() {
                         mList.sortBy { it.name }
                     }
                     Sort.SIZE -> {
-                        mList.sortBy { it.itemCount }
+                        mList.sortBy { it.mChildren }
                     }
                 }
             }
@@ -319,12 +341,17 @@ class FragmentVault : Fragment() {
                         mList.sortByDescending { it.name }
                     }
                     Sort.SIZE -> {
-                        mList.sortByDescending { it.itemCount }
+                        mList.sortByDescending { it.mChildren }
                     }
                 }
             }
         }
         return mList
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

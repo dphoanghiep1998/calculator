@@ -16,7 +16,7 @@ import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.common.utils.IMoveFile
 import com.neko.hiepdph.calculatorvault.databinding.FragmentListItemBinding
-import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter.AdapterListItem
+//import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.detail_item.adapter.AdapterListItem
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
 
 class FragmentListItem : Fragment() {
@@ -25,7 +25,7 @@ class FragmentListItem : Fragment() {
 
 
     private val viewModel: HomeViewModel by activityViewModels()
-    private var adapterListItem: AdapterListItem? = null
+//    private var adapterListItem: AdapterListItem? = null
     private val args: FragmentListItemArgs by navArgs()
     private var listPathSelected = mutableListOf<String>()
     private var sizeList = 0
@@ -40,8 +40,8 @@ class FragmentListItem : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        observeData()
-        (requireActivity() as HomeActivity).supportActionBar?.title = args.folder.name
+//        observeData()
+//        (requireActivity() as HomeActivity).supportActionBar?.title = args.folder.name
     }
 
     private fun initView() {
@@ -92,76 +92,76 @@ class FragmentListItem : Fragment() {
         })
     }
 
-    private fun observeData() {
-
-        when (args.folder.type) {
-            Constant.TYPE_PICTURE -> {
-                viewModel.getImageChildFromFolder(requireContext(), args.folder.folderPath)
-                viewModel.listImageItem.observe(viewLifecycleOwner) {
-                    it?.let {
-                        adapterListItem?.setData(it, Constant.TYPE_PICTURE)
-                        sizeList = it.size
-                    }
-                }
-            }
-            Constant.TYPE_VIDEOS -> {
-                viewModel.getVideoChildFromFolder(requireContext(), args.folder.folderPath)
-                viewModel.listVideoItem.observe(viewLifecycleOwner) {
-                    it?.let {
-                        adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
-                        sizeList = it.size
-                    }
-                }
-            }
-            Constant.TYPE_AUDIOS -> {
-
-                viewModel.getAudioChildFromFolder(requireContext(), args.folder.folderPath)
-                viewModel.listAudioItem.observe(viewLifecycleOwner) {
-                    it?.let {
-                        adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
-                        sizeList = it.size
-                    }
-                }
-            }
-            Constant.TYPE_FILE -> {
-                args.fileType?.let {
-                    viewModel.getFileChildFromFolder(
-                        requireContext(), args.folder.folderPath, it
-                    )
-                }
-                viewModel.listFileItem.observe(viewLifecycleOwner) {
-                    it?.let {
-                        adapterListItem?.setData(it, Constant.TYPE_FILE)
-                        sizeList = it.size
-                    }
-                }
-            }
-        }
-
-    }
+//    private fun observeData() {
+//
+//        when (args.folder.type) {
+//            Constant.TYPE_PICTURE -> {
+//                viewModel.getImageChildFromFolder(requireContext(), args.folder.folderPath)
+//                viewModel.listImageItem.observe(viewLifecycleOwner) {
+//                    it?.let {
+//                        adapterListItem?.setData(it, Constant.TYPE_PICTURE)
+//                        sizeList = it.size
+//                    }
+//                }
+//            }
+//            Constant.TYPE_VIDEOS -> {
+//                viewModel.getVideoChildFromFolder(requireContext(), args.folder.folderPath)
+//                viewModel.listVideoItem.observe(viewLifecycleOwner) {
+//                    it?.let {
+//                        adapterListItem?.setData(it, Constant.TYPE_VIDEOS)
+//                        sizeList = it.size
+//                    }
+//                }
+//            }
+//            Constant.TYPE_AUDIOS -> {
+//
+//                viewModel.getAudioChildFromFolder(requireContext(), args.folder.folderPath)
+//                viewModel.listAudioItem.observe(viewLifecycleOwner) {
+//                    it?.let {
+//                        adapterListItem?.setData(it, Constant.TYPE_AUDIOS)
+//                        sizeList = it.size
+//                    }
+//                }
+//            }
+//            Constant.TYPE_FILE -> {
+//                args.fileType?.let {
+//                    viewModel.getFileChildFromFolder(
+//                        requireContext(), args.folder.folderPath, it
+//                    )
+//                }
+//                viewModel.listFileItem.observe(viewLifecycleOwner) {
+//                    it?.let {
+//                        adapterListItem?.setData(it, Constant.TYPE_FILE)
+//                        sizeList = it.size
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
     private fun initRecycleView() {
-        adapterListItem = AdapterListItem(onClickItem = {
-            listPathSelected.clear()
-            listPathSelected.addAll(it)
-            checkListPath()
-            checkCheckBoxAll()
-        })
-
-        binding.rcvGroupItem.adapter = adapterListItem
-        when (args.folder.type) {
-            Constant.TYPE_PICTURE, Constant.TYPE_VIDEOS -> {
-                val gridLayoutManager =
-                    GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
-                binding.rcvGroupItem.layoutManager = gridLayoutManager
-            }
-            Constant.TYPE_AUDIOS, Constant.TYPE_FILE -> {
-                val linearLayoutManager =
-                    LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                binding.rcvGroupItem.layoutManager = linearLayoutManager
-            }
-
-        }
+//        adapterListItem = AdapterListItem(onClickItem = {
+//            listPathSelected.clear()
+//            listPathSelected.addAll(it)
+//            checkListPath()
+//            checkCheckBoxAll()
+//        })
+//
+//        binding.rcvGroupItem.adapter = adapterListItem
+//        when (args.folder.type) {
+//            Constant.TYPE_PICTURE, Constant.TYPE_VIDEOS -> {
+//                val gridLayoutManager =
+//                    GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
+//                binding.rcvGroupItem.layoutManager = gridLayoutManager
+//            }
+//            Constant.TYPE_AUDIOS, Constant.TYPE_FILE -> {
+//                val linearLayoutManager =
+//                    LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+//                binding.rcvGroupItem.layoutManager = linearLayoutManager
+//            }
+//
+//        }
     }
 
     private fun checkCheckBoxAll() {

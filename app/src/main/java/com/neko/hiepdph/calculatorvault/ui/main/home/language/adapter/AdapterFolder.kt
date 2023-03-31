@@ -1,4 +1,4 @@
-package com.neko.hiepdph.calculatorvault.ui.main.home.adapter
+package com.neko.hiepdph.calculatorvault.ui.main.home.language.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.data.model.CustomFolder
+import com.neko.hiepdph.calculatorvault.data.model.VaultFileDirItem
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeGridLayoutBinding
 import com.neko.hiepdph.calculatorvault.databinding.ItemHomeListLayoutBinding
 import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuItemOptionBinding
@@ -19,9 +19,9 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuItemOptionBinding
 
 class AdapterFolder(
     context: Context,
-    val onItemPress: (customFolder: CustomFolder) -> Unit,
-    val onRenamePress: (customFolder: CustomFolder) -> Unit,
-    val onDeletePress: (customFolder: CustomFolder) -> Unit
+    val onItemPress: (customFolder: VaultFileDirItem) -> Unit,
+    val onRenamePress: (customFolder: VaultFileDirItem) -> Unit,
+    val onDeletePress: (customFolder: VaultFileDirItem) -> Unit
 ) : RecyclerView.Adapter<ViewHolder>() {
     private var popupWindow: PopupWindow? = null
     private var bindingLayout: LayoutMenuItemOptionBinding? = null
@@ -44,9 +44,9 @@ class AdapterFolder(
         ViewHolder(binding.root)
 
 
-    private var listFolder = mutableListOf<CustomFolder>()
+    private var listFolder = mutableListOf<VaultFileDirItem>()
 
-    fun setData(list: List<CustomFolder>) {
+    fun setData(list: List<VaultFileDirItem>) {
         listFolder.clear()
         listFolder.addAll(list.toMutableList())
         notifyDataSetChanged()
@@ -80,7 +80,7 @@ class AdapterFolder(
                     binding.imvOption.visibility =
                         if (customFolder.type == Constant.TYPE_ADD_MORE) View.VISIBLE else View.GONE
                     binding.tvCount.text =
-                        customFolder.itemCount.toString() + " " + itemView.context.getString(R.string.item)
+                        customFolder.mChildren.toString() + " " + itemView.context.getString(R.string.item)
                     binding.imvOption.clickWithDebounce {
                         showOption(binding.imvOption, customFolder)
                     }
@@ -95,7 +95,7 @@ class AdapterFolder(
                     binding.tvName.text = customFolder.name
                     binding.imvOption.visibility =
                         if (customFolder.type == Constant.TYPE_ADD_MORE) View.VISIBLE else View.GONE
-                    binding.tvCount.text = customFolder.itemCount.toString()
+                    binding.tvCount.text = customFolder.mChildren.toString()
                     binding.imvOption.clickWithDebounce {
                         showOption(binding.imvOption, customFolder)
                     }
@@ -139,7 +139,7 @@ class AdapterFolder(
         )
     }
 
-    private fun showOption(view: View, customFolder: CustomFolder) {
+    private fun showOption(view: View, customFolder: VaultFileDirItem) {
         bindingLayout?.root?.clickWithDebounce {
             popupWindow?.dismiss()
         }

@@ -55,48 +55,48 @@ class FragmentAddFile : Fragment() {
     }
 
     private fun getDataGroupFile(type: String) {
-        viewModel.getListFolderItem(requireContext(), type)
+//        viewModel.getListFolderItem(requireContext(), type)
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterGroupItem(onClickFolderItem = { groupFile, fileType ->
-            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
-                groupFile, fileType,args.vaultPath
-            )
-            navigateToPage(R.id.fragmentAddFile, action)
-        })
-        binding.rcvGroupItem.adapter = adapter
-        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
-            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
-        } else {
-            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
-        }
-        binding.rcvGroupItem.layoutManager = gridLayoutManager
+//        adapter = AdapterGroupItem(onClickFolderItem = { groupFile, fileType ->
+//            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
+//                groupFile, fileType,args.vaultPath
+//            )
+//            navigateToPage(R.id.fragmentAddFile, action)
+//        })
+//        binding.rcvGroupItem.adapter = adapter
+//        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
+//            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
+//        } else {
+//            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+//        }
+//        binding.rcvGroupItem.layoutManager = gridLayoutManager
     }
 
     private fun observeListGroupData() {
-        when (args.type) {
-            Constant.TYPE_PICTURE -> viewModel.listGroupImageData.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapter.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_AUDIOS -> viewModel.listGroupAudioData.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapter.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_VIDEOS -> viewModel.listGroupVideoData.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapter.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_FILE -> viewModel.listGroupFileData.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapter.setData(it, args.type)
-                }
-            }
-        }
+//        when (args.type) {
+//            Constant.TYPE_PICTURE -> viewModel.listGroupImageData.observe(viewLifecycleOwner) {
+//                it?.let {
+//                    adapter.setData(it, args.type)
+//                }
+//            }
+//            Constant.TYPE_AUDIOS -> viewModel.listGroupAudioData.observe(viewLifecycleOwner) {
+//                it?.let {
+//                    adapter.setData(it, args.type)
+//                }
+//            }
+//            Constant.TYPE_VIDEOS -> viewModel.listGroupVideoData.observe(viewLifecycleOwner) {
+//                it?.let {
+//                    adapter.setData(it, args.type)
+//                }
+//            }
+//            Constant.TYPE_FILE -> viewModel.listGroupFileData.observe(viewLifecycleOwner) {
+//                it?.let {
+//                    adapter.setData(it, args.type)
+//                }
+//            }
+//        }
 
     }
 

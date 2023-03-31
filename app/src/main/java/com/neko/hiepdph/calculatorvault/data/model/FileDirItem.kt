@@ -18,7 +18,7 @@ open class FileDirItem(
     override fun toString() =
         "FileDirItem(path=$path, name=$name, isDirectory=$isDirectory, children=$children, size=$size, modified=$modified, mediaStoreId=$mediaStoreId)"
 
-    fun getExtension() = if(isDirectory) name else path.substringAfterLast(".","")
+    fun getExtension() = if (isDirectory) name else path.substringAfterLast(".", "")
 
     fun getParentPath() = path.getParentPath()
 
@@ -43,7 +43,9 @@ open class FileDirItem(
         return when {
 //            context.isRestrictedSAFOnlyRoot(path) -> context.getAndroidSAFLastModified(path)
 //            context.isPathOnOTG(path) -> context.getFastDocumentFile(path)?.lastModified() ?: 0L
-            buildMinVersionN() && path.startsWith("content://") -> context.getMediaStoreLastModified(path)
+            buildMinVersionN() && path.startsWith("content://") -> context.getMediaStoreLastModified(
+                path
+            )
             else -> File(path).lastModified()
         }
     }

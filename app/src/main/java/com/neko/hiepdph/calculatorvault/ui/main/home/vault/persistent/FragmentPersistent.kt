@@ -58,34 +58,32 @@ class FragmentPersistent : Fragment() {
 
 
     private fun initView() {
-        initData()
         initRecyclerView()
+        initData()
         initButton()
     }
-    private fun getDataGroupFile(type: String) {
-        viewModel.getListFolderItem(requireContext(), type)
-    }
-    private fun initData() {
+
+    private fun getDataFile() {
         when (args.type) {
-            Constant.TYPE_PICTURE -> viewModel.listImageItem.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapterPersistent?.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_AUDIOS -> viewModel.listAudioItem.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapterPersistent?.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_VIDEOS -> viewModel.listVideoItem.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapterPersistent?.setData(it, args.type)
-                }
-            }
-            Constant.TYPE_FILE -> viewModel.listFileItem.observe(viewLifecycleOwner) {
-                it?.let {
-                    adapterPersistent?.setData(it, args.type)
-                }
+            Constant.TYPE_PICTURE -> viewModel.getImageChildFromFolder(
+                requireContext(), args.vaultPath
+            )
+            Constant.TYPE_AUDIOS -> viewModel.getAudioChildFromFolder(
+                requireContext(), args.vaultPath
+            )
+            Constant.TYPE_VIDEOS -> viewModel.getVideoChildFromFolder(
+                requireContext(), args.vaultPath
+            )
+//        Constant.TYPE_FILE -> viewModel.getFileChildFromFolder(requireContext(),args.vaultPath)
+        }
+    }
+
+    private fun initData() {
+        getDataFile()
+
+        viewModel.listItemListPersistent.observe(viewLifecycleOwner) {
+            it?.let {
+                adapterPersistent?.setData(it, args.type)
             }
         }
     }
@@ -104,32 +102,32 @@ class FragmentPersistent : Fragment() {
                 val dialogFloatingButton = DialogAddFile(onClickPicture = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_PICTURE, getString(R.string.library),args.vaultPath
+                            Constant.TYPE_PICTURE, getString(R.string.library), args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickAudio = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_AUDIOS, getString(R.string.audios_album),args.vaultPath
+                            Constant.TYPE_AUDIOS, getString(R.string.audios_album), args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickVideo = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_VIDEOS, getString(R.string.library),args.vaultPath
+                            Constant.TYPE_VIDEOS, getString(R.string.library), args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 }, onClickFile = {
                     val action =
                         FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                            Constant.TYPE_FILE, getString(R.string.files),args.vaultPath
+                            Constant.TYPE_FILE, getString(R.string.files), args.vaultPath
                         )
                     navigateToPage(R.id.fragmentPersistent, action)
                 })
                 dialogFloatingButton.show(childFragmentManager, dialogFloatingButton.tag)
             } else {
                 val action = FragmentPersistentDirections.actionFragmentPersistentToFragmentAddFile(
-                    args.type, name,args.vaultPath
+                    args.type, name, args.vaultPath
                 )
                 navigateToPage(R.id.fragmentPersistent, action)
             }

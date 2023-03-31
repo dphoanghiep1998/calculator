@@ -11,12 +11,12 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.neko.hiepdph.calculatorvault'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.neko.hiepdph.calculatorvault"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -245,7 +245,7 @@ dependencies {
     def room_version = "2.4.3"
     def lifecycle_version = "2.6.0-alpha01"
     def lottieVersion = "3.4.0"
-    def nav_version = "2.4.2"
+    def nav_version = "2.5.3"
     def coroutines_version = '1.5.2'
 
 

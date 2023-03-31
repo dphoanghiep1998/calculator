@@ -27,10 +27,6 @@ class HomeActivity : AppCompatActivity() {
         initArchitecture()
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d("TAG1234", "onPause: ")
-    }
 
 
     private fun initArchitecture() {
@@ -39,52 +35,45 @@ class HomeActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_home) as NavHostFragment
         val navController = navHostFragment.navController
         setupActionBarWithNavController(navController, binding.drawerLayout)
-        val config = AppBarConfiguration.Builder(
-            R.id.fragmentLanguage,
-            R.id.fragmentVault,
-            R.id.fragmentSetting,
-            R.id.fragmentNote,
-            R.id.fragmentBrowser,
-            R.id.fragmentRecycleBin
-        ).setOpenableLayout(
-            binding.drawerLayout
-        ).build()
+        val config = AppBarConfiguration(
+            setOf(
+                R.id.fragmentLanguage,
+                R.id.fragmentVault,
+                R.id.fragmentSetting,
+                R.id.fragmentNote,
+                R.id.fragmentBrowser,
+                R.id.fragmentRecycleBin
+            ), binding.drawerLayout
+        )
+        setupActionBarWithNavController(navController)
         NavigationUI.setupWithNavController(binding.navigationView, navController)
         NavigationUI.setupWithNavController(binding.toolbar, navController, config)
-
 
         binding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.fragmentVault -> {
-//                    val navOptions: NavOptions =
-//                        NavOptions.Builder().setPopUpTo(R.id.fragmentVault, true).build()
-//                    navController.navigate(R.id.fragmentVault, null, navOptions)
-                    navController.navigate(R.id.fragmentVault)
+                    val navOptions: NavOptions =
+                        NavOptions.Builder().setPopUpTo(R.id.fragmentVault,false).setLaunchSingleTop(true).build()
+                    navController.navigate(R.id.fragmentVault, null, navOptions)
                 }
                 R.id.fragmentLanguage -> {
                     val navOptions: NavOptions =
-                        NavOptions.Builder().setPopUpTo(R.id.fragmentLanguage, true).build()
-                    navController.navigate(R.id.fragmentLanguage, null, navOptions)
+                        NavOptions.Builder().setLaunchSingleTop(true).build()
+                    navController.navigate(R.id.fragmentLanguage,null,navOptions)
                 }
                 R.id.fragmentBrowser -> {
-                    val navOptions: NavOptions =
-                        NavOptions.Builder().setPopUpTo(R.id.fragmentBrowser, true).build()
+                    val navOptions: NavOptions=  NavOptions.Builder().setPopUpTo(R.id.fragmentBrowser,true).setLaunchSingleTop(true).build()
                     navController.navigate(R.id.fragmentBrowser, null, navOptions)
+
                 }
                 R.id.fragmentNote -> {
-                    val navOptions: NavOptions =
-                        NavOptions.Builder().setPopUpTo(R.id.fragmentNote, true).build()
-                    navController.navigate(R.id.fragmentNote, null, navOptions)
+                    navController.navigate(R.id.fragmentNote)
                 }
                 R.id.fragmentSetting -> {
-                    val navOptions: NavOptions =
-                        NavOptions.Builder().setPopUpTo(R.id.fragmentSetting, true).build()
-                    navController.navigate(R.id.fragmentSetting, null, navOptions)
+                    navController.navigate(R.id.fragmentSetting)
                 }
                 R.id.fragmentRecycleBin -> {
-                    val navOptions: NavOptions =
-                        NavOptions.Builder().setPopUpTo(R.id.fragmentRecycleBin, true).build()
-                    navController.navigate(R.id.fragmentRecycleBin, null, navOptions)
+                    navController.navigate(R.id.fragmentRecycleBin)
                 }
                 R.id.item_theme -> changeTheme()
                 R.id.item_rate_app -> rateApp()
@@ -130,5 +119,6 @@ class HomeActivity : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
+
 
 }

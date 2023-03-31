@@ -17,17 +17,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
-    var listFolder = MutableLiveData(mutableListOf<CustomFolder>())
+    var listFolder = MutableLiveData(mutableListOf<FileDirItem>())
 
-    var listGroupImageData = SelfCleaningLiveData<MutableList<GroupFile>>()
-    var listGroupVideoData = SelfCleaningLiveData<MutableList<GroupFile>>()
-    var listGroupAudioData = SelfCleaningLiveData<MutableList<GroupFile>>()
-    var listGroupFileData = SelfCleaningLiveData<MutableList<GroupFile>>()
+    var listGroupImageData = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listGroupVideoData = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listGroupAudioData = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listGroupFileData = SelfCleaningLiveData<MutableList<FileDirItem>>()
 
-    var listImageItem = SelfCleaningLiveData<MutableList<ImageItem>>()
-    var listAudioItem = SelfCleaningLiveData<MutableList<AudioItem>>()
-    var listVideoItem = SelfCleaningLiveData<MutableList<VideoItem>>()
-    var listFileItem = SelfCleaningLiveData<MutableList<FileItem>>()
+    var listImageItem = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listAudioItem = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listVideoItem = SelfCleaningLiveData<MutableList<FileDirItem>>()
+    var listFileItem = SelfCleaningLiveData<MutableList<FileDirItem>>()
 
 
     fun createFolder(parentDir: File, fileName: String, callback: ICreateFile) {
@@ -42,93 +42,91 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getListFolderVault(context: Context, parentDir: File) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val listCustomFolder = mutableListOf<CustomFolder>()
-            val listFile = FileUtils.getFoldersInDirectory(parentDir.path)
-            var type: String
-            for (file in listFile) {
-                val name = when (file.name) {
-                    Constant.PICTURE_FOLDER_NAME -> {
-                        type = Constant.TYPE_PICTURE
-                        context.getString(R.string.pictures)
-                    }
-                    Constant.AUDIOS_FOLDER_NAME -> {
-                        type = Constant.TYPE_AUDIOS
-                        context.getString(R.string.audios)
-                    }
-                    Constant.VIDEOS_FOLDER_NAME -> {
-                        type = Constant.TYPE_VIDEOS
-                        context.getString(R.string.videos)
-                    }
-                    Constant.FILES_FOLDER_NAME -> {
-                        type = Constant.TYPE_FILE
-                        context.getString(R.string.files)
-                    }
-                    else -> {
-                        type = Constant.TYPE_ADD_MORE
-                        file.name
-                    }
-                }
-                val count = file.listFiles()?.size ?: 0
+//    fun getListFolderVault(context: Context, parentDir: File) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val listCustomFolder = mutableListOf<FileDirItem>()
+//            val listFile = FileUtils.getFoldersInDirectory(parentDir.path)
+//            var type: String
+//            for (file in listFile) {
+//                val name = when (file.name) {
+//                    Constant.PICTURE_FOLDER_NAME -> {
+//                        type = Constant.TYPE_PICTURE
+//                        context.getString(R.string.pictures)
+//                    }
+//                    Constant.AUDIOS_FOLDER_NAME -> {
+//                        type = Constant.TYPE_AUDIOS
+//                        context.getString(R.string.audios)
+//                    }
+//                    Constant.VIDEOS_FOLDER_NAME -> {
+//                        type = Constant.TYPE_VIDEOS
+//                        context.getString(R.string.videos)
+//                    }
+//                    Constant.FILES_FOLDER_NAME -> {
+//                        type = Constant.TYPE_FILE
+//                        context.getString(R.string.files)
+//                    }
+//                    else -> {
+//                        type = Constant.TYPE_ADD_MORE
+//                        file.name
+//                    }
+//                }
+//                val count = file.listFiles()?.size ?: 0
+//
+//                listCustomFolder.add(FileDirItem(name, count, type, file.path))
+//            }
+//            listFolder.postValue(listCustomFolder)
+//        }
+//    }
+//
 
-                listCustomFolder.add(CustomFolder(name, count, type, file.path))
-            }
-            listFolder.postValue(listCustomFolder)
-        }
-    }
+//    fun getListFolderItem(context: Context, type: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val folder = MediaStoreUtils.getParentFolderName(context, type).toMutableList()
+//            when (type) {
+//                Constant.TYPE_PICTURE -> listGroupImageData.postValue(folder)
+//                Constant.TYPE_AUDIOS -> listGroupAudioData.postValue(folder)
+//                Constant.TYPE_VIDEOS -> listGroupVideoData.postValue(folder)
+//                Constant.TYPE_FILE -> listGroupFileData.postValue(folder)
+//            }
+//        }
+//    }
 
+//    fun getImageChildFromFolder(context: Context, path: String) {
+//        Log.d("TAG", "getImageChildFromFolder: " + path)
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val listImageChild =
+//                MediaStoreUtils.getChildImageFromPath(context, path).toMutableList()
+//            listImageItem.postValue(listImageChild)
+//        }
+//    }
 
-    fun getListFolderItem(context: Context, type: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val folder = MediaStoreUtils.getParentFolderName(context, type).toMutableList()
-            when (type) {
-                Constant.TYPE_PICTURE -> listGroupImageData.postValue(folder)
-                Constant.TYPE_AUDIOS -> listGroupAudioData.postValue(folder)
-                Constant.TYPE_VIDEOS -> listGroupVideoData.postValue(folder)
-                Constant.TYPE_FILE -> listGroupFileData.postValue(folder)
-            }
-        }
-    }
+//    fun getAudioChildFromFolder(context: Context, path: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val listAudioChild =
+//                MediaStoreUtils.getChildAudioFromPath(context, path).toMutableList()
+//            listAudioItem.postValue(listAudioChild)
+//        }
+//    }
 
-    fun getImageChildFromFolder(context: Context, path: String) {
-        Log.d("TAG", "getImageChildFromFolder: " + path)
-        viewModelScope.launch(Dispatchers.IO) {
-            val listImageChild =
-                MediaStoreUtils.getChildImageFromPath(context, path).toMutableList()
-            listImageItem.postValue(listImageChild)
-        }
-    }
+//    fun getVideoChildFromFolder(context: Context, path: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val listVideoChild =
+//                MediaStoreUtils.getChildVideoFromPath(context, path).toMutableList()
+//            listVideoItem.postValue(listVideoChild)
+//        }
+//    }
 
-    fun getAudioChildFromFolder(context: Context, path: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val listAudioChild =
-                MediaStoreUtils.getChildAudioFromPath(context, path).toMutableList()
-            listAudioItem.postValue(listAudioChild)
-        }
-    }
-
-    fun getVideoChildFromFolder(context: Context, path: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val listVideoChild =
-                MediaStoreUtils.getChildVideoFromPath(context, path).toMutableList()
-            listVideoItem.postValue(listVideoChild)
-        }
-    }
-
-    fun getFileChildFromFolder(context: Context, path: String, type: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val listFileChild =
-                MediaStoreUtils.getChildFileFromPath(context, path, type).toMutableList()
-            listFileItem.postValue(listFileChild)
-        }
-    }
+//    fun getFileChildFromFolder(context: Context, path: String, type: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val listFileChild =
+//                MediaStoreUtils.getChildFileFromPath(context, path, type).toMutableList()
+//            listFileItem.postValue(listFileChild)
+//        }
+//    }
 
     fun moveMultipleFileToVault(filePath:List<String>,destinationPath:String,callback: IMoveFile){
         viewModelScope.launch(Dispatchers.IO) {
-//                FileUtils.moveFileToVault(filePath, destinationPath,callback)
+                FileUtils.copyMoveTo(filePath, destinationPath,false,callback)
         }
     }
-
-
 }
