@@ -65,7 +65,7 @@ class VaultViewModel @Inject constructor() : ViewModel() {
 
                 listVaultFolder.add(
                     VaultFileDirItem(
-                        file.path, name, type, true, count, file.length(), file.lastModified()
+                        file.absolutePath, name, type, true, count, file.length(), file.lastModified()
                     )
                 )
             }

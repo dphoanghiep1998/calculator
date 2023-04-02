@@ -85,5 +85,8 @@
         <argument
             android:name="vaultPath"
             app:argType="string" />
+        <argument
+            android:name="groupItem"
+            app:argType="com.neko.hiepdph.calculatorvault.data.model.GroupItem" />
     </fragment>
 </navigation>

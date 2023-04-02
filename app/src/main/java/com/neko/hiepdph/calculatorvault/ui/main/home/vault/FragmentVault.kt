@@ -75,8 +75,10 @@ class FragmentVault : Fragment() {
     private fun observeListFile() {
         viewModel.listFolderInVault.observe(viewLifecycleOwner) {
             adapter.setData(sortList(it))
+            binding.swipeLayout.isRefreshing = false
         }
     }
+
 
 
     private fun initView() {
@@ -84,6 +86,13 @@ class FragmentVault : Fragment() {
         initRecyclerView()
         initPopupWindow()
         initButton()
+        initSwipeView()
+    }
+
+    private fun initSwipeView() {
+        binding.swipeLayout.setOnRefreshListener {
+            observeListFile()
+        }
     }
 
     private fun initToolBar() {

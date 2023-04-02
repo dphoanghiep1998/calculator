@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
@@ -66,15 +67,16 @@ class FragmentPersistent : Fragment() {
     private fun getDataFile() {
         when (args.type) {
             Constant.TYPE_PICTURE -> viewModel.getImageChildFromFolder(
-                requireContext(), args.vaultPath
+                args.vaultPath
             )
             Constant.TYPE_AUDIOS -> viewModel.getAudioChildFromFolder(
-                requireContext(), args.vaultPath
+                args.vaultPath
             )
             Constant.TYPE_VIDEOS -> viewModel.getVideoChildFromFolder(
-                requireContext(), args.vaultPath
+                args.vaultPath
             )
-//        Constant.TYPE_FILE -> viewModel.getFileChildFromFolder(requireContext(),args.vaultPath)
+            Constant.TYPE_FILE -> viewModel.getFileChildFromFolder(args.vaultPath)
+            else -> viewModel.getFileChildFromFolder(args.vaultPath)
         }
     }
 
@@ -139,10 +141,18 @@ class FragmentPersistent : Fragment() {
 
         })
         binding.rcvItemGroup.adapter = adapterPersistent
-        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
-            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
-        } else {
-            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+        val gridLayoutManager = when (args.type) {
+            Constant.TYPE_PICTURE, Constant.TYPE_VIDEOS -> GridLayoutManager(
+                requireContext(), 4, RecyclerView.VERTICAL, false
+            )
+
+            Constant.TYPE_AUDIOS, Constant.TYPE_FILE -> LinearLayoutManager(
+                requireContext(), RecyclerView.VERTICAL, false
+            )
+            else -> LinearLayoutManager(
+                requireContext(), RecyclerView.VERTICAL, false
+            )
+
         }
         binding.rcvItemGroup.layoutManager = gridLayoutManager
 

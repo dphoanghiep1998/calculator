@@ -127,4 +127,7 @@
     <string name="preventing_lost_files_help">Preventing Lost Files Help</string>
     <string name="FAQ">FAQ</string>
     <string name="recycle_bin_instruction">The files in the Recycle Bin will be automatically deleted after 60 days.</string>
+    <string name="play">Play</string>
+    <string name="info">Info</string>
+    <string name="open">Open</string>
 </resources>

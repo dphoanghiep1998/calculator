@@ -2,8 +2,12 @@ package com.neko.hiepdph.calculatorvault.common.utils
 
 import android.content.Context
 import android.content.Intent
+import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
+import com.neko.hiepdph.calculatorvault.common.Constant
+import com.neko.hiepdph.calculatorvault.data.model.ListItem
 import java.io.File
+import java.util.*
 
 interface IDeleteFile {
     fun onSuccess()
@@ -65,8 +69,8 @@ object FileUtils {
     }
 
     fun getFoldersInDirectory(dir: String): List<File> {
+        val listOfFolder = mutableListOf<File>()
         return try {
-            val listOfFolder = mutableListOf<File>()
             val directory = File(dir)
             val files = directory.listFiles { file -> file.isDirectory }
             for (file in files) {
@@ -74,7 +78,48 @@ object FileUtils {
             }
             listOfFolder
         } catch (e: Exception) {
-            mutableListOf()
+            e.printStackTrace()
+            listOfFolder
+        }
+
+    }
+
+    fun getFileInDirectory(dir: String): List<ListItem> {
+        val listOfFolder = mutableListOf<ListItem>()
+        return try {
+            val directory = File(dir)
+            val files = directory.listFiles()
+            for (file in files) {
+                var type = ""
+                if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
+                    type = Constant.TYPE_PDF
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_CSV)) {
+                    type = Constant.TYPE_CSV
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PPT)) {
+                    type = Constant.TYPE_PPT
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PPT)) {
+                    type = Constant.TYPE_PPTX
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_TEXT)) {
+                    type = Constant.TYPE_TEXT
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_WORD)) {
+                    type = Constant.TYPE_WORD
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_EXCEL)) {
+                    type = Constant.TYPE_EXCEL
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_WORDX)) {
+                    type = Constant.TYPE_WORD
+                } else if (file.name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_ZIP)) {
+                    type = Constant.TYPE_ZIP
+                }
+                listOfFolder.add(
+                    ListItem(
+                        0, file.path, file.name, false, 0, file.length(), file.lastModified(), type
+                    )
+                )
+            }
+            listOfFolder
+        } catch (e: Exception) {
+            e.printStackTrace()
+            listOfFolder
         }
 
     }
@@ -114,8 +159,26 @@ object FileUtils {
                 val destinationFile = File(directory, newName)
                 sourceFile.copyTo(destinationFile)
             }
+            callback.onSuccess()
+
+            if (!isCopy) {
+                filePath.forEach {
+                    val sourceFile = File(it)
+                    sourceFile.delete()
+                }
+            }
         } catch (e: Exception) {
+            callback.onFailed()
             e.printStackTrace()
         }
+    }
+
+    private fun getMimeType(url: String): String {
+        var type = ""
+        var extension = MimeTypeMap.getFileExtensionFromUrl(url)
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+        }
+        return type
     }
 }

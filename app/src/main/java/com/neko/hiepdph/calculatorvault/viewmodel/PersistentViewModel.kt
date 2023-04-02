@@ -23,39 +23,39 @@ class PersistentViewModel @Inject constructor() : ViewModel() {
     }
 
 
-    fun getImageChildFromFolder(context: Context, path: String) {
+    fun getImageChildFromFolder(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val listImageChild =
-                MediaStoreUtils.getChildImageFromPath(context, path).toMutableList()
+                FileUtils.getFileInDirectory(path).toMutableList()
             setListItemPersistentData(listImageChild)
         }
     }
 
-    fun getAudioChildFromFolder(context: Context, path: String) {
+    fun getAudioChildFromFolder(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val listAudioChild =
-                MediaStoreUtils.getChildAudioFromPath(context, path).toMutableList()
+                FileUtils.getFileInDirectory(path).toMutableList()
             setListItemPersistentData(listAudioChild)
         }
     }
 
-    fun getVideoChildFromFolder(context: Context, path: String) {
+    fun getVideoChildFromFolder(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val listVideoChild =
-                MediaStoreUtils.getChildVideoFromPath(context, path).toMutableList()
+                FileUtils.getFileInDirectory(path).toMutableList()
             setListItemPersistentData(listVideoChild)
 
         }
     }
 
-    fun getFileChildFromFolder(context: Context, path: String, type: String) {
+    fun getFileChildFromFolder(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val listFileChild =
-                MediaStoreUtils.getChildFileFromPath(context, path, type).toMutableList()
+                FileUtils.getFileInDirectory(path).toMutableList()
             setListItemPersistentData(listFileChild)
-
         }
     }
+
 
 
 }

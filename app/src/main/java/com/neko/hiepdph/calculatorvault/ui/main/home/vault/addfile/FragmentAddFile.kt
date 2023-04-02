@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,13 +16,16 @@ import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddFileBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.vault.addfile.adapter.AdapterGroupItem
+import com.neko.hiepdph.calculatorvault.viewmodel.AddFileViewModel
 import com.neko.hiepdph.calculatorvault.viewmodel.HomeViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+
 
 class FragmentAddFile : Fragment() {
     private var _binding: FragmentAddFileBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: AdapterGroupItem
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel by viewModels<AddFileViewModel>()
     private val args: FragmentAddFileArgs by navArgs()
 
 
@@ -41,7 +45,7 @@ class FragmentAddFile : Fragment() {
 
     override fun onResume() {
         super.onResume()
-//        observeListGroupData()
+        observeListGroupData()
     }
 
     private fun getDataFromArgs() {
@@ -55,48 +59,31 @@ class FragmentAddFile : Fragment() {
     }
 
     private fun getDataGroupFile(type: String) {
-//        viewModel.getListFolderItem(requireContext(), type)
+        viewModel.getListGroupItem(requireContext(), type)
     }
 
     private fun initRecyclerView() {
-//        adapter = AdapterGroupItem(onClickFolderItem = { groupFile, fileType ->
-//            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
-//                groupFile, fileType,args.vaultPath
-//            )
-//            navigateToPage(R.id.fragmentAddFile, action)
-//        })
-//        binding.rcvGroupItem.adapter = adapter
-//        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
-//            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
-//        } else {
-//            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
-//        }
-//        binding.rcvGroupItem.layoutManager = gridLayoutManager
+        adapter = AdapterGroupItem(onClickFolderItem = { groupItem, fileType ->
+            val action = FragmentAddFileDirections.actionFragmentAddFileToFragmentListItem(
+               fileType,args.vaultPath, groupItem
+            )
+            navigateToPage(R.id.fragmentAddFile, action)
+        })
+        binding.rcvGroupItem.adapter = adapter
+        val gridLayoutManager = if (args.type == Constant.TYPE_FILE) {
+            GridLayoutManager(requireContext(), 4, RecyclerView.VERTICAL, false)
+        } else {
+            GridLayoutManager(requireContext(), 3, RecyclerView.VERTICAL, false)
+        }
+        binding.rcvGroupItem.layoutManager = gridLayoutManager
     }
 
     private fun observeListGroupData() {
-//        when (args.type) {
-//            Constant.TYPE_PICTURE -> viewModel.listGroupImageData.observe(viewLifecycleOwner) {
-//                it?.let {
-//                    adapter.setData(it, args.type)
-//                }
-//            }
-//            Constant.TYPE_AUDIOS -> viewModel.listGroupAudioData.observe(viewLifecycleOwner) {
-//                it?.let {
-//                    adapter.setData(it, args.type)
-//                }
-//            }
-//            Constant.TYPE_VIDEOS -> viewModel.listGroupVideoData.observe(viewLifecycleOwner) {
-//                it?.let {
-//                    adapter.setData(it, args.type)
-//                }
-//            }
-//            Constant.TYPE_FILE -> viewModel.listGroupFileData.observe(viewLifecycleOwner) {
-//                it?.let {
-//                    adapter.setData(it, args.type)
-//                }
-//            }
-//        }
+            viewModel.listItemListGroupFile.observe(viewLifecycleOwner) {
+                it?.let {
+                    adapter.setData(it, args.type)
+                }
+            }
 
     }
 

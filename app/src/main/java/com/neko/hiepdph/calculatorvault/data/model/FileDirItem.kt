@@ -2,6 +2,7 @@ package com.neko.hiepdph.calculatorvault.data.model
 
 import android.content.Context
 import com.neko.hiepdph.calculatorvault.common.extensions.*
+import com.neko.hiepdph.calculatorvault.common.utils.MediaStoreUtils
 import com.neko.hiepdph.calculatorvault.common.utils.buildMinVersionN
 import java.io.File
 
@@ -37,6 +38,8 @@ open class FileDirItem(
     fun getVideoResolution(context: Context) = context.getVideoResolution(path)
 
     fun getImageResolution(context: Context) = context.getImageResolution(path)
+
+    fun getThumb() = MediaStoreUtils.getThumbnail(path)
 
 
     fun getLastModified(context: Context): Long {

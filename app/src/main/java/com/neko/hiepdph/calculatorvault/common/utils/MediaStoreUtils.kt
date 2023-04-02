@@ -8,6 +8,8 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.Constant.archiveMimeTypes
 import com.neko.hiepdph.calculatorvault.common.Constant.extraAudioMimeTypes
@@ -20,186 +22,186 @@ import java.io.File
 import java.util.*
 
 object MediaStoreUtils {
-//    fun getParentFolderName(context: Context, type: String): List<FileDirItem> {
-//        val uri = MediaStore.Files.getContentUri("external")
-//        val projection = arrayOf(
-//            MediaStore.Files.FileColumns.MIME_TYPE,
-//            MediaStore.Files.FileColumns.DATA,
-//            MediaStore.Files.FileColumns.DISPLAY_NAME,
-//            MediaStore.Files.FileColumns.SIZE,
-//            MediaStore.Files.FileColumns.DATE_MODIFIED,
-//            MediaStore.Files.FileColumns._ID
-//        )
-//        val folders = mutableMapOf<String, FileDirItem>()
-//
-//        try {
-//            context.queryCursor(uri, projection) { cursor ->
-//                try {
-//                    val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
-//                    if (name.startsWith(".")) {
-//                        return@queryCursor
-//                    }
-//                    val fullMimetype = cursor.getStringValue(MediaStore.Files.FileColumns.MIME_TYPE)
-//                        ?.lowercase(Locale.getDefault()) ?: return@queryCursor
-//                    val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
-//                    val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
-//                    if (size == 0L) {
-//                        return@queryCursor
-//                    }
-//
-//                    val path = cursor.getStringValue(MediaStore.Files.FileColumns.DATA)
-//                    val lastModified =
-//                        cursor.getLongValue(MediaStore.Files.FileColumns.DATE_MODIFIED) * 1000
-//
-//                    val mimetype = fullMimetype.substringBefore("/")
-//
-//                    when (type) {
-//                        Constant.TYPE_PICTURE -> {
-//                            if (mimetype == "image") {
-//
-//                                val parentFolder = File(path).parentFile?.name ?: "No_name"
-//                                if (parentFolder.startsWith(".")) {
-//                                    return@queryCursor
-//                                }
-//                                if (!folders.containsKey(parentFolder)) {
-//                                    folders[parentFolder] = FileDirItem(
-//                                        parentFolder,
-//                                        Constant.TYPE_PICTURE,
-//                                        path,
-//                                        mutableListOf(),
-//                                        mutableListOf(),
-//                                        File(path).parentFile?.path ?: ""
-//
-//                                    )
-//                                }
-//                                if (path.isNotEmpty()) {
-//                                    folders[parentFolder]?.dataList?.add(
-//                                        path
-//                                    )
-//                                }
-//                            }
-//                        }
-//                        Constant.TYPE_VIDEOS -> {
-//                            if (mimetype == "video") {
-//
-//                                val parentFolder = File(path).parentFile?.name ?: "No_name"
-//
-//                                if (!folders.containsKey(parentFolder)) {
-//                                    folders[parentFolder] = GroupFile(
-//                                        parentFolder,
-//                                        Constant.TYPE_VIDEOS,
-//                                        path,
-//                                        mutableListOf(),
-//                                        mutableListOf(),
-//                                        File(path).parentFile?.path ?: ""
-//
-//                                    )
-//                                }
-//                                if (path.isNotEmpty()) {
-//                                    folders[parentFolder]?.dataList?.add(
-//                                        path
-//                                    )
-//                                }
-//                            }
-//                        }
-//                        Constant.TYPE_AUDIOS -> {
-//                            if (mimetype == "audio" || extraAudioMimeTypes.contains(fullMimetype)) {
-//
-//                                val parentFolder = File(path).parentFile?.name ?: "No_name"
-//
-//                                if (!folders.containsKey(parentFolder)) {
-//                                    folders[parentFolder] = GroupFile(
-//                                        parentFolder,
-//                                        Constant.TYPE_AUDIOS,
-//                                        path,
-//                                        mutableListOf(),
-//                                        mutableListOf(),
-//                                        File(path).parentFile?.path ?: ""
-//
-//                                    )
-//                                }
-//                                if (path.isNotEmpty()) {
-//                                    folders[parentFolder]?.dataList?.add(
-//                                        path
-//                                    )
-//                                    folders[parentFolder]?.dataThumb?.add(
-//                                        getThumbnail(path)
-//                                    )
-//                                }
-//                            }
-//                        }
-//                        Constant.TYPE_FILE -> {
-//                            if (mimetype == "text" || extraDocumentMimeTypes.contains(fullMimetype) || archiveMimeTypes.contains(
-//                                    fullMimetype
-//                                )
-//                            ) {
-//                                val parentFolder =
-//                                    Constant.FILES_FOLDER_NAME + "utra+super+promax+12345"
-//                                if (!folders.containsKey(parentFolder)) {
-//                                    folders[parentFolder] = GroupFile(
-//                                        parentFolder,
-//                                        Constant.TYPE_FILE,
-//                                        path,
-//                                        mutableListOf(),
-//                                        mutableListOf(),
-//                                        File(path).parentFile?.path ?: "",
-//                                        mutableSetOf()
-//                                    )
-//                                }
-//                                if (path.isNotEmpty()) {
-//                                    if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PDF)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_CSV)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_CSV)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_PPT)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPT)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_PPT)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPTX)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_TEXT)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_TEXT)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_WORD)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_EXCEL)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_EXCEL)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_WORDX)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
-//                                    } else if (name.lowercase(Locale.ROOT)
-//                                            .endsWith(Constant.TYPE_ZIP)
-//                                    ) {
-//                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_ZIP)
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//
-//                    }
-//
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//        return folders.values.toList()
-//    }
+    fun getListGroupItem(context: Context, type: String): List<GroupItem> {
+        val uri = MediaStore.Files.getContentUri("external")
+        val projection = arrayOf(
+            MediaStore.Files.FileColumns.MIME_TYPE,
+            MediaStore.Files.FileColumns.DATA,
+            MediaStore.Files.FileColumns.DISPLAY_NAME,
+            MediaStore.Files.FileColumns.SIZE,
+            MediaStore.Files.FileColumns.DATE_MODIFIED,
+            MediaStore.Files.FileColumns._ID
+        )
+        val folders = mutableMapOf<String, GroupItem>()
 
-    private fun getThumbnail(path: String): Bitmap? {
+        try {
+            context.queryCursor(uri, projection) { cursor ->
+                try {
+                    val name = cursor.getStringValue(MediaStore.Files.FileColumns.DISPLAY_NAME)
+                    if (name.startsWith(".")) {
+                        return@queryCursor
+                    }
+                    val fullMimetype = cursor.getStringValue(MediaStore.Files.FileColumns.MIME_TYPE)
+                        ?.lowercase(Locale.getDefault()) ?: return@queryCursor
+                    val id = cursor.getLongValue(MediaStore.Files.FileColumns._ID)
+                    val size = cursor.getLongValue(MediaStore.Files.FileColumns.SIZE)
+                    if (size == 0L) {
+                        return@queryCursor
+                    }
+
+                    val path = cursor.getStringValue(MediaStore.Files.FileColumns.DATA)
+                    val lastModified =
+                        cursor.getLongValue(MediaStore.Files.FileColumns.DATE_MODIFIED) * 1000
+
+                    val mimetype = fullMimetype.substringBefore("/")
+
+                    when (type) {
+                        Constant.TYPE_PICTURE -> {
+                            if (mimetype == "image") {
+
+                                val parentFolder = File(path).parentFile?.name ?: "No_name"
+                                if (parentFolder.startsWith(".")) {
+                                    return@queryCursor
+                                }
+                                if (!folders.containsKey(parentFolder)) {
+                                    folders[parentFolder] = GroupItem(
+                                        parentFolder,
+                                        Constant.TYPE_PICTURE,
+                                        path,
+                                        mutableListOf(),
+                                        mutableListOf(),
+                                        File(path).parentFile?.path ?: ""
+
+                                    )
+                                }
+                                if (path.isNotEmpty()) {
+                                    folders[parentFolder]?.dataList?.add(
+                                        path
+                                    )
+                                }
+                            }
+                        }
+                        Constant.TYPE_VIDEOS -> {
+                            if (mimetype == "video") {
+
+                                val parentFolder = File(path).parentFile?.name ?: "No_name"
+
+                                if (!folders.containsKey(parentFolder)) {
+                                    folders[parentFolder] = GroupItem(
+                                        parentFolder,
+                                        Constant.TYPE_VIDEOS,
+                                        path,
+                                        mutableListOf(),
+                                        mutableListOf(),
+                                        File(path).parentFile?.path ?: ""
+
+                                    )
+                                }
+                                if (path.isNotEmpty()) {
+                                    folders[parentFolder]?.dataList?.add(
+                                        path
+                                    )
+                                }
+                            }
+                        }
+                        Constant.TYPE_AUDIOS -> {
+                            if (mimetype == "audio" || extraAudioMimeTypes.contains(fullMimetype)) {
+
+                                val parentFolder = File(path).parentFile?.name ?: "No_name"
+
+                                if (!folders.containsKey(parentFolder)) {
+                                    folders[parentFolder] = GroupItem(
+                                        parentFolder,
+                                        Constant.TYPE_AUDIOS,
+                                        path,
+                                        mutableListOf(),
+                                        mutableListOf(),
+                                        File(path).parentFile?.path ?: ""
+
+                                    )
+                                }
+                                if (path.isNotEmpty()) {
+                                    folders[parentFolder]?.dataList?.add(
+                                        path
+                                    )
+                                    folders[parentFolder]?.dataThumb?.add(
+                                        getThumbnail(path)
+                                    )
+                                }
+                            }
+                        }
+                        Constant.TYPE_FILE -> {
+                            if (mimetype == "text" || extraDocumentMimeTypes.contains(fullMimetype) || archiveMimeTypes.contains(
+                                    fullMimetype
+                                )
+                            ) {
+                                val parentFolder =
+                                    Constant.FILES_FOLDER_NAME + "utra+super+promax+12345"
+                                if (!folders.containsKey(parentFolder)) {
+                                    folders[parentFolder] = GroupItem(
+                                        parentFolder,
+                                        Constant.TYPE_FILE,
+                                        path,
+                                        mutableListOf(),
+                                        mutableListOf(),
+                                        File(path).parentFile?.path ?: "",
+                                        mutableSetOf()
+                                    )
+                                }
+                                if (path.isNotEmpty()) {
+                                    if (name.lowercase(Locale.ROOT).endsWith(Constant.TYPE_PDF)) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PDF)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_CSV)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_CSV)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_PPT)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPT)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_PPT)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_PPTX)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_TEXT)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_TEXT)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_WORD)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_EXCEL)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_EXCEL)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_WORDX)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_WORD)
+                                    } else if (name.lowercase(Locale.ROOT)
+                                            .endsWith(Constant.TYPE_ZIP)
+                                    ) {
+                                        folders[parentFolder]?.dataTypeList?.add(Constant.TYPE_ZIP)
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return folders.values.toList()
+    }
+
+    fun getThumbnail(path: String): Bitmap? {
         return try {
             val mr = MediaMetadataRetriever()
             mr.setDataSource(path)
@@ -241,7 +243,6 @@ object MediaStoreUtils {
                         )
                     )
                 }
-                Log.d("TAG", "childpath: " + listImageChild.size)
             }
             return listImageChild
         } catch (e: Exception) {
@@ -312,10 +313,9 @@ object MediaStoreUtils {
                 val name = cursor.getStringValue(MediaStore.Audio.Media.DISPLAY_NAME)
 
                 if (childPath.isNotBlank()) {
-//                    val duration = getDuration(context, childPath)
-//                    val thumb = getThumbnail(childPath)
+                    val thumb = getThumbnail(childPath)
                     listAudioChild.add(
-                        ListItem(id, childPath, name, false, 0, size,  modified)
+                        ListItem(id, childPath, name, false, 0, size, modified)
                     )
                 }
             }
