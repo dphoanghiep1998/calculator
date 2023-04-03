@@ -9,12 +9,14 @@ import androidx.navigation.fragment.findNavController
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.FragmentNoteBinding
+import com.neko.hiepdph.calculatorvault.ui.main.home.note.adapter.AdapterNote
 import com.neko.hiepdph.calculatorvault.viewmodel.NoteViewModel
 
 class FragmentNote : Fragment() {
     private var _binding: FragmentNoteBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<NoteViewModel>()
+    private var adapterNote: AdapterNote ?= null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -29,7 +31,12 @@ class FragmentNote : Fragment() {
     }
 
     private fun initView() {
+        initRecyclerView()
         initButton()
+    }
+
+    private fun initRecyclerView() {
+
     }
 
     private fun initButton() {
@@ -64,7 +71,7 @@ class FragmentNote : Fragment() {
 
     }
 
-    private fun addNote(){
+    private fun addNote() {
         findNavController().navigate(R.id.action_fragmentNote_to_fragmentAddNote)
     }
 

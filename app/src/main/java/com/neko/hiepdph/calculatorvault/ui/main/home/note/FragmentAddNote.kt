@@ -10,8 +10,10 @@ import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
+import com.neko.hiepdph.calculatorvault.data.model.NoteModel
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddNoteBinding
 import com.neko.hiepdph.calculatorvault.viewmodel.NoteViewModel
+import java.util.Calendar
 
 
 class FragmentAddNote : Fragment() {
@@ -58,11 +60,14 @@ class FragmentAddNote : Fragment() {
     }
 
     private fun saveNote() {
-        if(binding.edtTitle.text.isBlank() || binding.edtContent.text.isBlank()){
-            showSnackBar(getString(R.string.title_and_content_required),SnackBarType.FAILED)
+        if (binding.edtTitle.text.isBlank() || binding.edtContent.text.isBlank()) {
+            showSnackBar(getString(R.string.title_and_content_required), SnackBarType.FAILED)
             return
         }
-        v
+        val title = binding.edtTitle.text.toString()
+        val content = binding.edtContent.text.toString()
+        val date = Calendar.getInstance().timeInMillis
+        viewModel.insertNewNote(NoteModel(-1, title, content, date))
     }
 
 
