@@ -20,10 +20,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/neutral_01"
-                app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:titleTextAppearance="@style/TextViewStyleToolbar"
-                 />
+                app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:titleTextAppearance="@style/TextViewStyleToolbar" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,9 +40,11 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
+        style="@style/Widget.Custom.NavigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:clipToPadding="false"
         app:headerLayout="@layout/layout_header_drawer"
         app:menu="@menu/drawer_menu" />
 

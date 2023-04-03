@@ -9,6 +9,10 @@ object DateTimeUtils {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         return formatter.format(date).toString()
     }
+    fun getDateConverted(time:Long):String{
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        return formatter.format(time).toString()
+    }
 
     fun getDateConvertedToResult(time: Long): String {
         val formatter = SimpleDateFormat("MMM dd, HH:mm")

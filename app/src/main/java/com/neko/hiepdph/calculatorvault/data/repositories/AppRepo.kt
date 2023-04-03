@@ -2,6 +2,7 @@ package com.neko.hiepdph.calculatorvault.data.repositories
 
 import androidx.lifecycle.LiveData
 import com.neko.hiepdph.calculatorvault.data.database.model.HistoryModel
+import com.neko.hiepdph.calculatorvault.data.model.NoteModel
 import com.neko.hiepdph.calculatorvault.data.services.HistoryLocalService
 import com.neko.hiepdph.calculatorvault.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -47,5 +48,27 @@ class AppRepo @Inject constructor(
 
     fun filterHistory(value: List<Int>): LiveData<List<HistoryModel>> =
         historyLocalService.historyDao.filterListHistory(value)
+
+
+    suspend fun insertNoteModel(model: NoteModel) = withContext(dispatcher) {
+        historyLocalService.no.insertHistory(model.toHistoryEntity())
+    }
+
+    suspend fun updateNoteModel(model: NoteModel) = withContext(dispatcher) {
+        historyLocalService.historyDao.updateHistory(model.toHistoryEntity())
+    }
+
+    suspend fun deleteAllNote() = withContext(dispatcher) {
+        historyLocalService.historyDao.deleteAllHistory()
+    }
+
+    suspend fun deleteNote(id: Int) = withContext(dispatcher) {
+        historyLocalService.historyDao.deleteHistory(id)
+    }
+
+    suspend fun deleteSelectedNote(listId: List<Int>) = withContext(dispatcher) {
+        historyLocalService.historyDao.deleteHistory(listId)
+    }
+
 
 }

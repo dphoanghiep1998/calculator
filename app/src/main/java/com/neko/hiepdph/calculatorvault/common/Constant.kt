@@ -10,7 +10,7 @@ object Constant {
     const val KEY_FIRST_DATA_INJECT = "KEY_FIRST_DATA_INJECT_SUGAR_V2"
     const val KEY_UNIT = "KEY_UNIT_SUGAR_V2"
     const val KEY_POSITION_INFO = "KEY_POSITION_INFO_SUGAR_V2"
-    const val APP_DB = "SUGAR_DADDY_V2"
+    const val APP_DB = "CALCULATOR_V1"
     const val KEY_PASS_SPLASH = "KEY_PASS_SPLASH_V2"
 
     const val KEY_USER_RATE = "KEY_USER_RATE_SUGAR_V2"

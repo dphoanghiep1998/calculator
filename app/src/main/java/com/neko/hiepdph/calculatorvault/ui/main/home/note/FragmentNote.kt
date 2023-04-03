@@ -1,14 +1,20 @@
 package com.neko.hiepdph.calculatorvault.ui.main.home.note
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.neko.hiepdph.calculatorvault.R
+import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
 import com.neko.hiepdph.calculatorvault.databinding.FragmentNoteBinding
+import com.neko.hiepdph.calculatorvault.viewmodel.NoteViewModel
 
 class FragmentNote : Fragment() {
     private var _binding: FragmentNoteBinding? = null
     private val binding get() = _binding!!
+    private val viewModel by viewModels<NoteViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -19,6 +25,17 @@ class FragmentNote : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        initButton()
+    }
+
+    private fun initButton() {
+        binding.floatingActionButton.clickWithDebounce {
+            addNote()
+        }
     }
 
 
@@ -37,7 +54,6 @@ class FragmentNote : Fragment() {
     }
 
     private fun changeLayout() {
-
     }
 
     private fun changeToSearchView() {
@@ -46,6 +62,10 @@ class FragmentNote : Fragment() {
 
     private fun editNote() {
 
+    }
+
+    private fun addNote(){
+        findNavController().navigate(R.id.action_fragmentNote_to_fragmentAddNote)
     }
 
     override fun onDestroy() {

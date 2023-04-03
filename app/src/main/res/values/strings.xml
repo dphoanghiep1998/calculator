@@ -130,4 +130,8 @@
     <string name="play">Play</string>
     <string name="info">Info</string>
     <string name="open">Open</string>
+    <string name="title">Title :</string>
+    <string name="content">Content :</string>
+    <string name="new_note">New note</string>
+    <string name="title_and_content_required">Note\'s title and Note\'s content are required!</string>
 </resources>

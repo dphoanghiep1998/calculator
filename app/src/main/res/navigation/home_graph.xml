@@ -33,7 +33,11 @@
         android:id="@+id/fragmentNote"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.note.FragmentNote"
         android:label="@string/note"
-        tools:layout="@layout/fragment_note" />
+        tools:layout="@layout/fragment_note" >
+        <action
+            android:id="@+id/action_fragmentNote_to_fragmentAddNote"
+            app:destination="@id/fragmentAddNote" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentRecycleBin"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.recyclebin.FragmentRecycleBin"
@@ -89,4 +93,8 @@
             android:name="groupItem"
             app:argType="com.neko.hiepdph.calculatorvault.data.model.GroupItem" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentAddNote"
+        android:name="com.neko.hiepdph.calculatorvault.ui.main.home.note.FragmentAddNote"
+        tools:layout="@layout/fragment_add_note" />
 </navigation>

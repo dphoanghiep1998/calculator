@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <attr name="colorNavigationItem" format="color" />
+    <attr name="colorNavigationItemSelected" format="color" />
+    <attr name="drawableNavigationItemBackground" format="reference" />
+
     <attr name="textSize" format="dimension" />
     <attr name="cornerRadiusBotLeft" format="dimension" />
     <attr name="cornerRadiusBotRight" format="dimension" />
@@ -18,8 +23,7 @@
         <attr name="expand" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="CalculatorMain">
-    </declare-styleable>
+    <declare-styleable name="CalculatorMain"></declare-styleable>
 
     <declare-styleable name="CustomSeekBar">
         //seekBar
