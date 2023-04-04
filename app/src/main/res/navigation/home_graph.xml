@@ -9,7 +9,7 @@
         android:id="@+id/fragmentVault"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.FragmentVault"
         android:label="@string/vault"
-        app:menu="@menu/toolbar_menu_vault">
+       >
         <action
             android:id="@+id/action_fragmentVault_to_fragmentPersistent"
             app:destination="@id/fragmentPersistent" />

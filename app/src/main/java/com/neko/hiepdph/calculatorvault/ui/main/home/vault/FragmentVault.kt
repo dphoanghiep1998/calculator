@@ -21,10 +21,7 @@ import com.neko.hiepdph.calculatorvault.activities.MainActivity
 import com.neko.hiepdph.calculatorvault.common.Constant
 import com.neko.hiepdph.calculatorvault.common.enums.Order
 import com.neko.hiepdph.calculatorvault.common.enums.Sort
-import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
-import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
-import com.neko.hiepdph.calculatorvault.common.extensions.navigateToPage
-import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
+import com.neko.hiepdph.calculatorvault.common.extensions.*
 import com.neko.hiepdph.calculatorvault.common.utils.ICreateFile
 import com.neko.hiepdph.calculatorvault.common.utils.IDeleteFile
 import com.neko.hiepdph.calculatorvault.data.model.VaultFileDirItem
@@ -33,10 +30,12 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutMenuOptionBinding
 import com.neko.hiepdph.calculatorvault.dialog.*
 import com.neko.hiepdph.calculatorvault.ui.main.home.language.adapter.AdapterFolder
 import com.neko.hiepdph.calculatorvault.viewmodel.VaultViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
-
+@AndroidEntryPoint
 class FragmentVault : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -49,23 +48,20 @@ class FragmentVault : Fragment() {
         var order: Order = Order.ASC
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        Log.d("TAG", "onCreateView: " + findNavController().currentDestination)
+        changeBackPressCallBack {
+            requireActivity().finishAffinity()
+        }
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentHomeBinding.bind(view)
         initView()
         observeListFile()
         viewModel.getListFolderInVault(requireContext(), requireActivity().filesDir)
@@ -96,7 +92,8 @@ class FragmentVault : Fragment() {
     }
 
     private fun initToolBar() {
-        (requireActivity() as HomeActivity)?.addMenuProvider(object : MenuProvider {
+        (requireActivity() as HomeActivity).getToolbar().menu?.clear()
+        (requireActivity() as HomeActivity).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menu.clear()
                 menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
@@ -111,23 +108,10 @@ class FragmentVault : Fragment() {
                 }
                 return true
             }
-        }, viewLifecycleOwner, Lifecycle.State.CREATED)
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.toolbar_menu_vault, menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val menuItemView = requireActivity().findViewById<View>(R.id.option)
-        when (item.itemId) {
-            R.id.add_folder -> showAddFolderDialog()
-            R.id.option -> showOptionDialog(menuItemView)
-            R.id.navigate_calculator -> navigateToCalculator()
-        }
-        return true
-    }
 
 
     private fun navigateToCalculator() {
@@ -220,6 +204,7 @@ class FragmentVault : Fragment() {
     }
 
     private fun showOptionDialog(menuItemView: View) {
+        Log.d("TAG", "showOptionDialog: ")
         popupWindow.showAsDropDown(menuItemView, 0, 0)
     }
 

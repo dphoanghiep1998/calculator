@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Handler
@@ -12,6 +13,7 @@ import android.os.Looper
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.neko.hiepdph.calculatorvault.R
 import java.io.File
 
@@ -298,5 +300,6 @@ fun Context.getMediaStoreLastModified(path: String): Long {
     }
     return 0
 }
+
 
 

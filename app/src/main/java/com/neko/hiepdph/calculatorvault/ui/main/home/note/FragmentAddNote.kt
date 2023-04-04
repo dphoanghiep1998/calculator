@@ -6,6 +6,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
 import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
@@ -13,9 +14,10 @@ import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.data.model.NoteModel
 import com.neko.hiepdph.calculatorvault.databinding.FragmentAddNoteBinding
 import com.neko.hiepdph.calculatorvault.viewmodel.NoteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
-
+@AndroidEntryPoint
 class FragmentAddNote : Fragment() {
 
     private var _binding: FragmentAddNoteBinding? = null
@@ -31,7 +33,7 @@ class FragmentAddNote : Fragment() {
     }
 
     private fun initToolBar() {
-        (requireActivity() as HomeActivity)?.addMenuProvider(object : MenuProvider {
+        (requireActivity() as HomeActivity).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menu.clear()
                 menuInflater.inflate(R.menu.toolbar_menu_add_note, menu)
@@ -47,17 +49,7 @@ class FragmentAddNote : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.toolbar_menu_add_note, menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.check -> saveNote()
-        }
-        return true
-    }
 
     private fun saveNote() {
         if (binding.edtTitle.text.isBlank() || binding.edtContent.text.isBlank()) {
@@ -68,9 +60,8 @@ class FragmentAddNote : Fragment() {
         val content = binding.edtContent.text.toString()
         val date = Calendar.getInstance().timeInMillis
         viewModel.insertNewNote(NoteModel(-1, title, content, date))
+        findNavController().popBackStack()
     }
-
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

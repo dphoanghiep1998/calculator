@@ -57,6 +57,8 @@ fun Fragment.getColor(res: Int): Int {
     return ContextCompat.getColor(requireContext(), res)
 }
 
+
+
 @SuppressLint("ResourceAsColor")
 fun Fragment.showSnackBar(text: String, type: SnackBarType) {
     val snackBar: Snackbar =

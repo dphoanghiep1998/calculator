@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.MenuProvider
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
+import com.neko.hiepdph.calculatorvault.common.extensions.changeBackPressCallBack
 
 class FragmentBrowser : Fragment() {
 
@@ -13,7 +14,9 @@ class FragmentBrowser : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        changeBackPressCallBack {
+            requireActivity().finishAffinity()
+        }
         return inflater.inflate(R.layout.fragment_browser, container, false)
     }
 
