@@ -33,7 +33,6 @@ import com.neko.hiepdph.calculatorvault.viewmodel.VaultViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 @AndroidEntryPoint
 class FragmentVault : Fragment() {
@@ -49,6 +48,11 @@ class FragmentVault : Fragment() {
     }
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -56,6 +60,7 @@ class FragmentVault : Fragment() {
         changeBackPressCallBack {
             requireActivity().finishAffinity()
         }
+        initToolBar()
         return binding.root
     }
 
@@ -76,9 +81,7 @@ class FragmentVault : Fragment() {
     }
 
 
-
     private fun initView() {
-        initToolBar()
         initRecyclerView()
         initPopupWindow()
         initButton()
@@ -93,7 +96,7 @@ class FragmentVault : Fragment() {
 
     private fun initToolBar() {
         (requireActivity() as HomeActivity).getToolbar().menu?.clear()
-        (requireActivity() as HomeActivity).addMenuProvider(object : MenuProvider {
+        requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menu.clear()
                 menuInflater.inflate(R.menu.toolbar_menu_vault, menu)
@@ -110,8 +113,6 @@ class FragmentVault : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
-
 
 
     private fun navigateToCalculator() {
@@ -209,6 +210,7 @@ class FragmentVault : Fragment() {
     }
 
     private fun showAddFolderDialog() {
+        Log.d("TAG", "showAddFolderDialog: ")
         val dialogAddNewFolder = DialogAddNewFolder(object : AddNewFolderDialogCallBack {
             override fun onPositiveClicked(name: String) {
                 val callback = object : ICreateFile {

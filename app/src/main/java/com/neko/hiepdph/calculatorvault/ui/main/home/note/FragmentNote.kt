@@ -3,7 +3,9 @@ package com.neko.hiepdph.calculatorvault.ui.main.home.note
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.CheckBox
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.get
@@ -16,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.neko.hiepdph.calculatorvault.R
 import com.neko.hiepdph.calculatorvault.activities.HomeActivity
+import com.neko.hiepdph.calculatorvault.common.extensions.SnackBarType
 import com.neko.hiepdph.calculatorvault.common.extensions.changeBackPressCallBack
 import com.neko.hiepdph.calculatorvault.common.extensions.clickWithDebounce
+import com.neko.hiepdph.calculatorvault.common.extensions.showSnackBar
 import com.neko.hiepdph.calculatorvault.databinding.FragmentNoteBinding
 import com.neko.hiepdph.calculatorvault.ui.main.home.note.adapter.AdapterNote
 import com.neko.hiepdph.calculatorvault.viewmodel.NoteViewModel
@@ -37,6 +41,7 @@ class FragmentNote : Fragment() {
     private var listener: ToolbarChangeListener? = null
     private var normalMenuProvider: MenuProvider? = null
     private var listIdNoteSelected = mutableListOf<Int>()
+    private var sizeNote = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -66,6 +71,7 @@ class FragmentNote : Fragment() {
     private fun observeNote() {
         viewModel.getAllNote().observe(viewLifecycleOwner) {
             adapterNote?.setData(it)
+            sizeNote = it.size
         }
     }
 
@@ -87,7 +93,15 @@ class FragmentNote : Fragment() {
         }, onEditItem = {
             listIdNoteSelected.clear()
             listIdNoteSelected.addAll(it)
+            checkNote()
+
+        }, onUnSelect = {
+            unCheckNote()
+        }, onSelectAll = {
+            listIdNoteSelected.clear()
+            listIdNoteSelected.addAll(it)
         })
+
         binding.rcvItemNote.adapter = adapterNote
 
         if (AdapterNote.isSwitchView) {
@@ -107,6 +121,10 @@ class FragmentNote : Fragment() {
                 menu.clear()
                 if (AdapterNote.editMode) {
                     menuInflater.inflate(R.menu.toolbar_menu_edit_note, menu)
+                    menu[1].actionView?.findViewById<View>(R.id.checkbox)?.setOnClickListener {
+                        checkAllNote(menu[1].actionView?.findViewById<CheckBox>(R.id.checkbox)?.isChecked == true)
+                    }
+
                 } else {
                     menuInflater.inflate(R.menu.toolbar_menu_note, menu)
                     if (AdapterNote.isSwitchView) {
@@ -123,7 +141,6 @@ class FragmentNote : Fragment() {
                 if (AdapterNote.editMode) {
                     when (menuItem.itemId) {
                         R.id.delete -> deleteNote()
-                        R.id.check_box -> checkAllNote()
                     }
 
                 } else {
@@ -141,8 +158,29 @@ class FragmentNote : Fragment() {
         )
     }
 
-    private fun checkAllNote() {
+    private fun checkNote() {
+        val checkbox =
+            (requireActivity() as HomeActivity).getToolbar().menu[1].actionView?.findViewById<CheckBox>(
+                R.id.checkbox
+            )
+        checkbox?.isChecked = listIdNoteSelected.size == sizeNote && sizeNote > 0
+    }
 
+    private fun unCheckNote() {
+        val checkbox =
+            (requireActivity() as HomeActivity).getToolbar().menu[1].actionView?.findViewById<CheckBox>(
+                R.id.checkbox
+            )
+        checkbox?.isChecked = false
+    }
+
+    private fun checkAllNote(status: Boolean) {
+        Log.d("TAG", "checkAllNote: " + status)
+        if (status) {
+            adapterNote?.selectAll()
+        } else {
+            adapterNote?.unSelectAll()
+        }
     }
 
     private fun editView() {
@@ -176,12 +214,12 @@ class FragmentNote : Fragment() {
 
     }
 
-    private fun editNote() {
-
-    }
-
     private fun deleteNote() {
-
+        if (listIdNoteSelected.isEmpty()) {
+            showSnackBar(getString(R.string.nothing_to_delete), SnackBarType.FAILED)
+        } else {
+            viewModel.deleteNote(listIdNoteSelected)
+        }
     }
 
     private fun addNote() {

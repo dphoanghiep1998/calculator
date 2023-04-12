@@ -8,8 +8,9 @@ interface BackPressDialogCallBack {
     fun onBackPressIntercepted()
 }
 
+@Suppress("DEPRECATION")
 class DialogCallBack(context: Context,
-                       private val callback: BackPressDialogCallBack
+                     private val callback: BackPressDialogCallBack
 ) :
     Dialog(context) {
 

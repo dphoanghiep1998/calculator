@@ -13,7 +13,11 @@ import com.neko.hiepdph.calculatorvault.databinding.LayoutItemNoteBinding
 class AdapterNote(
     private val onLongClickItem: () -> Unit,
     private val onClickItem: (NoteModel) -> Unit,
-    private val onEditItem: (List<Int>) -> Unit
+    private val onEditItem: (List<Int>) -> Unit,
+    private val onSelectAll: (List<Int>) -> Unit,
+
+    private val onUnSelect: () -> Unit,
+
 ) : RecyclerView.Adapter<AdapterNote.NoteViewHolder>() {
 
     private var listOfNote: MutableList<NoteModel> = mutableListOf()
@@ -21,21 +25,23 @@ class AdapterNote(
 
 
     fun setData(listNote: List<NoteModel>) {
-        var noteDiffCallback = DiffUtil.calculateDiff(NoteDiffCallback(listOfNote, listNote))
+        val noteDiffCallback = DiffUtil.calculateDiff(NoteDiffCallback(listOfNote, listNote))
         noteDiffCallback.dispatchUpdatesTo(this)
         listOfNote.clear()
         listOfNote.addAll(listNote)
     }
 
     fun selectAll() {
-        listOfId.forEach {
-            listOfId.add(it)
+        listOfNote.forEach {
+            listOfId.add(it.id)
         }
+        onSelectAll.invoke(listOfId.toMutableList())
         notifyItemRangeChanged(0, listOfNote.size)
     }
 
-    fun unselectAll() {
+    fun unSelectAll() {
         listOfId.clear()
+        onUnSelect()
         notifyItemRangeChanged(0, listOfNote.size)
     }
 
@@ -88,13 +94,25 @@ class AdapterNote(
                     } else {
                         listOfId.remove(item.id)
                     }
+                    onEditItem(listOfId.toMutableList())
                 }
+            }
+
+            binding.checkBox.setOnClickListener {
+                binding.checkBox.isChecked = !binding.checkBox.isChecked
+                if (binding.checkBox.isChecked) {
+                    listOfId.add(item.id)
+                } else {
+                    listOfId.remove(item.id)
+                }
+                onEditItem(listOfId.toMutableList())
             }
         }
     }
 
     fun changeToNormalView() {
         editMode = false
+        listOfId.clear()
         notifyItemRangeChanged(0, listOfNote.size)
     }
 }

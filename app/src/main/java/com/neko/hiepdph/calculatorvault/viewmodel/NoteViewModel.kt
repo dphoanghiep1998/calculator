@@ -15,11 +15,7 @@ import javax.inject.Inject
 class NoteViewModel @Inject constructor(
     private val appRepo: AppRepo
 ) :ViewModel() {
-    private val _listItemListGroupFile = SelfCleaningLiveData<MutableList<GroupItem>>()
-    val listItemListGroupFile: LiveData<MutableList<GroupItem>> get() = _listItemListGroupFile
-    fun setListItemPersistentData(list: MutableList<GroupItem>) {
-        _listItemListGroupFile.postValue(list)
-    }
+
 
     fun getAllNote():LiveData<List<NoteModel>>{
         return appRepo.getAllNote()
@@ -28,6 +24,11 @@ class NoteViewModel @Inject constructor(
     fun insertNewNote(model: NoteModel){
         viewModelScope.launch {
             appRepo.insertNoteModel(model)
+        }
+    }
+    fun deleteNote(listId:List<Int>){
+        viewModelScope.launch {
+            appRepo.deleteSelectedNote(listId)
         }
     }
 }

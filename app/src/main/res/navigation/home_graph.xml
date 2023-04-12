@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/fragmentVault"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.vault.FragmentVault"
-        android:label="@string/vault"
-       >
+        android:label="@string/vault">
         <action
             android:id="@+id/action_fragmentVault_to_fragmentPersistent"
             app:destination="@id/fragmentPersistent" />
@@ -33,7 +32,7 @@
         android:id="@+id/fragmentNote"
         android:name="com.neko.hiepdph.calculatorvault.ui.main.home.note.FragmentNote"
         android:label="@string/note"
-        tools:layout="@layout/fragment_note" >
+        tools:layout="@layout/fragment_note">
         <action
             android:id="@+id/action_fragmentNote_to_fragmentAddNote"
             app:destination="@id/fragmentAddNote" />

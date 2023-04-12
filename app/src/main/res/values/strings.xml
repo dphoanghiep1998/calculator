@@ -134,4 +134,5 @@
     <string name="content">Content :</string>
     <string name="new_note">New note</string>
     <string name="title_and_content_required">Note\'s title and Note\'s content are required!</string>
+    <string name="nothing_to_delete">Nothing to delete !</string>
 </resources>

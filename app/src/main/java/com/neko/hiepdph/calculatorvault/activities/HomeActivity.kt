@@ -56,11 +56,11 @@ class HomeActivity : AppCompatActivity(), ToolbarChangeListener {
         binding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.fragmentVault -> {
-                    navController!!.clearBackStack(R.id.fragmentVault)
+//                    navController!!.clearBackStack(R.id.fragmentVault)
                     navController!!.navigate(R.id.fragmentVault)
                 }
                 R.id.fragmentLanguage -> {
-                    navController!!.clearBackStack(R.id.fragmentLanguage)
+//                    navController!!.clearBackStack(R.id.fragmentLanguage)
                     navController!!.navigate(R.id.fragmentLanguage)
                 }
                 R.id.fragmentBrowser -> {
@@ -69,15 +69,15 @@ class HomeActivity : AppCompatActivity(), ToolbarChangeListener {
 
                 }
                 R.id.fragmentNote -> {
-                    navController!!.clearBackStack(R.id.fragmentNote)
+//                    navController!!.clearBackStack(R.id.fragmentNote)
                     navController!!.navigate(R.id.fragmentNote)
                 }
                 R.id.fragmentSetting -> {
-                    navController!!.clearBackStack(R.id.fragmentSetting)
+//                    navController!!.clearBackStack(R.id.fragmentSetting)
                     navController!!.navigate(R.id.fragmentSetting)
                 }
                 R.id.fragmentRecycleBin -> {
-                    navController!!.clearBackStack(R.id.fragmentRecycleBin)
+//                    navController!!.clearBackStack(R.id.fragmentRecycleBin)
                     navController!!.navigate(R.id.fragmentRecycleBin)
                 }
                 R.id.item_theme -> changeTheme()
